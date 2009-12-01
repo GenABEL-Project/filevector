@@ -1,0 +1,353 @@
+#ifndef __FRVECTOR__
+#define __FRVECTOR__
+
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <climits>
+#include <new>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <limits.h>
+#include <unistd.h>
+
+#include "frutil.h"
+#include "frerror.h"
+
+
+template <class DT> class filevector
+{
+public:
+	char * filename;
+	std::fstream data_file;
+	fr_type data_type;
+// row and column names
+	fixedchar * variable_names;
+	fixedchar * observation_names;
+// size of header (descriptives + var/obs names)
+	unsigned long int header_size;
+// cache size (Mb) requested by user
+	unsigned long int cache_size_Mb;
+// if the objct is connected to file
+	short int connected;
+// cache size internal; these ones are exact and used internaly
+	unsigned long int cache_size_nvars;
+	unsigned long int cache_size_bytes;
+	unsigned long int max_buffer_size_bytes;
+// which variables are now in cache
+	unsigned long int in_cache_from;
+	unsigned long int in_cache_to;
+	DT * cached_data;
+	char * char_buffer;
+
+// prototypes
+	filevector();
+	~filevector();
+
+// constructor based on initialize
+	filevector(char * filename_toload, unsigned long int cachesizeMb);
+
+// these ones are the actual used to initializ and free up
+	void initialize(char * filename_toload, unsigned long int cachesizeMb);
+	void free_filevector();
+// this one updates cache
+	void update_cache(unsigned long int from_var);
+// gives element number from nvar & nobs
+	unsigned long int nrnc_to_nelem(unsigned long int nvar, unsigned long int nobs);
+
+// getting and setting var/col names
+	void set_variable_name(unsigned long int nvar, fixedchar name);
+	void set_observation_name(unsigned long int nobs, fixedchar name);
+	fixedchar get_variable_name(unsigned long int nvar);
+	fixedchar get_observation_name(unsigned long int nobs);
+
+// USER FUNCTIONS
+// can read single variable
+	void read_variable(unsigned long int nvar, DT * outvec);
+// should only be used for reading single random elements!
+	DT read_element(unsigned long int nvar, unsigned long int nobs);
+// write single variable
+	void write_variable(unsigned long int nvar, DT * datavec);
+// write single element
+	void write_element(unsigned long int nvar, unsigned long int nobs, DT data);
+
+// FOR FUTURE:
+// very slow one!
+//	DT * read_observation(unsigned long int nobs);
+// should only be used for reading single random elements!
+//	DT read_element(unsigned long int nelment);
+
+};
+
+template <class DT>
+filevector<DT>::filevector()
+{
+	connected = 0;
+	data_type.nvariables = data_type.nobservations = 0;
+//TMP
+//	printf("contructor...\n");
+}
+
+
+template <class DT>
+filevector<DT>::~filevector()
+{
+	free_filevector();
+}
+
+template <class DT>
+void filevector<DT>::free_filevector()
+{
+	if (connected) {
+		data_file.seekp(sizeof(data_type), std::ios::beg);
+// may be have to fix: is the buffer always enough???
+		if (sizeof(fixedchar)*data_type.nobservations > INT_MAX) error("sizeof(fixedchar)*data_type.nobservations > INT_MAX\n\n");
+		data_file.write((char*)observation_names,sizeof(fixedchar)*data_type.nobservations);
+		data_file.seekp(sizeof(data_type)+sizeof(fixedchar)*data_type.nobservations, std::ios::beg);
+// may be have to fix: is the buffer always enough???
+		if (sizeof(fixedchar)*data_type.nvariables > INT_MAX) error("sizeof(fixedchar)*data_type.nvariables > INT_MAX\n\n");
+		data_file.write((char*)variable_names,sizeof(fixedchar)*data_type.nvariables);
+		delete [] char_buffer;
+		delete [] observation_names;
+		delete [] variable_names;
+		std::cout << "!!! destr + free !!!\n";
+	}
+	connected = 0;
+	data_file.close();
+	std::cout << "!!! destr !!!\n";
+}
+
+template <class DT>
+filevector<DT>::filevector(char * filename_toload, unsigned long int cachesizeMb)
+{
+	connected = 0;
+	initialize(filename_toload,cachesizeMb);
+}
+
+template <class DT>
+void filevector<DT>::initialize(char * filename_toload, unsigned long int cachesizeMb)
+{
+	if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported");
+
+//	if (char_buffer != NULL) error("B: trying to ini already ini-ed object!\n\n");
+	if (connected) error("trying to ini already ini-ed object!\n\n");
+	filename = filename_toload;
+	struct stat filestatus;
+	stat( filename_toload , &filestatus);
+
+	if (filestatus.st_size < sizeof(data_type))
+		error("file %s is too short to contain an FVF-object\n",filename_toload);
+
+	data_file.open(filename_toload, std::ios::out | std::ios::in | std::ios::binary);
+	if (!data_file)
+		error("opening file %s for write & read failed\n",filename_toload);
+	data_file.read((char*)&data_type,sizeof(data_type));
+	if (!data_file) error("failed to read datainfo from file '%s'\n",filename_toload);
+// some integrity checks
+	if (sizeof(DT) != data_type.bytes_per_record)
+		error("system data type size (%d) and file data type size (%d) do not match\n",
+			sizeof(DT),data_type.bytes_per_record);
+	//!!! nelements should actually be long to ensure !!!
+	if (data_type.nelements != (data_type.nobservations*data_type.nvariables))
+		error("number of variables (%lu) and observations (%lu) do not multiply to nelements (%lu) (file integrity issue?)\n",
+			data_type.nvariables, data_type.nobservations, data_type.nelements);
+	if ((data_type.bytes_per_record != (data_type.bits_per_record/8)) ||
+	     ((data_type.bits_per_record % 8) != 0) || (data_type.bits_per_record < 8))
+		perror("size in bytes/bits do not match or bit-size of char !=8 or non-byte recods (file integrity issue?)");
+
+// reserved for future use -- if bits storage ever used ...
+//	unsigned long int extrabits = 0;
+//	unsigned long int estimated_size = data_type.bits_per_record*data_type.nelements;
+//	unsigned long int resid = (estimated_size % 8);
+//	if (resid != 0) estimated_size += (8 - resid);
+//	estimated_size /= 8;
+
+	header_size = sizeof(data_type) + sizeof(fixedchar)*(data_type.nvariables+data_type.nobservations);
+
+	// temp fix because nelements is not yet long ... !!!
+//	unsigned long int estimated_size = data_type.bytes_per_record*data_type.nelements + header_size;
+	unsigned long int estimated_size = 
+			(unsigned long int) data_type.bytes_per_record * 
+			(unsigned long int) data_type.nvariables * 
+			(unsigned long int) data_type.nobservations + (unsigned long int) header_size;
+	if (estimated_size != filestatus.st_size)
+		error("actual file size (%lu) differ from the expected (%lu) [%lu,%lu]",
+						filestatus.st_size,estimated_size,data_type.nvariables,data_type.nobservations);
+
+// read in variable and observation names
+
+	variable_names = new (std::nothrow) fixedchar [data_type.nvariables];
+	if (!variable_names) error("can not get RAM for variable names");
+	observation_names = new (std::nothrow) fixedchar [data_type.nobservations];
+	if (!observation_names) error("can not get RAM for observation names");
+	data_file.seekg(sizeof(data_type), std::ios::beg);
+	for (unsigned long int i=0;i<data_type.nobservations;i++)
+		data_file.read((char*)(observation_names+i),sizeof(fixedchar));
+	for (unsigned long int i=0;i<data_type.nvariables;i++)
+		data_file.read((char*)(variable_names+i),sizeof(fixedchar));
+
+
+// figure out cache size
+	cache_size_Mb = cachesizeMb;
+	cache_size_nvars = (unsigned long int) 1024*1024*cache_size_Mb/(data_type.nobservations*data_type.bytes_per_record);
+	if (cache_size_nvars<1) {
+		message("attempting to set cache size to 1 var (%f Mb)\n",
+		         (float) data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
+		cache_size_nvars = 1;
+	} else if (cache_size_nvars>data_type.nvariables) {
+		message("attempting to cache all the data (%u variables, %f Mb)\n",
+			 data_type.nvariables,
+		         (float) data_type.nvariables*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
+		cache_size_nvars = data_type.nvariables;
+	} else {
+		message("attempting to cache specified amount of data (%u variables, %f Mb)\n",
+			 cache_size_nvars,
+		         (float) cache_size_nvars*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
+	}
+	cache_size_bytes = cache_size_nvars*data_type.bytes_per_record*data_type.nobservations*sizeof(char);
+// get memory for the cache
+	char_buffer = new (std::nothrow) char [cache_size_bytes];
+	if (!char_buffer)
+		error("failed to get memory for cache\n");
+	max_buffer_size_bytes = INT_MAX;
+	connected = 1;
+	update_cache(0);
+}
+
+template <class DT>
+void filevector<DT>::update_cache(unsigned long int from_var)
+{
+	unsigned long int current_cache_size_bytes = cache_size_bytes;
+	in_cache_from = from_var;
+	in_cache_to = from_var + cache_size_nvars - 1;
+	if (in_cache_to >= data_type.nvariables) {
+		in_cache_to = data_type.nvariables-1;
+		current_cache_size_bytes = (in_cache_to-in_cache_from+1)*
+					   data_type.bytes_per_record*data_type.nobservations*sizeof(char);
+	}
+//	std::cout << "updating cache: " << in_cache_from << " - " << in_cache_to << "\n";
+	unsigned long int internal_from = header_size + 
+			in_cache_from*data_type.nobservations*data_type.bytes_per_record*sizeof(char);
+//	std::cout << "position = " << internal_from << "\n";
+	data_file.seekg(internal_from, std::ios::beg);
+	if (current_cache_size_bytes <= max_buffer_size_bytes) {
+		data_file.read((char*)char_buffer,current_cache_size_bytes);
+		if (!data_file) error("failed to read cache from file '%s'\n",filename);
+	} else {
+// cache size is bigger than what we can read in one go ... read in blocks
+		unsigned long int nbytes_togo = current_cache_size_bytes;
+		unsigned long int nbytes_finished = 0;
+		while (nbytes_togo>0)
+		if (nbytes_togo > max_buffer_size_bytes) {
+			data_file.read((char*)(char_buffer+nbytes_finished),max_buffer_size_bytes);
+			if (!data_file) error("failed to read cache from file '%s'\n",filename);
+			nbytes_finished += max_buffer_size_bytes;
+			nbytes_togo -= max_buffer_size_bytes;
+		} else {
+			data_file.read((char*)(char_buffer+nbytes_finished),nbytes_togo);
+			if (!data_file) error("failed to read cache from file '%s'\n",filename);
+			nbytes_finished += nbytes_togo; 
+			nbytes_togo -= nbytes_togo;
+		}
+	}
+	cached_data = (DT*) char_buffer;
+//TMP
+//	for (int i=0;i<cache_size_nvars;i++) {
+//	for (int j=0;j<data_type.nobservations;j++)
+//	std::cout << " " << cached_data[i*data_type.nobservations+j];
+//	std::cout<<"\n";
+//	}
+}
+
+template <class DT>
+void filevector<DT>::set_variable_name(unsigned long int nvar, fixedchar name)
+{
+	if (nvar>=data_type.nvariables) error("trying to set name of obs out of range (%lu)\n\n",nvar);
+	variable_names[nvar] = name;
+}
+
+template <class DT>
+void filevector<DT>::set_observation_name(unsigned long int nobs, fixedchar name)
+{
+	if (nobs>=data_type.nobservations) error("trying to set name of vars out of range (%lu)\n\n",nobs);
+	observation_names[nobs] = name;
+}
+
+
+template <class DT>
+fixedchar filevector<DT>::get_variable_name(unsigned long int nvar)
+{
+	if (nvar>=data_type.nvariables) error("trying to get name of var out of range");
+	return(variable_names[nvar]);
+}
+
+template <class DT>
+fixedchar filevector<DT>::get_observation_name(unsigned long int nobs)
+{
+	if (nobs>=data_type.nobservations) error("trying to get name of obs out of range");
+	return(observation_names[nobs]);
+}
+
+// can read single variable
+template <class DT>
+void filevector<DT>::read_variable(unsigned long int nvar, DT * outvec)
+{
+	if (nvar>=data_type.nvariables) error("nvar out of range (%lu >= %lu)",nvar,data_type.nvariables);
+	if (nvar >= in_cache_from && nvar <= in_cache_to) {
+		unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations;
+		for (unsigned long int i = 0;i<data_type.nobservations;i++) {
+			outvec[i]=cached_data[offset+i];
+//TMP
+//			std::cout << " " << cached_data[offset+i];
+		}
+	} else {
+		update_cache(nvar);
+// memcpy from <cstring> may be used here, but not clear if performance will become better
+		for (unsigned long int i = 0;i<data_type.nobservations;i++) outvec[i]=cached_data[i];
+	}
+}
+
+// can write single variable
+template <class DT>
+void filevector<DT>::write_variable(unsigned long int nvar, DT * datavec)
+{
+	unsigned long int pos = nrnc_to_nelem(nvar, 0);
+	data_file.seekp(header_size+pos*sizeof(DT), std::ios::beg);
+	data_file.write((char*)datavec,sizeof(DT)*data_type.nobservations);
+	if (!data_file) error ("failed to write to data file\n");
+//TMP
+//	for (unsigned int i=0;i<data_type.nobservations;i++) std::cout << " " << datavec[i];
+}
+
+template <class DT>
+unsigned long int filevector<DT>::nrnc_to_nelem(unsigned long int nvar, unsigned long int nobs)
+{
+	if (nvar >= data_type.nvariables || nobs >= data_type.nobservations)
+		error("nvar >= real or nobs >= real (%u >= %u || %u >= %u)\n",
+			nvar,data_type.nvariables,nobs,data_type.nobservations);
+	return( nvar * data_type.nobservations + nobs );
+}
+
+// should only be used for reading single random elements!
+template <class DT>
+DT filevector<DT>::read_element(unsigned long int nvar, unsigned long int nobs)
+{
+	DT out;
+	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
+	data_file.seekg(header_size+pos*sizeof(DT), std::ios::beg);
+	data_file.read((char*)&out,sizeof(DT));
+	if (!data_file) error("failed to read an element from file '%s'\n",filename);
+	return(out);
+}
+
+template <class DT>
+void filevector<DT>::write_element(unsigned long int nvar, unsigned long int nobs, DT data)
+{
+	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
+	data_file.seekp(header_size+pos*sizeof(DT), std::ios::beg);
+	data_file.write((char*)&data,sizeof(DT));
+}
+
+
+#endif
