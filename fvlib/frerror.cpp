@@ -1,5 +1,5 @@
 /*
-	This function should be reimplemented using Rprintf 
+	This function should be re-implemented using Rprintf
 	if compiled as a part of R library
 */
 
