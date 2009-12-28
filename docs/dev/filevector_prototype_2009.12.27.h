@@ -91,9 +91,15 @@ template <class DT> class filevector
 	void free_filevector();
 
 // These are new functions
-// NEW -- TAKE CARE BOTH FILE AND CACHE ARE UPDATED
+// HIGH
+// TAKE CARE BOTH FILE AND CACHE ARE UPDATED
     void write_variable_name(unsigned long int nvar,fixedchar newname);  // loooong future -- control that name is unique
     void write_observation_name(unsigned long int nobs,fixedchar newname);  // loooong future -- control that name is unique!
+ // these functions should create a copy of a file with (filtered) object
+    void save(char * new_file_name);
+    void save(char * new_file_name, unsigned long int nvars, unsigned long int * varindexes);
+    void save(char * new_file_name, unsigned long int nobss, unsigned long int * obsindexes);
+    void save(char * new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes);
 // HIGH -- here I see the possibility to make these functions faster then "random" access functions
     void add_variable(DT * invec, fixedchar varname); // adds variable at the end = write_variable with nvar=NVARS?
                                                       // loooong future -- control that name is unique!
@@ -125,3 +131,4 @@ template <class DT> class filevector
 //   returned (in the order of names!)
 
 };
+;
