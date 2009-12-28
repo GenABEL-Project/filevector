@@ -9,6 +9,7 @@
 #include "frversion.h"
 #include "frerror.h"
 #include "frutil.h"
+#include "DatABELBaseCPP.h"
 #include "frvector.h"
 
 #include "usage.h"
@@ -41,23 +42,23 @@ int main(int argc, char * argv[])
 		next_option = getopt_long(argc,argv,short_options,long_options,NULL);
 		switch (next_option)
 		{
-			case 'i': 
-				  infilename = optarg; 
+			case 'i':
+				  infilename = optarg;
 				  break;
-			case 'o': 
-				  outfilename = optarg; 
+			case 'o':
+				  outfilename = optarg;
 				  break;
-			case 's': 
+			case 's':
 				  skipcols = atoi(optarg);
 				  break;
-			case 'r': 
+			case 'r':
 				  rownames = atoi(optarg);
 				  break;
-			case 'c': 
+			case 'c':
 				  colnames = 1;
 					colnamesfilename = optarg;
 				  break;
-			case 't': 
+			case 't':
 				  transpose=1;
 				  break;
 
@@ -70,7 +71,7 @@ int main(int argc, char * argv[])
 	while (next_option != -1);
 
 	// check that in- and out-filenames are supplied
-	if (infilename == NULL || outfilename == NULL) 
+	if (infilename == NULL || outfilename == NULL)
 	{
 		print_text2fvf_usage(program_name);
 	}
@@ -92,9 +93,9 @@ int main(int argc, char * argv[])
 	std::cout << "\t --colnames  = ";
 	if (colnames) {
 			if (colnamesfilename == NULL)
-				std::cout << "ON, using first line of '" << infilename << "'\n"; 
+				std::cout << "ON, using first line of '" << infilename << "'\n";
 			else
-				std::cout << "ON, using data from file '" << colnamesfilename << "'\n"; 
+				std::cout << "ON, using data from file '" << colnamesfilename << "'\n";
 	} else std::cout << "OFF\n";
 	std::cout << "\t --transpose = ";
 	if (transpose) std::cout << "ON\n"; else std::cout << "OFF\n";
@@ -105,7 +106,7 @@ int main(int argc, char * argv[])
 
 	// column names specified in a separate file; check the number of columns
 	unsigned long int words_in_colnamesfile = 0;
-	if (colnames & colnamesfilename != NULL) 
+	if (colnames & colnamesfilename != NULL)
 	{
 			std::ifstream colnamesfile(colnamesfilename);
 			std::string tmpstr;
@@ -130,7 +131,7 @@ int main(int argc, char * argv[])
 		line_wordcount = 0;
 		while (stream_sline >> sword) line_wordcount++;
 //		if (firstline_add_one) {line_wordcount++;firstline_add_one=0;}
-		if (last_word_count >=0 && last_word_count != line_wordcount) 
+		if (last_word_count >=0 && last_word_count != line_wordcount)
 			error("file '%s', line %u, number of elements is %u\n\n",infilename,infile_linecount,line_wordcount);
 		last_word_count = line_wordcount;
 	}
@@ -141,7 +142,7 @@ int main(int argc, char * argv[])
 	std::cout << "file '" << infilename << "' column count = " << line_wordcount << "\n\n";
 	if ( infile_linecount == 0 || line_wordcount ==0 ) error("file '%s' contains no lines/columns\n\n",infilename);
 
-	if (colnames & colnamesfilename != NULL) 
+	if (colnames & colnamesfilename != NULL)
 	if ((line_wordcount - skipcols) != words_in_colnamesfile)
 			error("number of column names (%lu) does not macth number of data columns (%lu)\n\n",words_in_colnamesfile,(line_wordcount-skipcols));
 
@@ -175,7 +176,7 @@ int main(int argc, char * argv[])
 
 	std::cout << "number of variables in FVF-file '" << outfilename << "' will be " << out_nvars << "\n\n";
 
-	filevector<float> outdata(outfilename, (unsigned int) 64); // this is not nice - fixed cache-size of 16 Mb
+	filevector<float> outdata(outfilename, (unsigned long int) 64); // this is not nice - fixed cache-size of 16 Mb
 
 	fixedchar tmpname;
 
@@ -266,7 +267,7 @@ int main(int argc, char * argv[])
 
 	}
 // from-memory block finished
-	
+
 
 // free up the RAM
 	delete [] data;

@@ -15,8 +15,9 @@
 #include "frutil.h"
 #include "frerror.h"
 
+#include "DatABELBaseCPP.h"
 
-template <class DT> class filevector
+template <class DT> class filevector: public DatABELBaseCPP<DT>
 {
 public:
 	char * filename;
@@ -50,7 +51,7 @@ public:
 
 // these ones are the actual used to initializ and free up
 	void initialize(char * filename_toload, unsigned long int cachesizeMb);
-	void free_filevector();
+	void free_resources();
 // this one updates cache
 	void update_cache(unsigned long int from_var);
 // gives element number from nvar & nobs
@@ -59,8 +60,8 @@ public:
 // getting and setting var/col names
 	void set_variable_name(unsigned long int nvar, fixedchar name);
 	void set_observation_name(unsigned long int nobs, fixedchar name);
-	fixedchar get_variable_name(unsigned long int nvar);
-	fixedchar get_observation_name(unsigned long int nobs);
+	fixedchar read_variable_name(unsigned long int nvar);
+	fixedchar read_observation_name(unsigned long int nobs);
 
 // USER FUNCTIONS
 // can read single variable
@@ -90,14 +91,14 @@ filevector<DT>::filevector()
 }
 
 
-template <class DT>
-filevector<DT>::~filevector()
-{
-	free_filevector();
-}
+//template <class DT>
+//filevector<DT>::~filevector()
+//{
+	//free_resources();
+//}
 
 template <class DT>
-void filevector<DT>::free_filevector()
+void filevector<DT>::free_resources()
 {
 	if (connected) {
 		data_file.seekp(sizeof(data_type), std::ios::beg);
@@ -119,11 +120,18 @@ void filevector<DT>::free_filevector()
 }
 
 template <class DT>
-filevector<DT>::filevector(char * filename_toload, unsigned long int cachesizeMb)
+filevector<DT>::filevector(char * filename_toload, unsigned long int cachesizeMb): DatABELBaseCPP<DT>::DatABELBaseCPP(filename_toload,cachesizeMb)
 {
 	connected = 0;
 	initialize(filename_toload,cachesizeMb);
 }
+
+template <class DT>
+filevector<DT>::~filevector()
+{
+    free_resources();
+}
+
 
 template <class DT>
 void filevector<DT>::initialize(char * filename_toload, unsigned long int cachesizeMb)
@@ -167,9 +175,9 @@ void filevector<DT>::initialize(char * filename_toload, unsigned long int caches
 
 	// temp fix because nelements is not yet long ... !!!
 //	unsigned long int estimated_size = data_type.bytes_per_record*data_type.nelements + header_size;
-	unsigned long int estimated_size = 
-			(unsigned long int) data_type.bytes_per_record * 
-			(unsigned long int) data_type.nvariables * 
+	unsigned long int estimated_size =
+			(unsigned long int) data_type.bytes_per_record *
+			(unsigned long int) data_type.nvariables *
 			(unsigned long int) data_type.nobservations + (unsigned long int) header_size;
 	if (estimated_size != filestatus.st_size)
 		error("actual file size (%lu) differ from the expected (%lu) [%lu,%lu]",
@@ -227,7 +235,7 @@ void filevector<DT>::update_cache(unsigned long int from_var)
 					   data_type.bytes_per_record*data_type.nobservations*sizeof(char);
 	}
 //	std::cout << "updating cache: " << in_cache_from << " - " << in_cache_to << "\n";
-	unsigned long int internal_from = header_size + 
+	unsigned long int internal_from = header_size +
 			in_cache_from*data_type.nobservations*data_type.bytes_per_record*sizeof(char);
 //	std::cout << "position = " << internal_from << "\n";
 	data_file.seekg(internal_from, std::ios::beg);
@@ -247,7 +255,7 @@ void filevector<DT>::update_cache(unsigned long int from_var)
 		} else {
 			data_file.read((char*)(char_buffer+nbytes_finished),nbytes_togo);
 			if (!data_file) error("failed to read cache from file '%s'\n",filename);
-			nbytes_finished += nbytes_togo; 
+			nbytes_finished += nbytes_togo;
 			nbytes_togo -= nbytes_togo;
 		}
 	}
@@ -276,14 +284,14 @@ void filevector<DT>::set_observation_name(unsigned long int nobs, fixedchar name
 
 
 template <class DT>
-fixedchar filevector<DT>::get_variable_name(unsigned long int nvar)
+fixedchar filevector<DT>::read_variable_name(unsigned long int nvar)
 {
 	if (nvar>=data_type.nvariables) error("trying to get name of var out of range");
 	return(variable_names[nvar]);
 }
 
 template <class DT>
-fixedchar filevector<DT>::get_observation_name(unsigned long int nobs)
+fixedchar filevector<DT>::read_observation_name(unsigned long int nobs)
 {
 	if (nobs>=data_type.nobservations) error("trying to get name of obs out of range");
 	return(observation_names[nobs]);
@@ -351,3 +359,4 @@ void filevector<DT>::write_element(unsigned long int nvar, unsigned long int nob
 
 
 #endif
+
