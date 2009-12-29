@@ -81,6 +81,7 @@ public:
 
 };
 
+/** does not compile DatABEL if this is uncommented
 template <class DT>
 filevector<DT>::filevector()
 {
@@ -89,6 +90,7 @@ filevector<DT>::filevector()
 //TMP
 //	printf("contructor...\n");
 }
+**/
 
 
 //template <class DT>
