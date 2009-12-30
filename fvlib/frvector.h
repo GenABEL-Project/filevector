@@ -81,17 +81,6 @@ public:
 
 };
 
-/** does not compile DatABEL if this is uncommented
-template <class DT>
-filevector<DT>::filevector()
-{
-	connected = 0;
-	data_type.nvariables = data_type.nobservations = 0;
-//TMP
-//	printf("contructor...\n");
-}
-**/
-
 
 //template <class DT>
 //filevector<DT>::~filevector()
