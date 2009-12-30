@@ -1,4 +1,3 @@
-
 VERSION = 0.0-8
 SRCDIR = fvfutil
 LIBDIR = fvlib
@@ -10,6 +9,7 @@ MERGEVARS = $(BINDIR)/mergevars
 #RSHLIB = $(BINDIR)/filevector.so
 
 READSPEED = $(BINDIR)/readspeed
+READVARIABLE = $(BINDIR)/readvariable
 
 # GNU compiler
 CPP = g++
@@ -44,8 +44,12 @@ DatABELdis: clean
 
 clean: 
 	rm -f $(BINDIR)/* $(SRCDIR)/*.o  $(LIBDIR)/*.o
-#clean: 
-#	rm -f $(BINDIR)/* $(SRCDIR)/*.o  $(LIBDIR)/*.o $(DASRCDIR)/*o
+
+
+readvariable : $(READVARIABLE)
+
+$(READVARIABLE): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadVariableTest.cpp
+	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/ReadVariableTest.cpp -o $(READVARIABLE)
 
 readspeed : $(READSPEED)
 
