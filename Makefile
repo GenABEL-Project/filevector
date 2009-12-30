@@ -2,23 +2,28 @@
 VERSION = 0.0-8
 SRCDIR = fvfutil
 LIBDIR = fvlib
+TESTSDIR = tests
 #DASRCDIR = DatABEL/src
 BINDIR = bin
 TEXT2FVF = $(BINDIR)/text2fvf
 MERGEVARS = $(BINDIR)/mergevars
 #RSHLIB = $(BINDIR)/filevector.so
 
+READSPEED = $(BINDIR)/readspeed
+
 # GNU compiler
 CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 -m64
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 #-m64
 
 EXECS = $(TEXT2FVF) $(MERGEVARS)
 
 LIBFILES = $(LIBDIR)/*.cpp $(LIBDIR)/*.h
 REGFILES = $(SRCDIR)/usage.cpp $(SRCDIR)/usage.h
+
+TESTSFILES = $(TESTSDIR)/*.cpp $(TESTSDIR)/*.h
 
 all: $(EXECS) # $(RSHLIB)
 
@@ -41,3 +46,8 @@ clean:
 	rm -f $(BINDIR)/* $(SRCDIR)/*.o  $(LIBDIR)/*.o
 #clean: 
 #	rm -f $(BINDIR)/* $(SRCDIR)/*.o  $(LIBDIR)/*.o $(DASRCDIR)/*o
+
+readspeed : $(READSPEED)
+
+$(READSPEED): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadSpeed.cpp
+	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/ReadSpeed.cpp  -o $(READSPEED)
