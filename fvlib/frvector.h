@@ -103,11 +103,11 @@ void filevector<DT>::free_resources()
 		delete [] char_buffer;
 		delete [] observation_names;
 		delete [] variable_names;
-		std::cout << "!!! destr + free !!!\n";
+//		std::cout << "!!! destr + free !!!\n";
 	}
 	connected = 0;
 	data_file.close();
-	std::cout << "!!! destr !!!\n";
+//	std::cout << "!!! destr !!!\n";
 }
 
 template <class DT>
@@ -127,7 +127,7 @@ filevector<DT>::~filevector()
 template <class DT>
 void filevector<DT>::initialize(char * filename_toload, unsigned long int cachesizeMb)
 {
-	if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported");
+	if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported\n");
 
 //	if (char_buffer != NULL) error("B: trying to ini already ini-ed object!\n\n");
 	if (connected) error("trying to ini already ini-ed object!\n\n");
