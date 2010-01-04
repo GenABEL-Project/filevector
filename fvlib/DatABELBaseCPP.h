@@ -16,6 +16,9 @@ template <class DT> class DatABELBaseCPP
     //	required:
     DatABELBaseCPP(char * filename_toload, unsigned long int desired_cache_size_Mb, int oFlag, int dbFormat){};
 
+    virtual unsigned int get_nvariables() = 0;
+    virtual unsigned int get_nobservations() = 0;
+
  // can read single variable
 	virtual void read_variable(unsigned long int nvar, DT * outvec) = 0;
 // should only be used for reading single random elements!

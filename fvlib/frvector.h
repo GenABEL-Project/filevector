@@ -60,6 +60,10 @@ public:
 // getting and setting var/col names
 	void set_variable_name(unsigned long int nvar, fixedchar name);
 	void set_observation_name(unsigned long int nobs, fixedchar name);
+
+	unsigned int get_nvariables();
+    unsigned int get_nobservations();
+
 	fixedchar read_variable_name(unsigned long int nvar);
 	fixedchar read_observation_name(unsigned long int nobs);
 
@@ -346,6 +350,27 @@ void filevector<DT>::write_element(unsigned long int nvar, unsigned long int nob
 	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
 	data_file.seekp(header_size+pos*sizeof(DT), std::ios::beg);
 	data_file.write((char*)&data,sizeof(DT));
+}
+
+template <class DT>
+unsigned int filevector<DT>::get_nvariables()
+{
+   if(!connected)
+   {
+       error("cannot return nvariables, not connected\n");
+   }
+   return data_type.nvariables;
+}
+
+
+template <class DT>
+unsigned int filevector<DT>::get_nobservations()
+{
+   if(!connected)
+   {
+       error("cannot return nvariables, not connected\n");
+   }
+   return data_type.nobservations;
 }
 
 
