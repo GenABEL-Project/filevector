@@ -10,6 +10,7 @@ MERGEVARS = $(BINDIR)/mergevars
 
 READSPEED = $(BINDIR)/readspeed
 READVARIABLE = $(BINDIR)/readvariable
+MODIFTEST = $(BINDIR)/modificationtest
 
 # GNU compiler
 CPP = g++
@@ -17,7 +18,7 @@ CPP = g++
 # CPP = CC
 
 CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 #-m64
-
+CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS)
 
 LIBFILES = $(LIBDIR)/*.cpp $(LIBDIR)/*.h
@@ -52,6 +53,9 @@ $(READVARIABLE): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadVariableTest.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/ReadVariableTest.cpp -o $(READVARIABLE)
 
 readspeed : $(READSPEED)
-
 $(READSPEED): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadSpeed.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/ReadSpeed.cpp  -o $(READSPEED)
+
+modificationtest : $(MODIFTEST)
+$(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.cpp
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/FileModificationTest.cpp  -o $(MODIFTEST)
