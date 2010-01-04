@@ -6,9 +6,6 @@
 template <class DT> class DatABELBaseCPP
 {
     public:
-	// HIGH
-	// unsigned long int nvariables, nobservations;
-
     // constructor
     // current:
 
