@@ -368,7 +368,7 @@ unsigned int filevector<DT>::get_nobservations()
 {
    if(!connected)
    {
-       error("cannot return nvariables, not connected\n");
+       error("cannot return nobservations, not connected\n");
    }
    return data_type.nobservations;
 }
