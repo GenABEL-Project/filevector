@@ -17,6 +17,10 @@ template <class DT> class DatABELBaseCPP
     //	required:
     DatABELBaseCPP(string filename_toload, unsigned long int desired_cache_size_Mb, int oFlag, int dbFormat){};
 
+    // added free_resources
+
+    virtual void free_resources() = 0;
+
     virtual unsigned int get_nvariables() = 0;
     virtual unsigned int get_nobservations() = 0;
 
