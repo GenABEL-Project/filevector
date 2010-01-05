@@ -1,0 +1,1 @@
+This is dir with data files for filevector tests. The files are not committed to svn because they are huge.
