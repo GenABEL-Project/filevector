@@ -6,6 +6,7 @@
 
 
 #include <frvector.h>
+#include "TestUtil.h"
 
 using namespace std;
 
@@ -17,18 +18,6 @@ class FileModificationTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
 public:
-
-    static string base_dir;
-    string detect_base_dir(string binpath);
-
-    float random_float()
-    {
-        float scale=RAND_MAX+1.;
-        float base=rand()/scale;
-        float fine=rand()/scale;
-        return base+fine/scale;
-    };
-
     /* make full path to file being written */
     string get_file_name_to_write();
 
@@ -61,7 +50,7 @@ public:
         {
             int var_num = (rand()%fv.get_nvariables())+1;
             int obs_num = (rand()%fv.get_nobservations())+1;
-            float tmp_elem = random_float();
+            float tmp_elem = TestUtil::random_float();
             fv.write_element( var_num, obs_num, tmp_elem);
         }
         cout << "wrote "<< el_write_count <<" elements\n";
