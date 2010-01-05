@@ -52,7 +52,7 @@ public:
 // constructor based on initialize
 	filevector(string filename_toload, unsigned long int cachesizeMb);
 
-// these ones are the actual used to initializ and free up
+// these ones are the actual used to initialize and free up
 	void initialize(string filename_toload, unsigned long int cachesizeMb);
 	void free_resources();
 // this one updates cache
@@ -325,6 +325,20 @@ void filevector<DT>::write_variable(unsigned long int nvar, DT * datavec)
 	data_file.seekp(header_size+pos*sizeof(DT), std::ios::beg);
 	data_file.write((char*)datavec,sizeof(DT)*data_type.nobservations);
 	if (!data_file) error ("failed to write to data file\n");
+
+	//update data in cache
+	cout << "var:"<< nvar << ",cache from :"<< in_cache_from << ", to: "<< in_cache_from  << endl;
+
+	if (nvar >= in_cache_from && nvar <= in_cache_to)
+	{
+	    cout<< "updating data in cache" << endl;
+	    unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations;
+		for (unsigned long int i = 0;i<data_type.nobservations;i++)
+		{
+			cached_data[offset+i]= datavec[i];
+    }
+	}
+
 //TMP
 //	for (unsigned int i=0;i<data_type.nobservations;i++) std::cout << " " << datavec[i];
 }
@@ -342,6 +356,7 @@ unsigned long int filevector<DT>::nrnc_to_nelem(unsigned long int nvar, unsigned
 template <class DT>
 DT filevector<DT>::read_element(unsigned long int nvar, unsigned long int nobs)
 {
+    //todo use cache
 	DT out;
 	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
 	data_file.seekg(header_size+pos*sizeof(DT), std::ios::beg);

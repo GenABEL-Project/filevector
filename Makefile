@@ -11,13 +11,15 @@ MERGEVARS = $(BINDIR)/mergevars
 READSPEED = $(BINDIR)/readspeed
 READVARIABLE = $(BINDIR)/readvariable
 MODIFTEST = $(BINDIR)/modificationtest
+UNITTEST = $(BINDIR)/fvunittest
+
 
 # GNU compiler
 CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 #-m64
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 -m64
 CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS)
 
@@ -59,3 +61,7 @@ $(READSPEED): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadSpeed.cpp
 modificationtest : $(MODIFTEST)
 $(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FileModificationTest.cpp  -o $(MODIFTEST)
+
+unittest : $(UNITTEST)
+$(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FVUnitTest.cpp
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FVUnitTest.cpp  -o $(UNITTEST)
