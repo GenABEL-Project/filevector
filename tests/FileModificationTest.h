@@ -9,6 +9,7 @@
 
 using namespace std;
 
+
 class FileModificationTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE( FileModificationTest );
@@ -17,19 +18,29 @@ class FileModificationTest : public CppUnit::TestFixture
 
 public:
 
+    static string base_dir;
+    string detect_base_dir(string binpath);
+
     float random_float()
     {
         float scale=RAND_MAX+1.;
         float base=rand()/scale;
         float fine=rand()/scale;
         return base+fine/scale;
-    }
+    };
 
+    /* make full path to file being written */
+    string get_file_name_to_write();
+
+    /*
+     * TODO Spec is not clear here, need to clarify what to test and how
+     */
     void testRandomWrite()
     {
-        char * file_name = (char * )"/home/chernyh/work/projects/cpp/data/2write/modify_me.fvf";
+        string file_name = get_file_name_to_write();
+        cout<< "full path:" << get_file_name_to_write() << endl;
         filevector<float> fv( file_name, 64 );
-        std::cout <<  "fv.get_nvariables():" << fv.get_nvariables() << "\n";
+        std::cout << "fv.get_nvariables():" << fv.get_nvariables() << "\n";
         CPPUNIT_ASSERT(fv.get_nvariables() == 33815 );
 
         int var_write_count = fv.get_nvariables() / 1000;
@@ -56,6 +67,10 @@ public:
         cout << "wrote "<< el_write_count <<" elements\n";
 
         cout << "done\n";
+    }
+
+    void testWriteBigFile()
+    {
 
     }
 };
