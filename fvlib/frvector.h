@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <climits>
 #include <new>
+#include <string>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -17,10 +18,12 @@
 
 #include "DatABELBaseCPP.h"
 
+using namespace std;
+
 template <class DT> class filevector: public DatABELBaseCPP<DT>
 {
 public:
-	char * filename;
+	string filename;
 	std::fstream data_file;
 	fr_type data_type;
 // row and column names
@@ -47,10 +50,10 @@ public:
 	~filevector();
 
 // constructor based on initialize
-	filevector(char * filename_toload, unsigned long int cachesizeMb);
+	filevector(string filename_toload, unsigned long int cachesizeMb);
 
 // these ones are the actual used to initializ and free up
-	void initialize(char * filename_toload, unsigned long int cachesizeMb);
+	void initialize(string filename_toload, unsigned long int cachesizeMb);
 	void free_resources();
 // this one updates cache
 	void update_cache(unsigned long int from_var);
@@ -115,7 +118,7 @@ void filevector<DT>::free_resources()
 }
 
 template <class DT>
-filevector<DT>::filevector(char * filename_toload, unsigned long int cachesizeMb): DatABELBaseCPP<DT>::DatABELBaseCPP(filename_toload,cachesizeMb)
+filevector<DT>::filevector(string filename_toload, unsigned long int cachesizeMb): DatABELBaseCPP<DT>::DatABELBaseCPP(filename_toload,cachesizeMb)
 {
 	connected = 0;
 	initialize(filename_toload,cachesizeMb);
@@ -129,7 +132,7 @@ filevector<DT>::~filevector()
 
 
 template <class DT>
-void filevector<DT>::initialize(char * filename_toload, unsigned long int cachesizeMb)
+void filevector<DT>::initialize(string filename_toload, unsigned long int cachesizeMb)
 {
 	if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported\n");
 
@@ -137,16 +140,19 @@ void filevector<DT>::initialize(char * filename_toload, unsigned long int caches
 	if (connected) error("trying to ini already ini-ed object!\n\n");
 	filename = filename_toload;
 	struct stat filestatus;
-	stat( filename_toload , &filestatus);
+	stat( filename_toload.c_str() , &filestatus);
 
 	if (filestatus.st_size < sizeof(data_type))
-		error("file %s is too short to contain an FVF-object\n",filename_toload);
+		error("file %s is too short to contain an FVF-object\n",filename_toload.c_str());
 
-	data_file.open(filename_toload, std::ios::out | std::ios::in | std::ios::binary);
-	if (!data_file)
-		error("opening file %s for write & read failed\n",filename_toload);
+	data_file.open(filename_toload.c_str(), std::ios::out | std::ios::in | std::ios::binary);
+	if (data_file.fail())
+		error("opening file %s for write & read failed\n",filename_toload.c_str());
+
 	data_file.read((char*)&data_type,sizeof(data_type));
-	if (!data_file) error("failed to read datainfo from file '%s'\n",filename_toload);
+	if (data_file.fail())
+        error("failed to read datainfo from file '%s'\n",filename_toload.c_str());
+
 // some integrity checks
 	if (sizeof(DT) != data_type.bytes_per_record)
 		error("system data type size (%d) and file data type size (%d) do not match\n",
@@ -236,7 +242,7 @@ void filevector<DT>::update_cache(unsigned long int from_var)
 	data_file.seekg(internal_from, std::ios::beg);
 	if (current_cache_size_bytes <= max_buffer_size_bytes) {
 		data_file.read((char*)char_buffer,current_cache_size_bytes);
-		if (!data_file) error("failed to read cache from file '%s'\n",filename);
+		if (!data_file) error("failed to read cache from file '%s'\n",filename.c_str());
 	} else {
 // cache size is bigger than what we can read in one go ... read in blocks
 		unsigned long int nbytes_togo = current_cache_size_bytes;
@@ -244,12 +250,12 @@ void filevector<DT>::update_cache(unsigned long int from_var)
 		while (nbytes_togo>0)
 		if (nbytes_togo > max_buffer_size_bytes) {
 			data_file.read((char*)(char_buffer+nbytes_finished),max_buffer_size_bytes);
-			if (!data_file) error("failed to read cache from file '%s'\n",filename);
+			if (!data_file) error("failed to read cache from file '%s'\n",filename.c_str());
 			nbytes_finished += max_buffer_size_bytes;
 			nbytes_togo -= max_buffer_size_bytes;
 		} else {
 			data_file.read((char*)(char_buffer+nbytes_finished),nbytes_togo);
-			if (!data_file) error("failed to read cache from file '%s'\n",filename);
+			if (!data_file) error("failed to read cache from file '%s'\n",filename.c_str());
 			nbytes_finished += nbytes_togo;
 			nbytes_togo -= nbytes_togo;
 		}
@@ -340,7 +346,7 @@ DT filevector<DT>::read_element(unsigned long int nvar, unsigned long int nobs)
 	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
 	data_file.seekg(header_size+pos*sizeof(DT), std::ios::beg);
 	data_file.read((char*)&out,sizeof(DT));
-	if (!data_file) error("failed to read an element from file '%s'\n",filename);
+	if (!data_file) error("failed to read an element from file '%s'\n",filename.c_str());
 	return(out);
 }
 

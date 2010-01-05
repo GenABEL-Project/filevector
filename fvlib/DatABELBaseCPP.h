@@ -1,7 +1,11 @@
 #ifndef __DatABELBaseCPP__
 #define __DatABELBaseCPP__
 
+#include <string>
+
 #include "frutil.h"
+
+using namespace std;
 
 template <class DT> class DatABELBaseCPP
 {
@@ -9,9 +13,9 @@ template <class DT> class DatABELBaseCPP
     // constructor
     // current:
 
-    DatABELBaseCPP(char * filename_toload, unsigned long int cachesizeMb){};
+    DatABELBaseCPP(string filename_toload, unsigned long int cachesizeMb){};
     //	required:
-    DatABELBaseCPP(char * filename_toload, unsigned long int desired_cache_size_Mb, int oFlag, int dbFormat){};
+    DatABELBaseCPP(string filename_toload, unsigned long int desired_cache_size_Mb, int oFlag, int dbFormat){};
 
     virtual unsigned int get_nvariables() = 0;
     virtual unsigned int get_nobservations() = 0;
