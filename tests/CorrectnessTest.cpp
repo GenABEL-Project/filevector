@@ -1,45 +1,30 @@
-#include "DatABELBaseCPP.h"
 #include "CorrectnessTest.h"
 #include "TestUtil.h"
 
+#include "frvector.h"
+
 using namespace std;
 
-void CorrectnessTest::runTest(){
-	if ( argc<2 )
-	{
-		std::cout << "Please provide filename!"<< "\n";
-		exit ( 1 );
-	}
-	unsigned long int cachesize = 64;
-	char * ifname1 = argv[1];
-	filevector<float> indata1( ifname1, cachesize );
+void CorrectnessTest::runTest() {
+    string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.1-22.collected.ped.out.mldose.fvf");
+	filevector<float> data( inputFile, 64 );
 
-	std::cout << "Reading file:" << ifname1 << "\n";
-	std::cout << "Variables:" << indata1.get_nvariables() << "\n";
-	std::cout << "Observations:" << indata1.get_nobservations() << "\n";
+	std::cout << "Reading file:" << inputFile << endl;
 
-	float * tmpdat = new ( std::nothrow ) float [indata1.get_nobservations()];
-	if(!tmpdat )
-	{
-		std::cout << "Cannot allocate buffer" << "\n";
-		exit(1);
-	}
+	unsigned long numVariables = data.get_nvariables();
+	unsigned long numObservations = data.get_nobservations();
 
-	for ( unsigned long int i=0 ; i < indata1.get_nvariables() ; i++ )
+	float* tmpdat = new float[numVariables];
+
+	for ( unsigned long i = 0 ; i < numVariables ; i++ )
 	{
-		indata1.read_variable( i,tmpdat );
-		if( i % 10000 == 0 )
-		{
-			std::cout << "Read:"<< i << " variables \n";
-		}
+		data.read_variable(i, &tmpdat[i]);
 	}
 
 	delete[] tmpdat;
-	std::cout << "Finished";
 
+	std::cout << "Finished" << endl;
 
-//  cout << "test" << endl;
-//    DatAbelBaseCPP fv = filevector();
 }
 
 int main(){

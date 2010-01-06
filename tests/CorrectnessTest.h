@@ -4,7 +4,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/Asserter.h>
 
-class CorrectnessTest : public CppUnit::TestFixture { 
+class CorrectnessTest : public CppUnit::TestFixture {
     void runTest();
     
     CPPUNIT_TEST_SUITE( CorrectnessTest );
