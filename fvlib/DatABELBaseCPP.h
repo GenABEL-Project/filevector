@@ -52,6 +52,14 @@ template <class DT> class DatABELBaseCPP
 //    virtual void write_observation(unsigned long int nobs, DT * invec) = 0;
 
 	virtual void save( string new_file_name ) = 0;
+	/*
+    * Save specified vars to new file
+	*/
+	virtual void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes) = 0;
+	/*
+    * Save specified observations to new file 
+	*/
+//	virtual void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes) = 0;
 
 };
 

@@ -81,6 +81,7 @@ public:
 	void write_element(unsigned long int nvar, unsigned long int nobs, DT data);
 
 	void save( string new_file_name );
+	void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes);
 
 // FOR FUTURE:
 // very slow one!
@@ -337,7 +338,7 @@ void filevector<DT>::write_variable(unsigned long int nvar, DT * datavec)
 	    unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations;
 		for (unsigned long int i = 0;i<data_type.nobservations;i++)
 		{
-			cached_data[offset+i]= datavec[i];
+		    cached_data[offset+i]= datavec[i];
         }
 	}
 
@@ -415,6 +416,31 @@ void filevector<DT>::save( string new_file_name )
         outdata.write_variable_name( i, read_variable_name(i));
         //write variables
         read_variable(i,tmpvariable);
+        outdata.write_variable(i,tmpvariable);
+    }
+}
+
+
+template <class DT>
+void filevector<DT>::save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes)
+{
+    initialize_empty_file( (char *)new_file_name.c_str(), nvars, get_nobservations(), data_type.type);
+    filevector<float> outdata( new_file_name, 64 );//todo which size for cache to use?
+
+    // copy observation names from the first object
+  	for (unsigned long int i=0;i<get_nobservations();i++)
+  	    outdata.write_observation_name( i, read_observation_name( i ) );
+
+    float * tmpvariable = new (std::nothrow) float[get_nobservations()];
+    if (!tmpvariable) error("can not allocate memory for tmpvariable\n\n");
+
+    for ( unsigned long int i=0 ; i<nvars ; i++ )
+    {
+        unsigned long int selected_index =  varindexes[i];
+        //write var names
+        outdata.write_variable_name( i, read_variable_name(selected_index ));
+        //write variables
+        read_variable(selected_index,tmpvariable);
         outdata.write_variable(i,tmpvariable);
     }
 }
