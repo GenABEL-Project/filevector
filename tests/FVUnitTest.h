@@ -24,6 +24,7 @@ class FVUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST( testCacheUpdatedOnWrite );
     CPPUNIT_TEST( test_write_variable_name );
     CPPUNIT_TEST( test_write_observation_name );
+    CPPUNIT_TEST( test_save );
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -83,7 +84,31 @@ public:
         CPPUNIT_ASSERT_EQUAL( string(_fc_obsname_saved.name), string(_fc_obsname_loaded.name) );
     }
 
+    void test_save()
+    {
+        string src_file_name = get_file_name_to_write();
+        string dest_file_name = src_file_name + "_copy";
+        filevector<float> fv( src_file_name, 2 );//no need in big cache
+        fv.save( dest_file_name );
+
+        filevector<float> fv_copy( dest_file_name, 2 );
+        CPPUNIT_ASSERT_EQUAL(fv.get_nobservations(),fv_copy.get_nobservations());
+        CPPUNIT_ASSERT_EQUAL(fv.get_nvariables(),fv_copy.get_nvariables());
+
+        for(unsigned long int i=0;i<fv.get_nvariables();i++)
+        {
+            CPPUNIT_ASSERT_EQUAL( string(fv.read_variable_name( i ).name),string(fv_copy.read_variable_name( i ).name));
+        }
+
+        for(unsigned long int i=0;i<fv.get_nobservations();i++)
+        {
+            CPPUNIT_ASSERT_EQUAL( string(fv.read_observation_name( i ).name),string(fv_copy.read_observation_name( i ).name));
+        }
+        
+    }
 };
+
+
 
 #endif
 

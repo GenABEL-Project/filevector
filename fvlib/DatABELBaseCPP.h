@@ -51,6 +51,8 @@ template <class DT> class DatABELBaseCPP
 //	virtual void read_observation(unsigned long int nobs, DT * outvec) = 0;
 //    virtual void write_observation(unsigned long int nobs, DT * invec) = 0;
 
+	virtual void save( string new_file_name ) = 0;
+
 };
 
 #endif
