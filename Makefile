@@ -56,12 +56,12 @@ $(CORRECTNESSTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/CorrectnessTest.cpp
 
 readspeed : $(READSPEED)
 $(READSPEED): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadSpeed.cpp
-	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/ReadSpeed.cpp  -o $(READSPEED)
+	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(LIBDIR)/*.h $(TESTSDIR)/ReadSpeed.cpp  -o $(READSPEED)
 
 modificationtest : $(MODIFTEST)
 $(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.cpp
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FileModificationTest.cpp  -o $(MODIFTEST)
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(LIBDIR)/*.h $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FileModificationTest.cpp  -o $(MODIFTEST)
 
 unittest : $(UNITTEST)
 $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FVUnitTest.cpp
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FVUnitTest.cpp  -o $(UNITTEST)
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(LIBDIR)/*.h $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FVUnitTest.cpp  -o $(UNITTEST)
