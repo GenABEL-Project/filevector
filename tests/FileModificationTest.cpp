@@ -14,12 +14,8 @@ string FileModificationTest::get_file_name_to_write()
 
 int main( int argc, char **argv)
 {
-    string file_name = get_file_name_to_write();
-
     TestUtil::detect_base_dir(string(argv[0]));
-    filevector<float> indata1( ifname1, cachesize );
-
-    cout << "base_dir:" << TestUtil::get_base_dir() << endl;
+    cout << "base_dir :" << TestUtil::get_base_dir() << "\n";
 
     CppUnit::TextUi::TestRunner runner;
     runner.addTest( FileModificationTest::suite() );
