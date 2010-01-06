@@ -9,7 +9,7 @@ MERGEVARS = $(BINDIR)/mergevars
 #RSHLIB = $(BINDIR)/filevector.so
 
 READSPEED = $(BINDIR)/readspeed
-READVARIABLE = $(BINDIR)/readvariable
+CORRECTNESSTEST = $(BINDIR)/correctnesstest
 MODIFTEST = $(BINDIR)/modificationtest
 UNITTEST = $(BINDIR)/fvunittest
 
@@ -49,10 +49,10 @@ clean:
 	rm -f $(BINDIR)/* $(SRCDIR)/*.o  $(LIBDIR)/*.o
 
 
-readvariable : $(READVARIABLE)
+correctnesstest : $(CORRECTNESSTEST)
 
-$(READVARIABLE): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadVariableTest.cpp
-	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/ReadVariableTest.cpp -o $(READVARIABLE)
+$(CORRECTNESSTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/CorrectnessTest.cpp
+	$(CPP) $(CFLAGS) ${CPPUNITFLAGS} $(LIBDIR)/*.cpp $(TESTSDIR)/CorrectnessTest.cpp -o $(CORRECTNESSTEST)
 
 readspeed : $(READSPEED)
 $(READSPEED): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadSpeed.cpp
