@@ -41,8 +41,9 @@ template <class DT> class DatABELBaseCPP
 	// These are new functions
 // NEW -- TAKE CARE BOTH FILE AND CACHE ARE UPDATED
 
-   // virtual void write_variable_name(unsigned long int nvar,fixedchar newname) = 0;  // loooong future -- control that name is unique
-   // virtual void write_observation_name(unsigned long int nobs,fixedchar newname)= 0;  // loooong future -- control that name is unique!
+   virtual void write_variable_name(unsigned long int nvar, fixedchar newname) = 0;  // todo loooong future -- control that name is unique
+   virtual void write_observation_name(unsigned long int nobs, fixedchar newname)= 0;  //todo loooong future -- control that name is unique!
+
 // HIGH -- here I see the possibility to make these functions faster then "random" access functions
    // virtual void add_variable(DT * invec, fixedchar varname) = 0; // adds variable at the end = write_variable with nvar=NVARS?
                                                       // loooong future -- control that name is unique!

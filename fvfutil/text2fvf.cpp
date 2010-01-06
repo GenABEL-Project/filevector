@@ -189,9 +189,9 @@ int main(int argc, char * argv[])
 			stream_sline >> sword;
 			strcpy(tmpname.name,sword.c_str());
 			if (transpose)
-				outdata.set_observation_name(i,tmpname);
+				outdata.write_observation_name(i,tmpname);
 			else
-				outdata.set_variable_name(i,tmpname);
+				outdata.write_variable_name(i,tmpname);
 		}
 	} else {
 		std::ifstream colnamesfile(colnamesfilename);
@@ -201,9 +201,9 @@ int main(int argc, char * argv[])
 			colnamesfile >> tmpstr;
 			strcpy(tmpname.name,tmpstr.c_str());
 			if (transpose)
-				outdata.set_observation_name(i,tmpname);
+				outdata.write_observation_name(i,tmpname);
 			else
-				outdata.set_variable_name(i,tmpname);
+				outdata.write_variable_name(i,tmpname);
 		}
 		colnamesfile.close();
 	}
@@ -222,9 +222,9 @@ int main(int argc, char * argv[])
 				if (current_word == rownames) {
 					strcpy(tmpname.name,sword.c_str());
 					if (transpose)
-						outdata.set_variable_name(cline,tmpname);
+						outdata.write_variable_name(cline,tmpname);
 					else
-						outdata.set_observation_name(cline,tmpname);
+						outdata.write_observation_name(cline,tmpname);
 				} else if (current_word > skipcols) {
 					sscanf(sword.c_str(),"%f",&data[j++]);
 				}
