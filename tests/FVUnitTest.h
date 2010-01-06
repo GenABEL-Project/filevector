@@ -8,6 +8,10 @@
 #include <cppunit/Asserter.h>
 
 #include <string>
+#include <cstring>
+
+
+#include "frvector.h"
 
 using namespace std;
 
@@ -18,6 +22,8 @@ class FVUnitTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE( FVUnitTest );
     CPPUNIT_TEST( testCacheUpdatedOnWrite );
+    CPPUNIT_TEST( test_write_variable_name );
+    CPPUNIT_TEST( test_write_observation_name );
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -27,7 +33,7 @@ public:
     void testCacheUpdatedOnWrite()
     {
         string file_name = get_file_name_to_write();
-        filevector<float> fv( file_name, 64 );
+        filevector<float> fv( file_name, 2 );//no need in big cache
         float * var = new (std::nothrow) float [fv.get_nobservations()];
         fv.read_variable(0,var);
         float val = var[0];
@@ -42,6 +48,40 @@ public:
         CPPUNIT_ASSERT_EQUAL( var2[0] , newVal );
 
     };
+
+    void test_write_variable_name()
+    {
+        string file_name = get_file_name_to_write();
+        filevector<float> fv( file_name, 2 );//no need in big cache
+        fixedchar _fc_varname_saved;
+        strcpy(_fc_varname_saved.name,"testvarname");
+        fv.write_variable_name( 0, _fc_varname_saved );
+
+        fixedchar _fc_varname_loaded = fv.read_variable_name(0);
+        CPPUNIT_ASSERT_EQUAL( string(_fc_varname_saved.name), string(_fc_varname_loaded.name) );
+        fv.free_resources();
+
+        filevector<float> fv2( file_name, 2 );//reopen
+        _fc_varname_loaded = fv2.read_variable_name(0);
+        CPPUNIT_ASSERT_EQUAL( string(_fc_varname_saved.name), string(_fc_varname_loaded.name) );
+        
+    }
+    void test_write_observation_name()
+    {
+        string file_name = get_file_name_to_write();
+        filevector<float> fv( file_name, 2 );//no need in big cache
+        fixedchar _fc_obsname_saved;
+        strcpy(_fc_obsname_saved.name,"testvarname");
+        fv.write_observation_name( 0, _fc_obsname_saved );
+
+        fixedchar _fc_obsname_loaded = fv.read_observation_name(0);
+        CPPUNIT_ASSERT_EQUAL( string(_fc_obsname_saved.name), string(_fc_obsname_loaded.name) );
+        fv.free_resources();
+
+        filevector<float> fv2( file_name, 2 );//reopen
+        _fc_obsname_loaded = fv2.read_observation_name(0);
+        CPPUNIT_ASSERT_EQUAL( string(_fc_obsname_saved.name), string(_fc_obsname_loaded.name) );
+    }
 
 };
 
