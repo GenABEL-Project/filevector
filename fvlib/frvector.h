@@ -487,7 +487,7 @@ void filevector<DT>::save_obs( string new_file_name, unsigned long int nobss, un
         outdata.write_variable_name( i, read_variable_name(i));
         //write variables
         read_variable(i, in_variable);
-        //copy data do reduced struct for writing
+        //copy data to reduced struct for writing
         for ( unsigned long int j=0 ; j<nobss ; j++ )
         {
             out_variable[j] = in_variable[obsindexes[j]];
