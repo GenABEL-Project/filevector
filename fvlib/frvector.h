@@ -82,6 +82,7 @@ public:
 
 	void save( string new_file_name );
 	void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes);
+	void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes);
 
 // FOR FUTURE:
 // very slow one!
@@ -401,13 +402,13 @@ template <class DT>
 void filevector<DT>::save( string new_file_name )
 {
     initialize_empty_file( (char *)new_file_name.c_str(), get_nvariables(), get_nobservations(), data_type.type);
-    filevector<float> outdata( new_file_name, 64 );//todo which size for cache to use?
+    filevector<DT> outdata( new_file_name, 64 );//todo which size for cache to use?
 
     // copy observation names from the first object
   	for (unsigned long int i=0;i<get_nobservations();i++)
   	    outdata.write_observation_name( i, read_observation_name( i ) );
 
-    float * tmpvariable = new (std::nothrow) float[get_nobservations()];
+    DT * tmpvariable = new (std::nothrow) DT[get_nobservations()];
     if (!tmpvariable) error("can not allocate memory for tmpvariable\n\n");
 
     for (unsigned long int i=0 ; i<get_nvariables();i++)
@@ -418,6 +419,7 @@ void filevector<DT>::save( string new_file_name )
         read_variable(i,tmpvariable);
         outdata.write_variable(i,tmpvariable);
     }
+    delete [] tmpvariable;
 }
 
 
@@ -425,13 +427,13 @@ template <class DT>
 void filevector<DT>::save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes)
 {
     initialize_empty_file( (char *)new_file_name.c_str(), nvars, get_nobservations(), data_type.type);
-    filevector<float> outdata( new_file_name, 64 );//todo which size for cache to use?
+    filevector<DT> outdata( new_file_name, 64 );//todo which size for cache to use?
 
     // copy observation names from the first object
   	for (unsigned long int i=0;i<get_nobservations();i++)
   	    outdata.write_observation_name( i, read_observation_name( i ) );
 
-    float * tmpvariable = new (std::nothrow) float[get_nobservations()];
+    DT * tmpvariable = new (std::nothrow) DT[get_nobservations()];
     if (!tmpvariable) error("can not allocate memory for tmpvariable\n\n");
 
     for ( unsigned long int i=0 ; i<nvars ; i++ )
@@ -443,7 +445,43 @@ void filevector<DT>::save_vars( string new_file_name, unsigned long int nvars, u
         read_variable(selected_index,tmpvariable);
         outdata.write_variable(i,tmpvariable);
     }
+
+    delete [] tmpvariable;
 }
+
+template <class DT>
+void filevector<DT>::save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes)
+{
+    initialize_empty_file( (char *)new_file_name.c_str(), get_nvariables(), nobss, data_type.type);
+    filevector<DT> outdata( new_file_name, 64 );//todo which size for cache to use?
+
+    // copy observation names from the first object
+  	for( unsigned long int i=0 ; i < nobss ; i++ )
+  	    outdata.write_observation_name( i, read_observation_name( obsindexes[i] ) );
+
+    DT * in_variable = new (std::nothrow) DT[get_nobservations()];
+    if (!in_variable) error("can not allocate memory for tmpvariable\n\n");
+
+    DT * out_variable = new (std::nothrow) DT[nobss];
+    if (!out_variable) error("can not allocate memory for tmpvariable\n\n");
+    for ( unsigned long int i=0 ; i<get_nvariables() ; i++ )
+    {
+        //write var names
+        outdata.write_variable_name( i, read_variable_name(i));
+        //write variables
+        read_variable(i, in_variable);
+        //copy data do reduced struct for writing
+        for ( unsigned long int j=0 ; j<nobss ; j++ )
+        {
+            out_variable[j] = in_variable[obsindexes[j]];
+        }
+        outdata.write_variable(i,out_variable);
+    }
+
+    delete [] in_variable;
+    delete [] out_variable;
+}
+
 
 
 #endif

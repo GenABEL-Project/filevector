@@ -26,6 +26,7 @@ class FVUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST( test_write_observation_name );
     CPPUNIT_TEST( test_save );
     CPPUNIT_TEST( test_save_vars );
+    CPPUNIT_TEST( test_save_obs );
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -112,13 +113,26 @@ public:
     {
         string src_file_name = get_file_name_to_write();
         string dest_file_name = src_file_name + "_vars";
-        filevector<float> fv( src_file_name, 2 );//no need in big cache
-        unsigned long int var_indexes[2] =  {1,3};
-        fv.save_vars( dest_file_name, 2, var_indexes );
+        filevector<float> fv( src_file_name, 64 );
+        unsigned long int obs_indexes[2] =  {1,3};
+        fv.save_vars( dest_file_name, 2, obs_indexes );
 
         filevector<float> fv_copy( dest_file_name, 2 );
         CPPUNIT_ASSERT_EQUAL(fv.get_nobservations(),fv_copy.get_nobservations());
         CPPUNIT_ASSERT_EQUAL( (unsigned int )2 ,fv_copy.get_nvariables() );
+    }
+
+    void test_save_obs()
+    {
+        string src_file_name = get_file_name_to_write();
+        string dest_file_name = src_file_name + "_obs";
+        filevector<float> fv( src_file_name, 64 );
+        unsigned long int obs_indexes[2] =  {1,3};
+        fv.save_obs( dest_file_name, 2, obs_indexes );
+
+        filevector<float> fv_copy( dest_file_name, 2 );
+        CPPUNIT_ASSERT_EQUAL((unsigned int )2 ,fv_copy.get_nobservations());
+        CPPUNIT_ASSERT_EQUAL( fv.get_nvariables() ,fv_copy.get_nvariables() );
     }
 };
 

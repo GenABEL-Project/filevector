@@ -59,7 +59,7 @@ template <class DT> class DatABELBaseCPP
 	/*
     * Save specified observations to new file 
 	*/
-//	virtual void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes) = 0;
+	virtual void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes) = 0;
 
 };
 
