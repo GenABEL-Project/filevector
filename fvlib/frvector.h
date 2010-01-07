@@ -77,8 +77,12 @@ public:
 	DT read_element(unsigned long int nvar, unsigned long int nobs);
 // write single variable
 	void write_variable(unsigned long int nvar, DT * datavec);
+//	void add_variable(DT * invec, fixedchar varname);
 // write single element
 	void write_element(unsigned long int nvar, unsigned long int nobs, DT data);
+
+	void read_observation(unsigned long int nobs, DT * outvec);
+	void write_observation(unsigned long int nobs, DT * outvec);
 
 	void save( string new_file_name );
 	void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes);
@@ -338,6 +342,30 @@ void filevector<DT>::read_variable(unsigned long int nvar, DT * outvec)
 	}
 }
 
+template <class DT>
+void filevector<DT>::read_observation(unsigned long int nobs, DT * outvec)
+{
+	DT * tmpdata = new (std::nothrow) DT [get_nobservations()];
+	if(!tmpdata)
+		error("read_observation: cannot allocate tmpdata");
+
+	for( int i = 0; i< get_nvariables(); i++)
+	{
+		read_variable(i, tmpdata);
+		outvec[i] = tmpdata[nobs];
+	}
+	delete[] tmpdata;
+}
+
+template <class DT>
+void filevector<DT>::write_observation(unsigned long int nobs, DT * invec)
+{
+	for( int i = 0; i< get_nvariables(); i++)
+	{
+		write_element( i, nobs, invec[i] );
+	}
+}
+
 // can write single variable
 template <class DT>
 void filevector<DT>::write_variable(unsigned long int nvar, DT * datavec)
@@ -363,6 +391,12 @@ void filevector<DT>::write_variable(unsigned long int nvar, DT * datavec)
 //TMP
 //	for (unsigned int i=0;i<data_type.nobservations;i++) std::cout << " " << datavec[i];
 }
+
+//template <class DT>
+//void filevector<DT>::add_variable(DT * invec, fixedchar varname)
+//{
+//todo
+//}
 
 template <class DT>
 unsigned long int filevector<DT>::nrnc_to_nelem(unsigned long int nvar, unsigned long int nobs)
@@ -392,6 +426,13 @@ void filevector<DT>::write_element(unsigned long int nvar, unsigned long int nob
 	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
 	data_file.seekp(header_size+pos*sizeof(DT), std::ios::beg);
 	data_file.write((char*)&data,sizeof(DT));
+
+	if (nvar >= in_cache_from && nvar <= in_cache_to)
+	{
+//        cout<< "write_element:updating data in cache" << endl;
+		unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations;
+		cached_data[offset+nobs]= data;
+	}
 }
 
 template <class DT>

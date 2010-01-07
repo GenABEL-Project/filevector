@@ -28,24 +28,27 @@ class FVUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST( test_save_vars );
     CPPUNIT_TEST( test_save_obs );
     CPPUNIT_TEST( test_set_cachesizeMb );
+    CPPUNIT_TEST( test_read_write_observation );
+
     CPPUNIT_TEST_SUITE_END();
 
 public:
 
     string get_file_name_to_write();
+    string get_dir_name_to_write();
 
     void testCacheUpdatedOnWrite()
     {
         string file_name = get_file_name_to_write();
         filevector<float> fv( file_name, 2 );//no need in big cache
-        float * var = new (std::nothrow) float [fv.get_nobservations()];
+        float * var = new float [fv.get_nobservations()];
         fv.read_variable(0,var);
         float val = var[0];
         float newVal = val+1.;
         var[0] = newVal;
         fv.write_variable(0,var);
 
-        float * var2 = new (std::nothrow) float [fv.get_nobservations()];
+        float * var2 = new float [fv.get_nobservations()];
         fv.read_variable(0,var2);
 
         cout<< "value from read():" << var2[0] << ",newVal: "<<newVal<< endl;
@@ -145,7 +148,7 @@ public:
         unsigned long int vars_capacity =11389 ;
         CPPUNIT_ASSERT_EQUAL( vars_capacity ,fv.cache_size_nvars );
 
-        float * var = new (std::nothrow) float [fv.get_nobservations()];
+        float * var = new float [fv.get_nobservations()];
         fv.read_variable(0,var);
         CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv.in_cache_from );
         CPPUNIT_ASSERT_EQUAL( vars_capacity-1, fv.in_cache_to );
@@ -164,6 +167,40 @@ public:
         delete var;
     }
 
+	void test_read_write_observation()
+	{
+		string tmp_file_name = get_dir_name_to_write()+"/tmp.dat";
+		initialize_empty_file( (char *)tmp_file_name.c_str(), 10,20, FLOAT);
+		filevector<float> fv( tmp_file_name, 1 );
+
+        float * var = new float [fv.get_nvariables()];
+        float * var2 = new float [fv.get_nvariables()];
+        for(int i = 0; i<fv.get_nvariables(); i++)
+        {
+            var[i] = i;
+		}
+
+        fv.write_observation(0,var);
+        fv.read_observation(0,var2);
+
+        CPPUNIT_ASSERT( compare_arrays(var, var2 , fv.get_nvariables()));
+
+        delete var;
+        delete var2;
+	}
+
+	bool compare_arrays(float * a1,float * a2, int size)
+	{
+		for(int i =0; i< size ; i++)
+		{
+			if(a1[i] != a2[i])
+			{
+			  cout<< "compare_arrays: " << i<<" elements not equal:"<< a1[i]<<","<<a2[i]<<endl; 
+			  return false;
+			}
+		}
+		return true;
+	}
 };
 
 

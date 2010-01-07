@@ -13,6 +13,11 @@ string FVUnitTest::get_file_name_to_write()
     return TestUtil::get_base_dir() + string("/../tests/data/2write/modify_me.fvf");
 }
 
+string FVUnitTest::get_dir_name_to_write()
+{
+    return TestUtil::get_base_dir() + string("/../tests/data/2write");
+}
+
 
 int main( int argc, char **argv)
 {
