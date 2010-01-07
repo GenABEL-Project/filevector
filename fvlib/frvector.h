@@ -84,6 +84,8 @@ public:
 	void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes);
 	void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes);
 
+	void set_cachesizeMb( unsigned long int cachesizeMb );
+
 // FOR FUTURE:
 // very slow one!
 //	DT * read_observation(unsigned long int nobs);
@@ -125,6 +127,7 @@ template <class DT>
 filevector<DT>::filevector(string filename_toload, unsigned long int cachesizeMb): DatABELBaseCPP<DT>::DatABELBaseCPP(filename_toload,cachesizeMb)
 {
 	connected = 0;
+	char_buffer = 0;
 	initialize(filename_toload,cachesizeMb);
 }
 
@@ -200,7 +203,14 @@ void filevector<DT>::initialize(string filename_toload, unsigned long int caches
 	for (unsigned long int i=0;i<data_type.nvariables;i++)
 		data_file.read((char*)(variable_names+i),sizeof(fixedchar));
 
+    set_cachesizeMb(cachesizeMb);
+    update_cache(0);
+	connected = 1;
+}
 
+template <class DT>
+void filevector<DT>::set_cachesizeMb( unsigned long int cachesizeMb )
+{
 // figure out cache size
 	cache_size_Mb = cachesizeMb;
 	cache_size_nvars = (unsigned long int) 1024*1024*cache_size_Mb/(data_type.nobservations*data_type.bytes_per_record);
@@ -219,13 +229,20 @@ void filevector<DT>::initialize(string filename_toload, unsigned long int caches
 		         (float) cache_size_nvars*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
 	}
 	cache_size_bytes = cache_size_nvars*data_type.bytes_per_record*data_type.nobservations*sizeof(char);
-// get memory for the cache
+
+    //free previously allocated memory
+    if(char_buffer !=0 )
+        delete char_buffer;
+    // get memory for the cache
 	char_buffer = new (std::nothrow) char [cache_size_bytes];
 	if (!char_buffer)
 		error("failed to get memory for cache\n");
 	max_buffer_size_bytes = INT_MAX;
-	connected = 1;
-	update_cache(0);
+
+	//don't read cache after resizing,
+	//it will be updated on next read operation from desired position
+	in_cache_from = 0;
+	in_cache_to = 0;
 }
 
 template <class DT>
@@ -307,7 +324,7 @@ template <class DT>
 void filevector<DT>::read_variable(unsigned long int nvar, DT * outvec)
 {
 	if (nvar>=data_type.nvariables) error("nvar out of range (%lu >= %lu)",nvar,data_type.nvariables);
-	if (nvar >= in_cache_from && nvar <= in_cache_to) {
+	if (in_cache_to > 0 && nvar >= in_cache_from && nvar <= in_cache_to) {
 		unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations;
 		for (unsigned long int i = 0;i<data_type.nobservations;i++) {
 			outvec[i]=cached_data[offset+i];
@@ -481,7 +498,6 @@ void filevector<DT>::save_obs( string new_file_name, unsigned long int nobss, un
     delete [] in_variable;
     delete [] out_variable;
 }
-
 
 
 #endif

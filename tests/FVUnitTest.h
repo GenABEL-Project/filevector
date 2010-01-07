@@ -27,6 +27,7 @@ class FVUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST( test_save );
     CPPUNIT_TEST( test_save_vars );
     CPPUNIT_TEST( test_save_obs );
+    CPPUNIT_TEST( test_set_cachesizeMb );
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -49,7 +50,8 @@ public:
 
         cout<< "value from read():" << var2[0] << ",newVal: "<<newVal<< endl;
         CPPUNIT_ASSERT_EQUAL( var2[0] , newVal );
-
+        delete var;
+        delete var2;
     };
 
     void test_write_variable_name()
@@ -134,6 +136,34 @@ public:
         CPPUNIT_ASSERT_EQUAL((unsigned int )2 ,fv_copy.get_nobservations());
         CPPUNIT_ASSERT_EQUAL( fv.get_nvariables() ,fv_copy.get_nvariables() );
     }
+
+    void test_set_cachesizeMb()
+    {
+        string src_file_name = get_file_name_to_write();
+        filevector<float> fv( src_file_name, 64 );
+
+        unsigned long int vars_capacity =11389 ;
+        CPPUNIT_ASSERT_EQUAL( vars_capacity ,fv.cache_size_nvars );
+
+        float * var = new (std::nothrow) float [fv.get_nobservations()];
+        fv.read_variable(0,var);
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv.in_cache_from );
+        CPPUNIT_ASSERT_EQUAL( vars_capacity-1, fv.in_cache_to );
+
+
+        fv.set_cachesizeMb(1);
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )177 ,fv.cache_size_nvars );
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv.in_cache_from );
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv.in_cache_to );
+
+        fv.read_variable(fv.get_nvariables() - 1,var);
+
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv.get_nvariables() - 1,fv.in_cache_from );
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv.get_nvariables() - 1,fv.in_cache_to );
+
+        delete var;
+    }
+
 };
 
 

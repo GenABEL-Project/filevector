@@ -61,6 +61,9 @@ template <class DT> class DatABELBaseCPP
 	*/
 	virtual void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes) = 0;
 
+	// changing cache size on the fly
+	virtual void set_cachesizeMb( unsigned long int cachesizeMb ) = 0;
+
 };
 
 #endif
