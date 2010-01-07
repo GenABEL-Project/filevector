@@ -1,14 +1,26 @@
+#include <string>
+
 #include <cppunit/TestCase.h>
 #include <cppunit/TestCaller.h>
 #include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/Asserter.h>
 
+using namespace std;
+
 class CorrectnessTest : public CppUnit::TestFixture {
-    void runTest();
-    
+    void testReadVariable();
+    void testReadObservation();
+/*    void testReadElement();
+    void testReadObservationName();
+    void testReadVariableName();*/
+
     CPPUNIT_TEST_SUITE( CorrectnessTest );
-    CPPUNIT_TEST( runTest );
+    CPPUNIT_TEST( testReadVariable );
+    CPPUNIT_TEST( testReadObservation );
+/*    CPPUNIT_TEST( testReadElement );
+    CPPUNIT_TEST( testReadObservationName );
+    CPPUNIT_TEST( testReadVariableName );*/
     CPPUNIT_TEST_SUITE_END();
 
 public: 

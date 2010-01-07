@@ -1,3 +1,7 @@
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
 #include "CorrectnessTest.h"
 #include "TestUtil.h"
 
@@ -5,8 +9,8 @@
 
 using namespace std;
 
-void CorrectnessTest::runTest() {
-    string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.1-22.collected.ped.out.mldose.fvf");
+void CorrectnessTest::testReadVariable() {
+    string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose.fvf");
 	filevector<float> data( inputFile, 64 );
 
 	std::cout << "Reading file:" << inputFile << endl;
@@ -14,22 +18,42 @@ void CorrectnessTest::runTest() {
 	unsigned long numVariables = data.get_nvariables();
 	unsigned long numObservations = data.get_nobservations();
 
-	float* tmpdat = new float[numVariables];
+	std::cout << "Size is " << numVariables << " x " << numObservations << endl;
 
-	for ( unsigned long i = 0 ; i < numVariables ; i++ )
+	float* tmpdat = new( nothrow ) float[numVariables];
+    string sumFileName = inputFile + string("_varsum");
+    ifstream sums;
+    sums.open(sumFileName.c_str(), ifstream::in);
+    cout << "Reading file: " << sumFileName << endl;
+
+    CPPUNIT_ASSERT(sums.good());
+
+    unsigned long i,j;
+
+	for ( i = 0 ; i < numVariables ; i++ )
 	{
-		data.read_variable(i, &tmpdat[i]);
+	    if (i%500000 == 1){
+	        std::cout << i << endl;
+	    }
+	    data.read_variable(i, tmpdat);
+	    float calcSumm, realSumm;
+	    sums >> realSumm;
+        calcSumm = 0;
+	    for (j = 0; j < numObservations; j++) {
+	        calcSumm += tmpdat[j];
+	    }
+	    CPPUNIT_ASSERT(TestUtil::relativeDifference(calcSumm,realSumm)<1E-4);
 	}
 
 	delete[] tmpdat;
 
-	std::cout << "Finished" << endl;
-
+	cout << "Finished" << endl;
 }
 
-int main(){
-  CppUnit::TextUi::TestRunner runner;
-  runner.addTest( CorrectnessTest::suite() );
-  runner.run();
-  return 0;
+int main(int numArgs, char **args){
+    TestUtil::detect_base_dir(string(args[0]));
+    CppUnit::TextUi::TestRunner runner;
+    runner.addTest( CorrectnessTest::suite() );
+    runner.run();
+    return 0;
 }

@@ -21,6 +21,9 @@ public :
 
     static float random_float();
 
+    template<class DT> static DT relativeDifference(DT x, DT y) {
+        return 2.*(abs(x)-abs(y))/(abs(x)+abs(y));
+    }
 };
 
 #endif
