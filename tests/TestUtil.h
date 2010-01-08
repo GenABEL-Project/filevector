@@ -3,6 +3,9 @@
 
 
 #include <string>
+#include <cmath>
+#include <time.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -21,6 +24,9 @@ public :
 
     static float random_float();
 
+    static void initRandomGenerator();
+
+    // returns relative difference between two values
     template<class DT> static DT relativeDifference(DT x, DT y) {
         return 2.*(abs(x)-abs(y))/(abs(x)+abs(y));
     }

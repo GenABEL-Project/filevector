@@ -25,6 +25,10 @@ string TestUtil::get_base_dir()
     return TestUtil::base_dir;
 }
 
+void TestUtil::initRandomGenerator(){
+    srand (time(0));
+}
+
 float TestUtil::random_float()
 {
     float scale=RAND_MAX+1.;

@@ -10,14 +10,15 @@ using namespace std;
 
 class CorrectnessTest : public CppUnit::TestFixture {
     void testReadVariable();
-    void testReadObservation();
-/*    void testReadElement();
-    void testReadObservationName();
+//    void testReadVariableRandom(); // some question remains
+    void testRandomReadObservations();
+/*    void testReadObservationName();
     void testReadVariableName();*/
 
     CPPUNIT_TEST_SUITE( CorrectnessTest );
     CPPUNIT_TEST( testReadVariable );
-    CPPUNIT_TEST( testReadObservation );
+//  CPPUNIT_TEST( testReadVariableRandom ); // some question remains
+    CPPUNIT_TEST( testRandomReadObservations );
 /*    CPPUNIT_TEST( testReadElement );
     CPPUNIT_TEST( testReadObservationName );
     CPPUNIT_TEST( testReadVariableName );*/
