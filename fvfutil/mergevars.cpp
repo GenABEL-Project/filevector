@@ -19,7 +19,7 @@ int main(int argc, char * argv[])
 	char * ifname1 = argv[1], * ifname2 = argv[2], * ofname = argv[3];
 	unsigned long int cachesize = 64;
 	if (argc>4) cachesize = atoi(argv[4]);
-	if (cachesize < 0) error ("cahce size must be positive long integer\n\n");
+	if (cachesize < 0) error ("cache size must be positive long integer\n\n");
 	std::cout << "Options in effect:\n";
 	std::cout << "\tINFILE1   = " << ifname1 << "\n";
 	std::cout << "\tINFILE2   = " << ifname2 << "\n";
