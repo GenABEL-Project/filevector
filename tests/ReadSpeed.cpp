@@ -11,11 +11,16 @@ int main ( int argc, char * argv[] )
 		std::cout << "Please provide filename!"<< "\n";
 		exit ( 1 );
 	}
+    char * ifname1 = argv[1];
+
 	unsigned long int cachesize = 64;
-	char * ifname1 = argv[1];
+	if (argc>2) cachesize = atoi(argv[2]);
+	if (cachesize < 0) error ("cache size must be positive long integer\n\n");
+
 	filevector<float> indata1( ifname1, cachesize );
 
 	std::cout << "Reading file:"<< ifname1 << "\n";
+	std::cout << "Using cache size:"<< cachesize<< "\n";
 	std::cout << "Variables:"<< indata1.get_nvariables() << "\n";
 	std::cout << "Observations:"<< indata1.get_nobservations() << "\n";
 
@@ -31,7 +36,7 @@ int main ( int argc, char * argv[] )
 		indata1.read_variable( i,tmpdat );
 		if( i % 10000 == 0 )
 		{
-			std::cout << "Read:"<< i << " variables \n";
+			std::cout << "Read:"<< i << "/" << indata1.get_nvariables() << " variables \n";
 		}
 	}
 
