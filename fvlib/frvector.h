@@ -378,7 +378,7 @@ void filevector<DT>::write_variable(unsigned long int nvar, DT * datavec)
 	//update data in cache
 //	cout << "var:"<< nvar << ",cache from :"<< in_cache_from << ", to: "<< in_cache_to  << endl;
 
-	if (nvar >= in_cache_from && nvar < in_cache_to)
+	if (nvar >= in_cache_from && nvar <= in_cache_to)
 	{
 //	    cout<< "updating data in cache" << endl;
 	    unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations;
