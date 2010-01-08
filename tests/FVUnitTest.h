@@ -29,6 +29,7 @@ class FVUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST( test_save_obs );
     CPPUNIT_TEST( test_set_cachesizeMb );
     CPPUNIT_TEST( test_read_write_observation );
+    CPPUNIT_TEST( test_read_variable_convert_to );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -209,6 +210,30 @@ public:
 			}
 		}
 		return true;
+	}
+
+    void test_read_variable_convert_to()
+	{
+
+		unsigned long int nvariables =10;
+		unsigned long int nobservations =3;
+		string tmp_file_name = get_dir_name_to_write()+"/tmp.dat";
+		initialize_empty_file( (char *)tmp_file_name.c_str(), nvariables,nobservations, FLOAT);
+		filevector<float> fv( tmp_file_name, 1 );
+
+		float * var = new float [fv.get_nobservations()];
+		for(int i = 0; i<fv.get_nobservations(); i++)
+        {
+            var[i] = i + i/10;
+		}
+		fv.write_variable(0,var);
+
+		int * int_var = new int[fv.get_nobservations()];
+		fv.read_variable_convert_to(0,int_var);
+
+		CPPUNIT_ASSERT_EQUAL(0, int_var[0]);
+		CPPUNIT_ASSERT_EQUAL(1, int_var[1]);
+		CPPUNIT_ASSERT_EQUAL(2, int_var[2]);
 	}
 };
 
