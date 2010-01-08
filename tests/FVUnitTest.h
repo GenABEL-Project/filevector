@@ -169,8 +169,11 @@ public:
 
 	void test_read_write_observation()
 	{
+
+		unsigned long int nvariables =10;
+		unsigned long int nobservations =20;
 		string tmp_file_name = get_dir_name_to_write()+"/tmp.dat";
-		initialize_empty_file( (char *)tmp_file_name.c_str(), 10,20, FLOAT);
+		initialize_empty_file( (char *)tmp_file_name.c_str(), nvariables,nobservations, FLOAT);
 		filevector<float> fv( tmp_file_name, 1 );
 
         float * var = new float [fv.get_nvariables()];
@@ -184,6 +187,12 @@ public:
         fv.read_observation(0,var2);
 
         CPPUNIT_ASSERT( compare_arrays(var, var2 , fv.get_nvariables()));
+        fv.free_resources();
+
+		//reopen file and check
+		filevector<float> fv2( tmp_file_name, 1 );
+		fv2.read_observation(0,var2);
+		CPPUNIT_ASSERT( compare_arrays(var, var2 , nvariables));
 
         delete var;
         delete var2;
