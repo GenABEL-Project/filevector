@@ -234,6 +234,9 @@ public:
 		CPPUNIT_ASSERT_EQUAL(0, int_var[0]);
 		CPPUNIT_ASSERT_EQUAL(1, int_var[1]);
 		CPPUNIT_ASSERT_EQUAL(2, int_var[2]);
+
+		delete[] var; 
+		delete[] int_var;
 	}
 };
 
