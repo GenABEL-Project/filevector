@@ -26,7 +26,23 @@ template <class DT> class DatABELBaseCPP
 
  // can read single variable
 	virtual void read_variable(unsigned long int nvar, DT * outvec) = 0;
-	template <class DT2> void read_variable_convert_to(unsigned long int nvar, DT * outvec);
+
+	template <class DT2>
+	void read_variable_convert_to(unsigned long int nvar, DT2 * outvec)
+	{
+		    DT * tmp = new (std::nothrow) DT[get_nobservations()];
+    		if(!tmp)
+    			error("read_variable_convert_to allocation error");
+
+    		read_variable(nvar, tmp);
+
+    		for(int i = 0; i< get_nobservations();i++)
+    		{
+    			outvec[i] = (DT2)tmp[i];
+    		}
+
+    		delete[] tmp;
+	}
 
 // should only be used for reading single random elements!
 	virtual DT read_element(unsigned long int nvar, unsigned long int nobs) = 0;

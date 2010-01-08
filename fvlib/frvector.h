@@ -74,28 +74,6 @@ public:
 // can read single variable
 	void read_variable(unsigned long int nvar, DT * outvec);
 
-	//for converting to another type
-	//todo I don't know how to define this method outside of definition secion(like othe methods)
-	//todo it causes compilation errors
-    template<class DT2>
-	void read_variable_convert_to(unsigned long int nvar, DT2 * outvec)
-	{
-		DT * tmp = new (std::nothrow) DT[get_nobservations()];
-		if(!tmp)
-			error("read_variable_convert_to allocation error");
-
-		read_variable(nvar, tmp);
-
-		for(int i = 0; i< get_nobservations();i++)
-		{
-			outvec[i] = (DT2)tmp[i];
-		}
-
-		delete[] tmp;
-
-	};
-
-
 // should only be used for reading single random elements!
 	DT read_element(unsigned long int nvar, unsigned long int nobs);
 // write single variable
