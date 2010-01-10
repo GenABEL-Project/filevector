@@ -1,13 +1,3 @@
-#include <iostream>
-#include <cstdlib>
-#include <cstring>
-
-#include "frversion.h"
-#include "frerror.h"
-#include "frutil.h"
-#include "frvector.h"
-
-#include "usage.h"
 #include "mergevars.h"
 
 int main(int argc, char * argv[])

@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include "frversion.h"
-#include "text2fvf.h"
-#include "mergevars.h"
 #include "usage.h"
 
 void print_text2fvf_usage(char * progname) 

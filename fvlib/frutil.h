@@ -76,6 +76,6 @@ void make_fake_file(char * fake_filename, unsigned long int nvariables, unsigned
 
 fr_type get_file_type(char * filename);
 
-void initialize_empty_file(char * filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type);
+void initialize_empty_file(std::string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type);
 
 #endif

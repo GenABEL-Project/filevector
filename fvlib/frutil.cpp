@@ -11,7 +11,7 @@ fr_type get_file_type(char * filename) {
 	return(out);
 }
 
-void initialize_empty_file(char * filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type)
+void initialize_empty_file(std::string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type)
 {
 	fr_type metadata;
 // data element size
@@ -36,7 +36,7 @@ void initialize_empty_file(char * filename, unsigned long int nvariables, unsign
 		desize = sizeof(double);
 		break;
 	  default:
-		error("file contains data of unknown type\n",(const char *) filename);
+		error("file contains data of unknown type\n",filename.c_str());
 	}
 	metadata.type = type;
 	metadata.nvariables = nvariables;
@@ -45,7 +45,7 @@ void initialize_empty_file(char * filename, unsigned long int nvariables, unsign
 	metadata.bytes_per_record = desize;
 	metadata.bits_per_record = desize*8;
 	
-	std::ofstream outfile(filename, std::ios::binary | std::ios::out);
+	std::ofstream outfile(filename.c_str(), std::ios::binary | std::ios::out);
 	outfile.write((char*)&metadata,sizeof(metadata));
 
 	fixedchar obsname;
