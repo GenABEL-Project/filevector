@@ -46,7 +46,7 @@ DatABELdis: clean
 	cd ..; tar chvf DatABEL_$(VERSION).tar DatABEL_$(VERSION); gzip DatABEL_$(VERSION).tar
 
 clean: 
-	rm -f $(BINDIR)/* $(SRCDIR)/*.o  $(LIBDIR)/*.o
+	rm -rf $(BINDIR)/* $(SRCDIR)/*.o  $(LIBDIR)/*.o
 
 
 correctnesstest : $(CORRECTNESSTEST)
