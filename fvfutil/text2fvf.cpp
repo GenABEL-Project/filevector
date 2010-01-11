@@ -6,7 +6,7 @@ int main(int argc, char * argv[])
 	print_text2fvf_welcome();
 
 	int next_option;
-	const char * const short_options = "i:o:c:r:1:2:3:4:t";
+	const char * const short_options = "i:o:c:r:1:2:3:4:t:R";
 	const struct option long_options [] =
 	{
 			{"infile",    required_argument, NULL, 'i'},
@@ -15,15 +15,16 @@ int main(int argc, char * argv[])
 			{"skiprows",  required_argument, NULL, 'r'},
 			{"rncol",     required_argument, NULL, '1'},
 			{"cnrow",     required_argument, NULL, '2'},
-			{"rrnfile",   required_argument, NULL, '3'},
+			{"rnfile",    required_argument, NULL, '3'},
 			{"cnfile",    required_argument, NULL, '4'},
 			{"transpose", no_argument,       NULL, 't'},
+			{"Rmatrix",   no_argument,       NULL, 'R'},
 			{ NULL     ,  no_argument,       NULL,  0 }
 	};
 
 	char * program_name = argv[0];
 	char * infilename = NULL, * outfilename = NULL, * colnamesfilename = NULL, * rownamesfilename = NULL;
-	int rownames = 0, colnames = 0, transpose = 0, skipcols = 0, skiprows = 0;
+	int rownames = 0, colnames = 0, transpose = 0, skipcols = 0, skiprows = 0, Rmatrix = 0;
 
 	do
 	{
@@ -59,6 +60,9 @@ int main(int argc, char * argv[])
 		case 't':
 			transpose=1;
 			break;
+		case 'R':
+			Rmatrix=1;
+			break;
 
 		case '?': print_text2fvf_usage(program_name);
 		case ':': print_text2fvf_usage(program_name);
@@ -81,7 +85,7 @@ int main(int argc, char * argv[])
 			RFname, CFname,
 			rownames, colnames,
 			skiprows, skipcols,
-			transpose);
+			transpose, Rmatrix);
 
 	return(0);
 }

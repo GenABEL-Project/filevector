@@ -19,7 +19,7 @@ void text2fvf(
 		std::string rownamesfilename, std::string colnamesfilename,
 		int rownames, int colnames,
 		int skiprows, int skipcols,
-		int transpose
+		int transpose, int Rmatrix
 );
 
 

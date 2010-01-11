@@ -3,11 +3,12 @@
 #define REPORT_EVERY 10000
 
 void text2fvf(
-		std::string program_name, std::string infilename, std::string outfilename,
+		std::string program_name,
+		std::string infilename, std::string outfilename,
 		std::string rownamesfilename, std::string colnamesfilename,
 		int rownames, int colnames,
 		int skiprows, int skipcols,
-		int transpose
+		int transpose, int Rmatrix
 )
 {
 
@@ -23,6 +24,8 @@ void text2fvf(
 	message("\t --cnrow     = ");
 	if (colnames) message("%d\n",colnames); else message("OFF\n");
 
+	if (colnamesfilename != "") colnames = -1;
+	if (rownamesfilename != "") rownames = -1;
 	message("\t --colnames  = ");
 	if (colnames) {
 		if (colnamesfilename == "")
@@ -41,6 +44,8 @@ void text2fvf(
 
 	message("\t --transpose = ");
 	if (transpose) message("ON\n"); else message("OFF\n");
+	message("\t --Rmatrix   = ");
+	if (Rmatrix) message("ON\n"); else message("OFF\n");
 	message("\n");
 
 
@@ -96,7 +101,9 @@ void text2fvf(
 		while (stream_sline >> sword) line_wordcount++;
 		//		if (firstline_add_one) {line_wordcount++;firstline_add_one=0;}
 		if (last_word_count >=0 && last_word_count != line_wordcount)
-			error("file '%s', line %u, number of elements is %u\n\n",infilename.c_str(),infile_linecount,line_wordcount);
+			if (!(Rmatrix && (line_wordcount-1) == last_word_count))
+				error("file '%s', line %u, number of elements is %u (previous line(s): %u)\n\n",
+						infilename.c_str(),infile_linecount,line_wordcount,last_word_count);
 		last_word_count = line_wordcount;
 	}
 	message("\b\b\b\b\b\b\b\b\b\b\b\b%d",infile_linecount);std::cout.flush();
@@ -108,11 +115,8 @@ void text2fvf(
 
 	if (colnames & colnamesfilename != "")
 		if ((line_wordcount - skipcols) != words_in_colnamesfile)
-			error("number of column names (%lu) does not match number of data columns (%lu)\n\n",words_in_colnamesfile,(line_wordcount-skipcols));
-
-	if (rownames & rownamesfilename != "")
-		if ((line_wordcount - skiprows) != words_in_rownamesfile)
-			error("number of row names (%lu) does not match number of data rows (%lu)\n\n",words_in_rownamesfile,(line_wordcount-skiprows));
+			error("number of column names (%lu) does not match number of data columns (%lu)\n\n",
+					words_in_colnamesfile,(line_wordcount-skipcols));
 
 	// read the data to memory
 
@@ -158,15 +162,24 @@ void text2fvf(
 				cur_line++;
 				getline(infile,sline);
 				std::istringstream stream_sline(sline);
-				if (cur_line == colnames)
-					for (unsigned long int i=0;i<ncols;i++) {
+				if (cur_line == colnames) {
+					int toCol = ncols;
+					if (!Rmatrix) toCol = ncols + skipcols;
+//					Rprintf("toCol=%u\n",toCol);
+					for (unsigned long int i=0;i<toCol;i++) {
 						stream_sline >> sword;
-						strcpy(tmpname.name,sword.c_str());
-						if (transpose)
-							outdata.write_observation_name(i,tmpname);
-						else
-							outdata.write_variable_name(i,tmpname);
+						if (Rmatrix || i>=skipcols) {
+							int idx = i;
+							if (!Rmatrix) idx = idx - skipcols;
+//							Rprintf("%u %u %s\n",i,idx,sword.c_str());
+							strcpy(tmpname.name,sword.c_str());
+							if (transpose)
+								outdata.write_observation_name(idx,tmpname);
+							else
+								outdata.write_variable_name(idx,tmpname);
+						}
 					}
+				}
 			}
 		} else {
 			std::ifstream colnamesfile(colnamesfilename.c_str());
@@ -186,19 +199,19 @@ void text2fvf(
 	// read row names file if present
 	if (rownames && rownamesfilename != "")
 	{
-			std::ifstream rownamesfile(rownamesfilename.c_str());
-			if (!rownamesfile) error("can not open row names file '%s'\n\n",rownamesfilename.c_str());
-			std::string tmpstr;
-			for (unsigned long int i=0;i<nrows;i++) {
-				rownamesfile >> tmpstr;
-				strcpy(tmpname.name,tmpstr.c_str());
-				if (transpose)
-					outdata.write_variable_name(i,tmpname);
-				else
-					outdata.write_observation_name(i,tmpname);
-			}
-			rownamesfile.close();
+		std::ifstream rownamesfile(rownamesfilename.c_str());
+		if (!rownamesfile) error("can not open row names file '%s'\n\n",rownamesfilename.c_str());
+		std::string tmpstr;
+		for (unsigned long int i=0;i<nrows;i++) {
+			rownamesfile >> tmpstr;
+			strcpy(tmpname.name,tmpstr.c_str());
+			if (transpose)
+				outdata.write_variable_name(i,tmpname);
+			else
+				outdata.write_observation_name(i,tmpname);
 		}
+		rownamesfile.close();
+	}
 
 
 	// read the data
@@ -234,6 +247,13 @@ void text2fvf(
 	message("\n\n");
 	infile.close();
 
+	// check that row names are the same length as data
+	if (rownames & rownamesfilename != "")
+		if ((cline) != words_in_rownamesfile)
+			error("number of row names (%lu) does not match number of data rows (%lu)\n\n",
+					words_in_rownamesfile,(cline-skiprows));
+
+
 	// we have to write data from memory...
 	if (!transpose) {
 
@@ -265,7 +285,8 @@ void text2fvf(
 
 	// free up the RAM
 	delete [] data;
+	outdata.free_resources();
 
-	std::cout << "\nFinished successfully\n\n";
+	std::cout << "\nFinished successfully text2fvf\n";
 
 }
