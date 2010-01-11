@@ -16,7 +16,7 @@ void error (const char * format, ... )
 #ifdef R_R_H
 	Rprintf("ERROR: %s",buffer);
 #else
-	printf("ERROR: %s",buffer);
+	printf("ERROR: %s\n",buffer);
 //	perror(buffer);
 #endif
 	exit(EXIT_FAILURE);
@@ -32,7 +32,7 @@ void warning (const char * format, ... )
 #ifdef R_R_H
 	Rprintf("WARNING: %s",buffer);
 #else
-	printf("WARNING: %s",buffer);
+	printf("WARNING: %s\n",buffer);
 #endif
 }
 
@@ -46,6 +46,6 @@ void message (const char * format, ... )
 #ifdef R_R_H
 	Rprintf("%s",buffer);
 #else
-	printf("%s",buffer);
+	printf("%s\n",buffer);
 #endif
 }
