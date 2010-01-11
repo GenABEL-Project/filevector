@@ -5,7 +5,7 @@
 #include <cppunit/Asserter.h>
 
 
-#include <frvector.h>
+#include <filevector.h>
 #include "TestUtil.h"
 
 using namespace std;
