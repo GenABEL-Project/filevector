@@ -2,7 +2,7 @@
 
 #include "frutil.h"
 #include "const.h"
-#include "frvector.h"
+#include "filevector.h"
 
 fr_type get_file_type(char * filename) {
 	fr_type out;
