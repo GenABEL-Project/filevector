@@ -31,6 +31,7 @@ class FVUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST( test_set_cachesizeMb );
     CPPUNIT_TEST( test_read_write_observation );
     CPPUNIT_TEST( test_read_variable_convert_to );
+    CPPUNIT_TEST( test_add_variable );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -38,6 +39,7 @@ public:
 
     string get_file_name_to_write();
     string get_dir_name_to_write();
+    string get_temp_file_name();
 
     void testCacheUpdatedOnWrite()
     {
@@ -181,14 +183,10 @@ public:
 
 	void test_read_write_observation()
 	{
-
-		unsigned long int nvariables =10;
+	    unsigned long int nvariables =10;
 		unsigned long int nobservations =20;
-		string tmp_file_name = get_dir_name_to_write()+"/tmp";
-		remove((tmp_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
-        remove((tmp_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
-		initialize_empty_file( (char *)tmp_file_name.c_str(), nvariables,nobservations, FLOAT);
-
+        create_empty_filevector(nvariables, nobservations);
+        string tmp_file_name = get_temp_file_name();
 		filevector<float> fv( tmp_file_name, 1 );
 
         float * var = new float [fv.get_nvariables()];
@@ -213,35 +211,21 @@ public:
         delete var2;
 	}
 
-	bool compare_arrays(float * a1,float * a2, int size)
-	{
-		for(int i =0; i< size ; i++)
-		{
-			if(a1[i] != a2[i])
-			{
-			  cout<< "compare_arrays: " << i<<" elements not equal:"<< a1[i]<<","<<a2[i]<<endl; 
-			  return false;
-			}
-		}
-		return true;
-	}
 
     void test_read_variable_convert_to()
 	{
 
 		unsigned long int nvariables =10;
 		unsigned long int nobservations =3;
-		string tmp_file_name = get_dir_name_to_write()+"/tmp";
-        remove((tmp_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
-        remove((tmp_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
-		initialize_empty_file( (char *)tmp_file_name.c_str(), nvariables,nobservations, FLOAT);
+		create_empty_filevector(nvariables, nobservations);
+		string tmp_file_name = get_temp_file_name();
 
 		filevector<float> fv( tmp_file_name, 1 );
 
 		float * var = new float [fv.get_nobservations()];
 		for(int i = 0; i<fv.get_nobservations(); i++)
         {
-            var[i] = i + i/10;
+            var[i] = i + (float)i/10;
 		}
 		fv.write_variable(0,var);
 
@@ -255,6 +239,59 @@ public:
 		delete[] var; 
 		delete[] int_var;
 	}
+
+	void test_add_variable()
+	{
+		create_empty_filevector(10,20);
+		filevector<float> fv( get_temp_file_name(), 1 );
+		float * var = new float [fv.get_nobservations()];
+		create_and_fill_variable(fv.get_nobservations(),var);
+
+        string varname = "added";
+		fv.add_variable(var,varname);
+
+		CPPUNIT_ASSERT_EQUAL((unsigned int)11, fv.get_nvariables());
+		fixedchar _fc_varname_loaded = fv.read_variable_name(10);
+        CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
+        fv.free_resources();
+
+        filevector<float> fv2( get_temp_file_name(), 1 );
+        CPPUNIT_ASSERT_EQUAL((unsigned int)11, fv2.get_nvariables());
+		_fc_varname_loaded = fv2.read_variable_name(10);
+        CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
+	}
+
+	//==========================  utility methods ==================
+
+    void create_and_fill_variable(unsigned int  nobs, float * in )
+    {
+        for(int i = 0; i<nobs; i++)
+        {
+            in[i] = i + (float)i/10;
+		}
+    }
+
+	void create_empty_filevector(unsigned int  nvars, unsigned int  nobs)
+	{
+	    string tmp_file_name = get_temp_file_name();
+		remove((tmp_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
+		remove((tmp_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
+		initialize_empty_file( (char *)tmp_file_name.c_str(), nvars, nobs, FLOAT);
+	}
+
+	bool compare_arrays(float * a1,float * a2, int size)
+	{
+		for(int i =0; i< size ; i++)
+		{
+			if(a1[i] != a2[i])
+			{
+			  cout<< "compare_arrays: " << i<<" elements not equal:"<< a1[i]<<","<<a2[i]<<endl;
+			  return false;
+			}
+		}
+		return true;
+	}
+
 
 };
 

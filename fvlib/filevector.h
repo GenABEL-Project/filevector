@@ -7,6 +7,7 @@
 #include <climits>
 #include <new>
 #include <string>
+#include <cstring>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -80,7 +81,7 @@ public:
 	DT read_element(unsigned long int nvar, unsigned long int nobs);
 // write single variable
 	void write_variable(unsigned long int nvar, DT * datavec);
-//	void add_variable(DT * invec, fixedchar varname);
+	void add_variable(DT * invec, string varname);
 // write single element
 	void write_element(unsigned long int nvar, unsigned long int nobs, DT data);
 
@@ -115,6 +116,8 @@ template <class DT>
 void filevector<DT>::free_resources()
 {
 	if (connected) {
+	    index_file.seekp(0, std::ios::beg);
+	    index_file.write((char*)&data_type, sizeof(data_type));
 		index_file.seekp(sizeof(data_type), std::ios::beg);
 // may be have to fix: is the buffer always enough???
 		if (sizeof(fixedchar)*data_type.nobservations > INT_MAX) error("sizeof(fixedchar)*data_type.nobservations > INT_MAX\n\n");
@@ -411,6 +414,28 @@ void filevector<DT>::write_variable(unsigned long int nvar, DT * datavec)
 //TMP
 //	for (unsigned int i=0;i<data_type.nobservations;i++) std::cout << " " << datavec[i];
 }
+
+
+
+template <class DT>
+void filevector<DT>::add_variable(DT * invec, string varname)
+{
+      data_type.nvariables++;
+      data_type.nelements = data_type.nvariables*data_type.nobservations;//recalculate
+
+      fixedchar * new_variable_names = new fixedchar[data_type.nvariables];
+      if (!new_variable_names)
+          error("can not allocate memory in add_variable()");
+
+      memcpy(new_variable_names,variable_names,data_type.nvariables-1);
+      fixedchar _fc_varname;
+      strcpy(_fc_varname.name, varname.c_str());
+
+      new_variable_names[data_type.nvariables - 1] = _fc_varname;
+      variable_names = new_variable_names;
+      write_variable(data_type.nvariables - 1,invec);
+}
+
 
 
 template <class DT>

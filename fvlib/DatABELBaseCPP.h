@@ -49,9 +49,10 @@ template <class DT> class DatABELBaseCPP
 	// write single variable
 	virtual void write_variable(unsigned long int nvar, DT * datavec) = 0;
 
-	// adds variable at the end = write_variable with nvar=NVARS?
-	// todo loooong future -- control that name is unique!
-    //virtual void add_variable(DT * invec, fixedchar varname) = 0;
+    // HIGH -- here I see the possibility to make these functions faster then "random" access functions
+    // adds variable at the end = write_variable with nvar=NVARS?
+	    // todo loooong future -- control that name is unique!
+    virtual void add_variable(DT * invec, string varname) = 0; 
 
 
 // write single element
@@ -67,9 +68,6 @@ template <class DT> class DatABELBaseCPP
    virtual void write_variable_name(unsigned long int nvar, fixedchar newname) = 0;  // todo loooong future -- control that name is unique
    virtual void write_observation_name(unsigned long int nobs, fixedchar newname)= 0;  //todo loooong future -- control that name is unique!
 
-// HIGH -- here I see the possibility to make these functions faster then "random" access functions
-   // virtual void add_variable(DT * invec, fixedchar varname) = 0; // adds variable at the end = write_variable with nvar=NVARS?
-                                                      // loooong future -- control that name is unique!
 
 	virtual void read_observation(unsigned long int nobs, DT * outvec) = 0;
     virtual void write_observation(unsigned long int nobs, DT * invec) = 0;
