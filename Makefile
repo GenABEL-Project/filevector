@@ -12,6 +12,7 @@ READSPEED = $(BINDIR)/readspeed
 CORRECTNESSTEST = $(BINDIR)/correctnesstest
 MODIFTEST = $(BINDIR)/modificationtest
 UNITTEST = $(BINDIR)/fvunittest
+CONVERT = $(BINDIR)/convert
 
 
 # GNU compiler
@@ -19,7 +20,7 @@ CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 -m64 -g
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 -m64 
 CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS)
 
@@ -65,3 +66,7 @@ $(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.cpp
 unittest : $(UNITTEST)
 $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FVUnitTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FVUnitTest.cpp  -o $(UNITTEST)
+
+converter : $(CONVERT)
+$(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp  $(SRCDIR)/convert.cpp -o $(CONVERT)
