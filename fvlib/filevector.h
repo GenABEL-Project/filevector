@@ -23,8 +23,10 @@ using namespace std;
 template <class DT> class filevector: public DatABELBaseCPP<DT>
 {
 public:
-	string filename;
-	std::fstream data_file;
+    string data_filename;
+	string index_filename;
+	fstream data_file;
+	fstream index_file;
 	fr_type data_type;
 // row and column names
 	fixedchar * variable_names;
@@ -99,6 +101,9 @@ public:
 
 };
 
+//global variables
+const string FILEVECTOR_DATA_FILE_SUFFIX=".fvd";
+const string FILEVECTOR_INDEX_FILE_SUFFIX=".fvi";
 
 //template <class DT>
 //filevector<DT>::~filevector()
@@ -110,20 +115,21 @@ template <class DT>
 void filevector<DT>::free_resources()
 {
 	if (connected) {
-		data_file.seekp(sizeof(data_type), std::ios::beg);
+		index_file.seekp(sizeof(data_type), std::ios::beg);
 // may be have to fix: is the buffer always enough???
 		if (sizeof(fixedchar)*data_type.nobservations > INT_MAX) error("sizeof(fixedchar)*data_type.nobservations > INT_MAX\n\n");
-		data_file.write((char*)observation_names,sizeof(fixedchar)*data_type.nobservations);
-		data_file.seekp(sizeof(data_type)+sizeof(fixedchar)*data_type.nobservations, std::ios::beg);
+		index_file.write((char*)observation_names,sizeof(fixedchar)*data_type.nobservations);
+		index_file.seekp(sizeof(data_type)+sizeof(fixedchar)*data_type.nobservations, std::ios::beg);
 // may be have to fix: is the buffer always enough???
 		if (sizeof(fixedchar)*data_type.nvariables > INT_MAX) error("sizeof(fixedchar)*data_type.nvariables > INT_MAX\n\n");
-		data_file.write((char*)variable_names,sizeof(fixedchar)*data_type.nvariables);
+		index_file.write((char*)variable_names,sizeof(fixedchar)*data_type.nvariables);
 		delete [] char_buffer;
 		delete [] observation_names;
 		delete [] variable_names;
 //		std::cout << "!!! destr + free !!!\n";
 	}
 	connected = 0;
+	index_file.close();
 	data_file.close();
 //	std::cout << "!!! destr !!!\n";
 }
@@ -148,22 +154,32 @@ void filevector<DT>::initialize(string filename_toload, unsigned long int caches
 {
 	if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported\n");
 
+	index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;
+	data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
+
+
 //	if (char_buffer != NULL) error("B: trying to ini already ini-ed object!\n\n");
 	if (connected) error("trying to ini already ini-ed object!\n\n");
-	filename = filename_toload;
-	struct stat filestatus;
-	stat( filename_toload.c_str() , &filestatus);
 
-	if (filestatus.st_size < sizeof(data_type))
-		error("file %s is too short to contain an FVF-object\n",filename_toload.c_str());
+	struct stat index_filestatus;
+	stat( index_filename.c_str() , &index_filestatus);
+    if (index_filestatus.st_size < sizeof(data_type))
+           error("index file %s is too short to contain an FV-index\n",index_filename.c_str());
 
-	data_file.open(filename_toload.c_str(), std::ios::out | std::ios::in | std::ios::binary);
-	if (data_file.fail())
-		error("opening file %s for write & read failed\n",filename_toload.c_str());
+	struct stat data_filestatus;
+	stat( data_filename.c_str() , &data_filestatus);
 
-	data_file.read((char*)&data_type,sizeof(data_type));
-	if (data_file.fail())
-        error("failed to read datainfo from file '%s'\n",filename_toload.c_str());
+	index_file.open(index_filename.c_str(), std::ios::out | std::ios::in | std::ios::binary);
+	if (!index_file)
+		error("opening file %s for write & read failed\n",index_filename.c_str());
+
+	data_file.open(data_filename.c_str(), std::ios::out | std::ios::in | std::ios::binary);
+	if (!data_file)
+		error("opening file %s for write & read failed\n",data_filename.c_str());
+
+	index_file.read((char*)&data_type,sizeof(data_type));
+	if (!index_file)
+        error("failed to read datainfo from file '%s'\n",index_filename.c_str());
 
 // some integrity checks
 	if (sizeof(DT) != data_type.bytes_per_record)
@@ -185,16 +201,18 @@ void filevector<DT>::initialize(string filename_toload, unsigned long int caches
 //	estimated_size /= 8;
 
 	header_size = sizeof(data_type) + sizeof(fixedchar)*(data_type.nvariables+data_type.nobservations);
+    if(header_size != index_filestatus.st_size)
+        error("index file size(%lu) differs from the expected(%lu)",index_filestatus.st_size,header_size );
 
 	// temp fix because nelements is not yet long ... !!!
 //	unsigned long int estimated_size = data_type.bytes_per_record*data_type.nelements + header_size;
 	unsigned long int estimated_size =
 			(unsigned long int) data_type.bytes_per_record *
 			(unsigned long int) data_type.nvariables *
-			(unsigned long int) data_type.nobservations + (unsigned long int) header_size;
-	if (estimated_size != filestatus.st_size)
-		error("actual file size (%lu) differ from the expected (%lu) [%lu,%lu]",
-						filestatus.st_size,estimated_size,data_type.nvariables,data_type.nobservations);
+			(unsigned long int) data_type.nobservations;
+	if (estimated_size != data_filestatus.st_size)
+		error("data file size (%lu) differ from the expected (%lu) [%lu,%lu]",
+						data_filestatus.st_size,estimated_size,data_type.nvariables,data_type.nobservations);
 
 // read in variable and observation names
 
@@ -202,11 +220,11 @@ void filevector<DT>::initialize(string filename_toload, unsigned long int caches
 	if (!variable_names) error("can not get RAM for variable names");
 	observation_names = new (std::nothrow) fixedchar [data_type.nobservations];
 	if (!observation_names) error("can not get RAM for observation names");
-	data_file.seekg(sizeof(data_type), std::ios::beg);
+	index_file.seekg(sizeof(data_type), std::ios::beg);
 	for (unsigned long int i=0;i<data_type.nobservations;i++)
-		data_file.read((char*)(observation_names+i),sizeof(fixedchar));
+		index_file.read((char*)(observation_names+i),sizeof(fixedchar));
 	for (unsigned long int i=0;i<data_type.nvariables;i++)
-		data_file.read((char*)(variable_names+i),sizeof(fixedchar));
+		index_file.read((char*)(variable_names+i),sizeof(fixedchar));
 
     set_cachesizeMb(cachesizeMb);
     update_cache(0);
@@ -262,13 +280,12 @@ void filevector<DT>::update_cache(unsigned long int from_var)
 					   data_type.bytes_per_record*data_type.nobservations*sizeof(char);
 	}
 //	std::cout << "updating cache: " << in_cache_from << " - " << in_cache_to << "\n";
-	unsigned long int internal_from = header_size +
-			in_cache_from*data_type.nobservations*data_type.bytes_per_record*sizeof(char);
+	unsigned long int internal_from = in_cache_from*data_type.nobservations*data_type.bytes_per_record*sizeof(char);
 //	std::cout << "position = " << internal_from << "\n";
 	data_file.seekg(internal_from, std::ios::beg);
 	if (current_cache_size_bytes <= max_buffer_size_bytes) {
 		data_file.read((char*)char_buffer,current_cache_size_bytes);
-		if (!data_file) error("failed to read cache from file '%s'\n",filename.c_str());
+		if (!data_file) error("failed to read cache from file '%s'\n",data_filename.c_str());
 	} else {
 // cache size is bigger than what we can read in one go ... read in blocks
 		unsigned long int nbytes_togo = current_cache_size_bytes;
@@ -276,12 +293,12 @@ void filevector<DT>::update_cache(unsigned long int from_var)
 		while (nbytes_togo>0)
 		if (nbytes_togo > max_buffer_size_bytes) {
 			data_file.read((char*)(char_buffer+nbytes_finished),max_buffer_size_bytes);
-			if (!data_file) error("failed to read cache from file '%s'\n",filename.c_str());
+			if (!data_file) error("failed to read cache from file '%s'\n",data_filename.c_str());
 			nbytes_finished += max_buffer_size_bytes;
 			nbytes_togo -= max_buffer_size_bytes;
 		} else {
 			data_file.read((char*)(char_buffer+nbytes_finished),nbytes_togo);
-			if (!data_file) error("failed to read cache from file '%s'\n",filename.c_str());
+			if (!data_file) error("failed to read cache from file '%s'\n",data_filename.c_str());
 			nbytes_finished += nbytes_togo;
 			nbytes_togo -= nbytes_togo;
 		}
@@ -345,15 +362,6 @@ void filevector<DT>::read_variable(unsigned long int nvar, DT * outvec)
 
 
 
-/*template<class DT1,class DT2>
-void read_variable_convert_to(filevector<DT1> fv, unsigned long int nvar, DT2 * outvec)
-{
-DT1 * tmp = new (std::nothrow) DT1[fv.get_nvariables()];
-    read_variable(nvar, tmp);
-    
-} */
-
-
 template <class DT>
 void filevector<DT>::read_observation(unsigned long int nobs, DT * outvec)
 {
@@ -383,7 +391,7 @@ template <class DT>
 void filevector<DT>::write_variable(unsigned long int nvar, DT * datavec)
 {
 	unsigned long int pos = nrnc_to_nelem(nvar, 0);
-	data_file.seekp(header_size+pos*sizeof(DT), std::ios::beg);
+	data_file.seekp(pos*sizeof(DT), std::ios::beg);
 	data_file.write((char*)datavec,sizeof(DT)*data_type.nobservations);
 	if (!data_file) error ("failed to write to data file\n");
 
@@ -404,11 +412,6 @@ void filevector<DT>::write_variable(unsigned long int nvar, DT * datavec)
 //	for (unsigned int i=0;i<data_type.nobservations;i++) std::cout << " " << datavec[i];
 }
 
-//template <class DT>
-//void filevector<DT>::add_variable(DT * invec, fixedchar varname)
-//{
-//todo
-//}
 
 template <class DT>
 unsigned long int filevector<DT>::nrnc_to_nelem(unsigned long int nvar, unsigned long int nobs)
@@ -426,9 +429,9 @@ DT filevector<DT>::read_element(unsigned long int nvar, unsigned long int nobs)
     //todo use cache
 	DT out;
 	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
-	data_file.seekg(header_size+pos*sizeof(DT), std::ios::beg);
+	data_file.seekg(pos*sizeof(DT), std::ios::beg);
 	data_file.read((char*)&out,sizeof(DT));
-	if (!data_file) error("failed to read an element from file '%s'\n",filename.c_str());
+	if (!data_file) error("failed to read an element from file '%s'\n",data_filename.c_str());
 	return(out);
 }
 
@@ -436,7 +439,7 @@ template <class DT>
 void filevector<DT>::write_element(unsigned long int nvar, unsigned long int nobs, DT data)
 {
 	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
-	data_file.seekp(header_size+pos*sizeof(DT), std::ios::beg);
+	data_file.seekp(pos*sizeof(DT), std::ios::beg);
 	data_file.write((char*)&data,sizeof(DT));
 
 	if (nvar >= in_cache_from && nvar <= in_cache_to)

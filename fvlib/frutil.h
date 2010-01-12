@@ -7,6 +7,8 @@
 #include "frerror.h"
 #include "const.h"
 
+using namespace std;
+
 class fixedchar
 {
 public:
@@ -76,6 +78,9 @@ void make_fake_file(char * fake_filename, unsigned long int nvariables, unsigned
 
 fr_type get_file_type(char * filename);
 
-void initialize_empty_file(std::string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type);
+void initialize_empty_file(string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type);
+
+string extract_base_file_name(string filename);
+bool file_exists(string fileName);
 
 #endif

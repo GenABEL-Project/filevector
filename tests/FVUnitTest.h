@@ -10,6 +10,7 @@
 #include <string>
 #include <cstring>
 
+#include<stdio.h>
 
 #include "filevector.h"
 
@@ -95,7 +96,11 @@ public:
     void test_save()
     {
         string src_file_name = get_file_name_to_write();
-        string dest_file_name = src_file_name + "_copy";
+
+        string dest_file_name = get_dir_name_to_write()+"/save_test";
+        remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
+        remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
+
         filevector<float> fv( src_file_name, 2 );//no need in big cache
         fv.save( dest_file_name );
 
@@ -118,7 +123,10 @@ public:
     void test_save_vars()
     {
         string src_file_name = get_file_name_to_write();
-        string dest_file_name = src_file_name + "_vars";
+        string dest_file_name = get_dir_name_to_write()+"/save_vars_test";
+        remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
+        remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
+
         filevector<float> fv( src_file_name, 64 );
         unsigned long int obs_indexes[2] =  {1,3};
         fv.save_vars( dest_file_name, 2, obs_indexes );
@@ -131,7 +139,10 @@ public:
     void test_save_obs()
     {
         string src_file_name = get_file_name_to_write();
-        string dest_file_name = src_file_name + "_obs";
+        string dest_file_name = get_dir_name_to_write()+"/save_obs_test";
+        remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
+        remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
+
         filevector<float> fv( src_file_name, 64 );
         unsigned long int obs_indexes[2] =  {1,3};
         fv.save_obs( dest_file_name, 2, obs_indexes );
@@ -173,8 +184,11 @@ public:
 
 		unsigned long int nvariables =10;
 		unsigned long int nobservations =20;
-		string tmp_file_name = get_dir_name_to_write()+"/tmp.dat";
+		string tmp_file_name = get_dir_name_to_write()+"/tmp";
+		remove((tmp_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
+        remove((tmp_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 		initialize_empty_file( (char *)tmp_file_name.c_str(), nvariables,nobservations, FLOAT);
+
 		filevector<float> fv( tmp_file_name, 1 );
 
         float * var = new float [fv.get_nvariables()];
@@ -217,8 +231,11 @@ public:
 
 		unsigned long int nvariables =10;
 		unsigned long int nobservations =3;
-		string tmp_file_name = get_dir_name_to_write()+"/tmp.dat";
+		string tmp_file_name = get_dir_name_to_write()+"/tmp";
+        remove((tmp_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
+        remove((tmp_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 		initialize_empty_file( (char *)tmp_file_name.c_str(), nvariables,nobservations, FLOAT);
+
 		filevector<float> fv( tmp_file_name, 1 );
 
 		float * var = new float [fv.get_nobservations()];
@@ -238,6 +255,7 @@ public:
 		delete[] var; 
 		delete[] int_var;
 	}
+
 };
 
 
