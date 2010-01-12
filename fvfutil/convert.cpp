@@ -61,7 +61,10 @@ int main(int argc, char * argv[])
 
      //copy header
      int buf_len = header_size;
-     char * buffer = new char [buf_len];
+     char * buffer = new (std::nothrow) char [buf_len];
+     if (!buffer)
+		error("failed to get memory for buffer\n");
+		
      data_file.seekg( 0 );
      data_file.read(buffer,buf_len);
      new_index_file.write(buffer,buf_len);
