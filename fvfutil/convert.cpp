@@ -21,8 +21,8 @@ int main(int argc, char * argv[])
     if(filename.find(".fvf")!=filename.length()-4)
        error("filename should have .fvf extention");
 
-    string data_filename =filename.substr(0,filename.length()-4)+ ".fvd";
-    string index_filename =filename.substr(0,filename.length()-4)+ ".fvi";
+    string data_filename  =filename.substr(0,filename.length()-4) + FILEVECTOR_DATA_FILE_SUFFIX;
+    string index_filename =filename.substr(0,filename.length()-4) + FILEVECTOR_INDEX_FILE_SUFFIX;
 
     cout << "data:" << data_filename << ", index:" << index_filename << endl;
 
