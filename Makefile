@@ -13,6 +13,7 @@ CORRECTNESSTEST = $(BINDIR)/correctnesstest
 MODIFTEST = $(BINDIR)/modificationtest
 UNITTEST = $(BINDIR)/fvunittest
 CONVERT = $(BINDIR)/convert
+WRITE_VAR_SPEED = $(BINDIR)/writevarspeed
 
 
 # GNU compiler
@@ -20,7 +21,7 @@ CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 -m64 
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 -g #-m64 
 CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS)
 
@@ -70,3 +71,7 @@ $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FVUnitTest.cpp
 converter : $(CONVERT)
 $(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp  $(SRCDIR)/convert.cpp -o $(CONVERT)
+
+writevarspeed : $(WRITE_VAR_SPEED)
+$(WRITE_VAR_SPEED): $(LIBFILES) $(SRCDIR)/convert.cpp
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp  $(TESTSDIR)/WriteVariablesSpeed.cpp -o $(WRITE_VAR_SPEED)
