@@ -59,25 +59,8 @@ int main(int argc, char * argv[])
 		}
 	}
 
-/*
-	cout << "Filevector has:" << fv.get_nvariables() << " variables" << endl;
-	for(int i=0;i<fv.get_nvariables();i++)
-	{
-	    cout<< i<<":"<< fv.read_variable_name(i).name << endl;
-	}
-*/
+//    fv.dump_variable_names();
 	fv.free_resources();
 
 	delete[] tmp;
-
-
-/*
-	filevector<float> fv2(filename,cacheSize);
-	cout << "Loaded Filevector has:" << fv2.get_nvariables() << " variables" << endl;
-	for(int i=0;i<fv2.get_nvariables();i++)
-	{
-	    cout<< i<<":"<< fv2.read_variable_name(i).name << endl;
-	}
-*/
-
 }

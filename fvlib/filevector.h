@@ -71,6 +71,7 @@ public:
     unsigned int get_nobservations();
 
 	fixedchar read_variable_name(unsigned long int nvar);
+	void dump_variable_names();
 	fixedchar read_observation_name(unsigned long int nobs);
 
 // USER FUNCTIONS
@@ -338,6 +339,15 @@ fixedchar filevector<DT>::read_variable_name(unsigned long int nvar)
 }
 
 template <class DT>
+void filevector<DT>::dump_variable_names()
+{
+	for(int i=0;i<get_nvariables();i++)
+	{
+	    cout<< i<<":"<< read_variable_name(i).name << endl;
+	}
+}
+
+template <class DT>
 fixedchar filevector<DT>::read_observation_name(unsigned long int nobs)
 {
 	if (nobs>=data_type.nobservations) error("trying to get name of obs out of range");
@@ -423,16 +433,18 @@ void filevector<DT>::add_variable(DT * invec, string varname)
       data_type.nvariables++;
       data_type.nelements = data_type.nvariables*data_type.nobservations;//recalculate
 
-      fixedchar * new_variable_names = new fixedchar[data_type.nvariables];
+      fixedchar * new_variable_names = new (nothrow)fixedchar[data_type.nvariables];
       if (!new_variable_names)
           error("can not allocate memory in add_variable()");
 
-      memcpy(new_variable_names,variable_names,data_type.nvariables-1);
-      fixedchar _fc_varname;
-      strcpy(_fc_varname.name, varname.c_str());
-
+	  //reallocate greater array for var names
+	  memcpy(new_variable_names,variable_names,sizeof(fixedchar)*(data_type.nvariables-1));
+      fixedchar _fc_varname(varname);
       new_variable_names[data_type.nvariables - 1] = _fc_varname;
+      fixedchar * oldvar_names = variable_names;
       variable_names = new_variable_names;
+      delete[] oldvar_names;
+
       write_variable(data_type.nvariables - 1,invec);
 }
 
