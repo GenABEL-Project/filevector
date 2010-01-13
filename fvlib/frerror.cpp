@@ -15,11 +15,11 @@ void error (const char * format, ... )
 	va_end(args);
 #ifdef R_R_H
 	Rprintf("ERROR: %s",buffer);
+	throw 1;
 #else
 	printf("ERROR: %s\n",buffer);
-//	perror(buffer);
-#endif
 	exit(EXIT_FAILURE);
+#endif
 }
 
 void warning (const char * format, ... )

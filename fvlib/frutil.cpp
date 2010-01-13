@@ -68,12 +68,12 @@ void initialize_empty_file(string filename, unsigned long int nvariables, unsign
 	metadata.bits_per_record = desize*8;
 
 	if(file_exists( index_filename ))
-	     error("initialize_empty_file error:file %s already exist",index_filename.c_str());
+	     error("initialize_empty_file error:file %s already exists\n",index_filename.c_str());
 
 	std::ofstream idx_file(index_filename.c_str(), std::ios::binary | std::ios::out);
 
 	if(file_exists( data_filename ))
-	     error("initialize_empty_file error:file %s already exist",data_filename.c_str());
+	     error("initialize_empty_file error:file %s already exists\n",data_filename.c_str());
 	std::ofstream data_file(data_filename.c_str(), std::ios::binary | std::ios::out);
 
 	     
