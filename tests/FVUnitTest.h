@@ -248,17 +248,23 @@ public:
 		create_and_fill_variable(fv.get_nobservations(),var);
 
         string varname = "added";
+        string varname2 = "added2";
 		fv.add_variable(var,varname);
+		fv.add_variable(var,varname2);
 
-		CPPUNIT_ASSERT_EQUAL((unsigned int)11, fv.get_nvariables());
+		CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv.get_nvariables());
 		fixedchar _fc_varname_loaded = fv.read_variable_name(10);
         CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
+        _fc_varname_loaded = fv.read_variable_name(11);
+        CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
         fv.free_resources();
 
         filevector<float> fv2( get_temp_file_name(), 1 );
-        CPPUNIT_ASSERT_EQUAL((unsigned int)11, fv2.get_nvariables());
+        CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv2.get_nvariables());
 		_fc_varname_loaded = fv2.read_variable_name(10);
         CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
+        _fc_varname_loaded = fv2.read_variable_name(11);
+        CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
 	}
 
 	//==========================  utility methods ==================
