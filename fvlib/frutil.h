@@ -2,6 +2,7 @@
 #define __FRUTIL__
 
 #include <iostream>
+#include <cstring>
 #include <cstdlib>
 #include <fstream>
 #include "frerror.h"
@@ -12,6 +13,8 @@ using namespace std;
 class fixedchar
 {
 public:
+    fixedchar(){};
+    fixedchar(string s){strcpy(name,s.c_str());};
 	char name[NAMELENGTH];
 };
 
