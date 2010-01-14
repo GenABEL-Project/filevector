@@ -158,8 +158,13 @@ void filevector<DT>::initialize(string filename_toload, unsigned long int caches
 {
 	if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported\n");
 
-	index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;
-	data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
+    index_filename = filename_toload + FILEVECTOR_INDEX_FILE_SUFFIX;
+    if(!file_exists(index_filename))
+    	index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;
+
+	data_filename = filename_toload + FILEVECTOR_DATA_FILE_SUFFIX;
+	if(!file_exists(data_filename))
+        data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
 
 
 //	if (char_buffer != NULL) error("B: trying to ini already ini-ed object!\n\n");
