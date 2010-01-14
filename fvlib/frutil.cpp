@@ -17,9 +17,9 @@ fr_type get_file_type(char * filename) {
 string extract_base_file_name(string filename)
 {
     int slashPos = filename.find_last_of("/");// example bin/../tests/data/2write/save_test
-    int dotPos = filename.find(".",slashPos);
-	//cout<< "extract_base_file_name:"<<filename<<", pos:"<< dotPos<<", slashPos:" << slashPos << endl;
-	if(dotPos == string::npos)
+    int dotPos = filename.find_last_of(".");
+//	cout<< "extract_base_file_name:"<<filename<<", pos:"<< dotPos<<", slashPos:" << slashPos << endl;
+	if(dotPos == string::npos || dotPos < slashPos )
 	{
         return filename;
 	}

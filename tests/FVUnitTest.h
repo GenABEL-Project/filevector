@@ -32,6 +32,7 @@ class FVUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST( test_read_write_observation );
     CPPUNIT_TEST( test_read_variable_convert_to );
     CPPUNIT_TEST( test_add_variable );
+    CPPUNIT_TEST( test_extract_base_file_name );
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -265,6 +266,21 @@ public:
         CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
         _fc_varname_loaded = fv2.read_variable_name(11);
         CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
+	}
+
+	void test_extract_base_file_name()
+	{
+	    string fn = "//...///dd/d///filename.ext";
+	    string base = extract_base_file_name(fn);
+	    CPPUNIT_ASSERT_EQUAL( fn , base + ".ext" );
+
+	    fn = "/path/filename.ext1.ext2.ext3.ext";
+	    base = extract_base_file_name(fn);
+	    CPPUNIT_ASSERT_EQUAL( fn , base + ".ext" );
+
+	    fn = "/path/../filename";
+	    base = extract_base_file_name(fn);
+	    CPPUNIT_ASSERT_EQUAL( fn , base );
 	}
 
 	//==========================  utility methods ==================
