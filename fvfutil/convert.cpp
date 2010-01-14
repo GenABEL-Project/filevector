@@ -10,11 +10,13 @@
 #include "frutil.h"
 #include "filevector.h"
 
+using namespace std;
+
 int main(int argc, char * argv[])
 {
 	if ( argc<2 )
   	{
-  		std::cout << "Please provide name of the file to convert"<< endl;
+  		cout << "Please provide name of the file to convert"<< endl;
   		exit ( 1 );
   	}
     string filename = argv[1];
@@ -35,9 +37,9 @@ int main(int argc, char * argv[])
 	if (filestatus.st_size < sizeof(data_type))
 		error("file %s is too short to contain an FVF-object\n",filename.c_str());
 
-	std::fstream data_file;
-	std::ofstream new_data_file;
-	std::ofstream new_index_file;
+	fstream data_file;
+	ofstream new_data_file;
+	ofstream new_index_file;
 
 	data_file.open(filename.c_str(), std::ios::out | std::ios::in | std::ios::binary);
 	if (data_file.fail())
@@ -49,20 +51,20 @@ int main(int argc, char * argv[])
 
 	unsigned long int header_size = sizeof(data_type) + sizeof(fixedchar)*(data_type.nvariables+data_type.nobservations);
 
-    new_data_file.open(data_filename.c_str(), std::ios::out | std::ios::binary);
+    new_data_file.open(data_filename.c_str(), ios::out | ios::binary);
     	if (new_data_file.fail())
     		error("creating new data file %s for write failed",data_filename.c_str());
 
-    new_index_file.open(index_filename.c_str(), std::ios::out | std::ios::binary);
+    new_index_file.open(index_filename.c_str(), ios::out | ios::binary);
         	if (new_index_file.fail())
         		error("creating new index file %s for write failed",index_filename.c_str());
 
 
 
      //copy header
-     int buf_len = header_size;
-     char * buffer = new (std::nothrow) char [buf_len];
-     if (!buffer)
+    int buf_len = header_size;
+    char * buffer = new (nothrow) char [buf_len];
+    if (!buffer)
 		error("failed to get memory for buffer\n");
 		
      data_file.seekg( 0 );

@@ -149,7 +149,7 @@ void text2fvf(
 	message("number of variables in FVF-file '%s' will be %d\n",outfilename.c_str(),out_nvars);
 	message("number of observations in FVF-file '%s' will be %d\n\n",outfilename.c_str(),out_nobs);
 
-	filevector<float> outdata(outfilename, (unsigned long int) 64); // this is not nice - fixed cache-size of 64 Mb
+	DatABELBaseCPP * outdata = new filevector(outfilename, (unsigned long int) 64); // this is not nice - fixed cache-size of 64 Mb
 
 	fixedchar tmpname;
 
@@ -174,9 +174,9 @@ void text2fvf(
 //							Rprintf("%u %u %s\n",i,idx,sword.c_str());
 							strcpy(tmpname.name,sword.c_str());
 							if (transpose)
-								outdata.write_observation_name(idx,tmpname);
+								outdata->write_observation_name(idx,tmpname);
 							else
-								outdata.write_variable_name(idx,tmpname);
+								outdata->write_variable_name(idx,tmpname);
 						}
 					}
 				}
@@ -189,9 +189,9 @@ void text2fvf(
 				colnamesfile >> tmpstr;
 				strcpy(tmpname.name,tmpstr.c_str());
 				if (transpose)
-					outdata.write_observation_name(i,tmpname);
+					outdata->write_observation_name(i,tmpname);
 				else
-					outdata.write_variable_name(i,tmpname);
+					outdata->write_variable_name(i,tmpname);
 			}
 			colnamesfile.close();
 		}
@@ -206,9 +206,9 @@ void text2fvf(
 			rownamesfile >> tmpstr;
 			strcpy(tmpname.name,tmpstr.c_str());
 			if (transpose)
-				outdata.write_variable_name(i,tmpname);
+				outdata->write_variable_name(i,tmpname);
 			else
-				outdata.write_observation_name(i,tmpname);
+				outdata->write_observation_name(i,tmpname);
 		}
 		rownamesfile.close();
 	}
@@ -229,15 +229,15 @@ void text2fvf(
 			if (current_word == rownames) {
 				strcpy(tmpname.name,sword.c_str());
 				if (transpose)
-					outdata.write_variable_name(cline,tmpname);
+					outdata->write_variable_name(cline,tmpname);
 				else
-					outdata.write_observation_name(cline,tmpname);
+					outdata->write_observation_name(cline,tmpname);
 			} else if (current_word > skipcols) {
 				sscanf(sword.c_str(),"%f",&data[j++]);
 			}
 		}
 		if (transpose) {
-			outdata.write_variable(cline,data);
+			outdata->write_variable_as(cline,data);
 			j=0;
 		}
 		cline++;
@@ -267,10 +267,10 @@ void text2fvf(
 		{
 			if (transpose)
 			{
-				outdata.write_variable(current_var,(data+current_var*ncols));
+				outdata->write_variable_as(current_var,(data+current_var*ncols));
 			} else {
 				for (unsigned long int j=0;j<nrows;j++) tmpdat[j] = data[j * ncols + current_var];
-				outdata.write_variable(current_var,tmpdat);
+				outdata->write_variable_as(current_var,tmpdat);
 			}
 			if ((current_var+1 % REPORT_EVERY) == 0) {std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b" << (current_var+1);std::cout.flush();}
 		}
@@ -285,8 +285,7 @@ void text2fvf(
 
 	// free up the RAM
 	delete [] data;
-	outdata.free_resources();
-
+	delete outdata;
 	std::cout << "\nFinished successfully text2fvf\n";
 
 }

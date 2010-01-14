@@ -45,16 +45,16 @@ public:
     void testCacheUpdatedOnWrite()
     {
         string file_name = get_file_name_to_write();
-        filevector<float> fv( file_name, 2 );//no need in big cache
-        float * var = new float [fv.get_nobservations()];
-        fv.read_variable(0,var);
+        DatABELBaseCPP *fv = new filevector( file_name, 2 );//no need in big cache
+        float * var = new float [fv->get_nobservations()];
+        fv->read_variable_as(0,var);
         float val = var[0];
         float newVal = val+1.;
         var[0] = newVal;
-        fv.write_variable(0,var);
+        fv->write_variable_as(0,var);
 
-        float * var2 = new float [fv.get_nobservations()];
-        fv.read_variable(0,var2);
+        float * var2 = new float [fv->get_nobservations()];
+        fv->read_variable_as(0,var2);
 
         cout<< "value from read():" << var2[0] << ",newVal: "<<newVal<< endl;
         CPPUNIT_ASSERT_EQUAL( var2[0] , newVal );
@@ -65,34 +65,34 @@ public:
     void test_write_variable_name()
     {
         string file_name = get_file_name_to_write();
-        filevector<float> fv( file_name, 2 );//no need in big cache
+        DatABELBaseCPP* fv = new filevector( file_name, 2 );//no need in big cache
         fixedchar _fc_varname_saved;
         strcpy(_fc_varname_saved.name,"testvarname");
-        fv.write_variable_name( 0, _fc_varname_saved );
+        fv->write_variable_name( 0, _fc_varname_saved );
 
-        fixedchar _fc_varname_loaded = fv.read_variable_name(0);
+        fixedchar _fc_varname_loaded = fv->read_variable_name(0);
         CPPUNIT_ASSERT_EQUAL( string(_fc_varname_saved.name), string(_fc_varname_loaded.name) );
-        fv.free_resources();
+        delete fv;
 
-        filevector<float> fv2( file_name, 2 );//reopen
-        _fc_varname_loaded = fv2.read_variable_name(0);
+        DatABELBaseCPP *fv2 = new filevector ( file_name, 2 );//reopen
+        _fc_varname_loaded = fv2->read_variable_name(0);
         CPPUNIT_ASSERT_EQUAL( string(_fc_varname_saved.name), string(_fc_varname_loaded.name) );
         
     }
     void test_write_observation_name()
     {
         string file_name = get_file_name_to_write();
-        filevector<float> fv( file_name, 2 );//no need in big cache
+        DatABELBaseCPP* fv = new filevector( file_name, 2 );//no need in big cache
         fixedchar _fc_obsname_saved;
         strcpy(_fc_obsname_saved.name,"testvarname");
-        fv.write_observation_name( 0, _fc_obsname_saved );
+        fv->write_observation_name( 0, _fc_obsname_saved );
 
-        fixedchar _fc_obsname_loaded = fv.read_observation_name(0);
+        fixedchar _fc_obsname_loaded = fv->read_observation_name(0);
         CPPUNIT_ASSERT_EQUAL( string(_fc_obsname_saved.name), string(_fc_obsname_loaded.name) );
-        fv.free_resources();
+        delete fv;
 
-        filevector<float> fv2( file_name, 2 );//reopen
-        _fc_obsname_loaded = fv2.read_observation_name(0);
+        DatABELBaseCPP* fv2 = new filevector( file_name, 2 );//reopen
+        _fc_obsname_loaded = fv2->read_observation_name(0);
         CPPUNIT_ASSERT_EQUAL( string(_fc_obsname_saved.name), string(_fc_obsname_loaded.name) );
     }
 
@@ -104,23 +104,23 @@ public:
         remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
         remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
-        filevector<float> fv( src_file_name, 2 );//no need in big cache
-        fv.save( dest_file_name );
+        DatABELBaseCPP* fv =  new filevector ( src_file_name, 2 );//no need in big cache
+        fv->save( dest_file_name );
 
-        filevector<float> fv_copy( dest_file_name, 2 );
-        CPPUNIT_ASSERT_EQUAL(fv.get_nobservations(),fv_copy.get_nobservations());
-        CPPUNIT_ASSERT_EQUAL(fv.get_nvariables(),fv_copy.get_nvariables());
+        DatABELBaseCPP* fv_copy = new filevector ( dest_file_name, 2 );
+        CPPUNIT_ASSERT_EQUAL(fv->get_nobservations(),fv_copy->get_nobservations());
+        CPPUNIT_ASSERT_EQUAL(fv->get_nvariables(),fv_copy->get_nvariables());
 
-        for(unsigned long int i=0;i<fv.get_nvariables();i++)
+        for(unsigned long int i=0;i<fv->get_nvariables();i++)
         {
-            CPPUNIT_ASSERT_EQUAL( string(fv.read_variable_name( i ).name),string(fv_copy.read_variable_name( i ).name));
+            CPPUNIT_ASSERT_EQUAL( string(fv->read_variable_name( i ).name),string(fv_copy->read_variable_name( i ).name));
         }
 
-        for(unsigned long int i=0;i<fv.get_nobservations();i++)
+        for(unsigned long int i=0;i<fv->get_nobservations();i++)
         {
-            CPPUNIT_ASSERT_EQUAL( string(fv.read_observation_name( i ).name),string(fv_copy.read_observation_name( i ).name));
+            CPPUNIT_ASSERT_EQUAL( string(fv->read_observation_name( i ).name),string(fv_copy->read_observation_name( i ).name));
         }
-        
+        delete fv;
     }
 
     void test_save_vars()
@@ -130,13 +130,13 @@ public:
         remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
         remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
-        filevector<float> fv( src_file_name, 64 );
+        DatABELBaseCPP *fv = new filevector ( src_file_name, 64 );
         unsigned long int obs_indexes[2] =  {1,3};
-        fv.save_vars( dest_file_name, 2, obs_indexes );
+        fv->save_vars( dest_file_name, 2, obs_indexes );
 
-        filevector<float> fv_copy( dest_file_name, 2 );
-        CPPUNIT_ASSERT_EQUAL(fv.get_nobservations(),fv_copy.get_nobservations());
-        CPPUNIT_ASSERT_EQUAL( (unsigned int )2 ,fv_copy.get_nvariables() );
+        DatABELBaseCPP *fv_copy = new filevector( dest_file_name, 2 );
+        CPPUNIT_ASSERT_EQUAL(fv->get_nobservations(),fv_copy->get_nobservations());
+        CPPUNIT_ASSERT_EQUAL( (unsigned int )2 ,fv_copy->get_nvariables() );
     }
 
     void test_save_obs()
@@ -146,38 +146,38 @@ public:
         remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
         remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
-        filevector<float> fv( src_file_name, 64 );
+        DatABELBaseCPP *fv = new filevector( src_file_name, 64 );
         unsigned long int obs_indexes[2] =  {1,3};
-        fv.save_obs( dest_file_name, 2, obs_indexes );
+        fv->save_obs( dest_file_name, 2, obs_indexes );
 
-        filevector<float> fv_copy( dest_file_name, 2 );
-        CPPUNIT_ASSERT_EQUAL((unsigned int )2 ,fv_copy.get_nobservations());
-        CPPUNIT_ASSERT_EQUAL( fv.get_nvariables() ,fv_copy.get_nvariables() );
+        DatABELBaseCPP* fv_copy = new filevector( dest_file_name, 2 );
+        CPPUNIT_ASSERT_EQUAL((unsigned int )2 ,fv_copy->get_nobservations());
+        CPPUNIT_ASSERT_EQUAL( fv->get_nvariables() ,fv_copy->get_nvariables() );
     }
 
     void test_set_cachesizeMb()
     {
         string src_file_name = get_file_name_to_write();
-        filevector<float> fv( src_file_name, 64 );
+        filevector *fv = new filevector( src_file_name, 64 );
 
         unsigned long int vars_capacity =11389 ;
-        CPPUNIT_ASSERT_EQUAL( vars_capacity ,fv.cache_size_nvars );
+        CPPUNIT_ASSERT_EQUAL( vars_capacity ,fv->cache_size_nvars );
 
-        float * var = new float [fv.get_nobservations()];
-        fv.read_variable(0,var);
-        CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv.in_cache_from );
-        CPPUNIT_ASSERT_EQUAL( vars_capacity-1, fv.in_cache_to );
+        float * var = new float [fv->get_nobservations()];
+        fv->read_variable(0,var);
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv->in_cache_from );
+        CPPUNIT_ASSERT_EQUAL( vars_capacity-1, fv->in_cache_to );
 
 
-        fv.set_cachesizeMb(1);
-        CPPUNIT_ASSERT_EQUAL((unsigned long int )177 ,fv.cache_size_nvars );
-        CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv.in_cache_from );
-        CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv.in_cache_to );
+        fv->set_cachesizeMb(1);
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )177 ,fv->cache_size_nvars );
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv->in_cache_from );
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv->in_cache_to );
 
-        fv.read_variable(fv.get_nvariables() - 1,var);
+        fv->read_variable(fv->get_nvariables() - 1,var);
 
-        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv.get_nvariables() - 1,fv.in_cache_from );
-        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv.get_nvariables() - 1,fv.in_cache_to );
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv->get_nvariables() - 1,fv->in_cache_from );
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv->get_nvariables() - 1,fv->in_cache_to );
 
         delete var;
     }
@@ -188,26 +188,27 @@ public:
 		unsigned long int nobservations =20;
         create_empty_filevector(nvariables, nobservations);
         string tmp_file_name = get_temp_file_name();
-		filevector<float> fv( tmp_file_name, 1 );
+		DatABELBaseCPP* fv = new filevector( tmp_file_name, 1 );
 
-        float * var = new float [fv.get_nvariables()];
-        float * var2 = new float [fv.get_nvariables()];
-        for(int i = 0; i<fv.get_nvariables(); i++)
+        float * var = new float [fv->get_nvariables()];
+        float * var2 = new float [fv->get_nvariables()];
+        for(int i = 0; i<fv->get_nvariables(); i++)
         {
             var[i] = i;
 		}
 
-        fv.write_observation(0,var);
-        fv.read_observation(0,var2);
+        fv->write_observation(0,var);
+        fv->read_observation(0,var2);
 
-        CPPUNIT_ASSERT( compare_arrays(var, var2 , fv.get_nvariables()));
-        fv.free_resources();
+        CPPUNIT_ASSERT( compare_arrays(var, var2 , fv->get_nvariables()));
+        delete fv;
 
 		//reopen file and check
-		filevector<float> fv2( tmp_file_name, 1 );
-		fv2.read_observation(0,var2);
+		DatABELBaseCPP* fv2 = new filevector( tmp_file_name, 1 );
+		fv2->read_observation(0,var2);
 		CPPUNIT_ASSERT( compare_arrays(var, var2 , nvariables));
-
+        delete fv2;
+        
         delete var;
         delete var2;
 	}
@@ -221,17 +222,17 @@ public:
 		create_empty_filevector(nvariables, nobservations);
 		string tmp_file_name = get_temp_file_name();
 
-		filevector<float> fv( tmp_file_name, 1 );
+		DatABELBaseCPP* fv = new filevector( tmp_file_name, 1 );
 
-		float * var = new float [fv.get_nobservations()];
-		for(int i = 0; i<fv.get_nobservations(); i++)
+		float * var = new float [fv->get_nobservations()];
+		for(int i = 0; i<fv->get_nobservations(); i++)
         {
             var[i] = i + (float)i/10;
 		}
-		fv.write_variable(0,var);
+		fv->write_variable_as(0,var);
 
-		int * int_var = new int[fv.get_nobservations()];
-		fv.read_variable_convert_to(0,int_var);
+		int * int_var = new int[fv->get_nobservations()];
+		fv->read_variable_as(0,int_var);
 
 		CPPUNIT_ASSERT_EQUAL(0, int_var[0]);
 		CPPUNIT_ASSERT_EQUAL(1, int_var[1]);
@@ -244,28 +245,30 @@ public:
 	void test_add_variable()
 	{
 		create_empty_filevector(10,20);
-		filevector<float> fv( get_temp_file_name(), 1 );
-		float * var = new float [fv.get_nobservations()];
-		create_and_fill_variable(fv.get_nobservations(),var);
+		DatABELBaseCPP* fv = new filevector( get_temp_file_name(), 1 );
+		float * var = new float [fv->get_nobservations()];
+		create_and_fill_variable(fv->get_nobservations(),var);
 
         string varname = "added";
         string varname2 = "added2";
-		fv.add_variable(var,varname);
-		fv.add_variable(var,varname2);
+		fv->add_variable_as(var,varname);
+		fv->add_variable_as(var,varname2);
 
-		CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv.get_nvariables());
-		fixedchar _fc_varname_loaded = fv.read_variable_name(10);
+		CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv->get_nvariables());
+		fixedchar _fc_varname_loaded = fv->read_variable_name(10);
         CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
-        _fc_varname_loaded = fv.read_variable_name(11);
+        _fc_varname_loaded = fv->read_variable_name(11);
         CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
-        fv.free_resources();
+        delete fv;
 
-        filevector<float> fv2( get_temp_file_name(), 1 );
-        CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv2.get_nvariables());
-		_fc_varname_loaded = fv2.read_variable_name(10);
+        DatABELBaseCPP* fv2 = new filevector( get_temp_file_name(), 1 );
+
+        CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv2->get_nvariables());
+		_fc_varname_loaded = fv2->read_variable_name(10);
         CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
-        _fc_varname_loaded = fv2.read_variable_name(11);
+        _fc_varname_loaded = fv2->read_variable_name(11);
         CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
+        delete fv2;
 	}
 
 	void test_extract_base_file_name()

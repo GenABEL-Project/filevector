@@ -16,8 +16,8 @@ int main(int argc, char * argv[])
 	std::cout << "\tOUTFILE   = " << ofname << "\n";
 	std::cout << "\tcachesize = " << cachesize << " Mb\n\n";
 
-	filevector<float> indata1(ifname1, cachesize);
-	filevector<float> indata2(ifname2, cachesize);
+	filevector indata1(ifname1, cachesize);
+	filevector indata2(ifname2, cachesize);
 
 // sanity checks: can we merge these files?
 // are dimensions compatible?
@@ -41,7 +41,7 @@ int main(int argc, char * argv[])
 	initialize_empty_file(ofname, out_nvars, out_nobs, FLOAT);
 	std::cout << "writing out the data ... \n";
 
-	filevector<float> outdata(ofname, cachesize);
+	filevector outdata(ofname, cachesize);
 
 // copy observation names from the first object
 	for (unsigned long int i=0;i<indata1.data_type.nobservations;i++) outdata.observation_names[i] = indata1.observation_names[i];

@@ -85,5 +85,6 @@ void initialize_empty_file(string filename, unsigned long int nvariables, unsign
 
 string extract_base_file_name(string filename);
 bool file_exists(string fileName);
+unsigned short calcDataSize(unsigned short int type);
 
 #endif
