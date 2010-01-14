@@ -31,8 +31,8 @@ string extract_base_file_name(string filename)
 }
 void initialize_empty_file(string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type)
 {
-	string index_filename = extract_base_file_name(filename) + FILEVECTOR_INDEX_FILE_SUFFIX;
-	string data_filename = extract_base_file_name(filename)+ FILEVECTOR_DATA_FILE_SUFFIX;
+	string index_filename = filename + FILEVECTOR_INDEX_FILE_SUFFIX;
+	string data_filename = filename + FILEVECTOR_DATA_FILE_SUFFIX;
 
 
 	fr_type metadata;
