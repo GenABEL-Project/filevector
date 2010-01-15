@@ -77,7 +77,7 @@ public:
     {
         char* tmp = new (nothrow) char [get_nobservations()*getDataSize()];
         if(!tmp)
-            error("read_variable_convert_to allocation error");
+            error("write_variable_as allocation error");
 
         for(int i = 0; i< get_nobservations();i++){
             performCast(&tmp[i*getDataSize()],outvec[i],getDataType());
