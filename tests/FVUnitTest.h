@@ -273,13 +273,13 @@ public:
 
 	void test_extract_base_file_name()
 	{
-	    string fn = "//...///dd/d///filename.ext";
+	    string fn = "//...///dd/d///filename.fvi";
 	    string base = extract_base_file_name(fn);
-	    CPPUNIT_ASSERT_EQUAL( fn , base + ".ext" );
+	    CPPUNIT_ASSERT_EQUAL( fn , base + ".fvi" );
 
-	    fn = "/path/filename.ext1.ext2.ext3.ext";
+	    fn = "/path/filename.ext1.ext2.ext3.fvi";
 	    base = extract_base_file_name(fn);
-	    CPPUNIT_ASSERT_EQUAL( fn , base + ".ext" );
+	    CPPUNIT_ASSERT_EQUAL( fn , base + ".fvi" );
 
 	    fn = "/path/../filename";
 	    base = extract_base_file_name(fn);
