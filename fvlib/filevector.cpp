@@ -10,6 +10,8 @@ using namespace std;
 void filevector::free_resources()
 {
 	if (connected) {
+	    index_file.seekp(0, ios::beg);
+	    index_file.write((char*)&data_type, sizeof(data_type));
 		index_file.seekp(sizeof(data_type), ios::beg);
 // may be have to fix: is the buffer always enough???
 		if (sizeof(fixedchar)*data_type.nobservations > INT_MAX) error("sizeof(fixedchar)*data_type.nobservations > INT_MAX\n\n");
@@ -62,25 +64,25 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 	struct stat data_filestatus;
 	stat( data_filename.c_str() , &data_filestatus);
 
-	cout << "1" << endl;
+//	cout << "1" << endl;
 
 	index_file.open(index_filename.c_str(), ios::out | ios::in | ios::binary);
 	if (!index_file)
 		error("opening file %s for write & read failed\n",index_filename.c_str());
 
-	cout << "2" << endl;
+//	cout << "2" << endl;
 
 	data_file.open(data_filename.c_str(), ios::out | ios::in | ios::binary);
 	if (!data_file)
 		error("opening file %s for write & read failed\n",data_filename.c_str());
 
-	cout << "3" << endl;
+//	cout << "3" << endl;
 
 	index_file.read((char*)&data_type,sizeof(data_type));
 	if (!index_file)
         error("failed to read datainfo from file '%s'\n",index_filename.c_str());
 
-	cout << "4" << endl;
+//	cout << "4" << endl;
 
 //    // some integrity checks
 //	if (getDataSize() != data_type.bytes_per_record)
@@ -101,7 +103,7 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 //	if (resid != 0) estimated_size += (8 - resid);
 //	estimated_size /= 8;
 
-	cout << "5" << endl;
+//	cout << "5" << endl;
 
 	header_size = sizeof(data_type) + sizeof(fixedchar)*(data_type.nvariables+data_type.nobservations);
     if(header_size != index_filestatus.st_size)
@@ -129,7 +131,7 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 	for (unsigned long int i=0;i<data_type.nvariables;i++)
 		index_file.read((char*)(variable_names+i),sizeof(fixedchar));
 
-	cout << "6" << endl;
+//	cout << "6" << endl;
 
     set_cachesizeMb(cachesizeMb);
     update_cache(0);
