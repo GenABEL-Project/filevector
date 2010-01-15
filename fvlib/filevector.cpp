@@ -38,8 +38,16 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 {
 	if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported\n");
 
-	index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;
-	data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
+    index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;
+
+    if(!file_exists(index_filename))
+          error("index file not exists: %s",index_filename.c_str());
+
+   data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
+    if(!file_exists(data_filename))
+         error("data file not exists: %s",data_filename.c_str());
+
+
 
 	if (connected) error("trying to ini already ini-ed object!\n\n");
 

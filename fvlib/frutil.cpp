@@ -17,16 +17,19 @@ fr_type get_file_type(char * filename) {
 
 string extract_base_file_name(string filename)
 {
-    int slashPos = filename.find_last_of("/");// example bin/../tests/data/2write/save_test
-    int dotPos = filename.find(".",slashPos);
-	//cout<< "extract_base_file_name:"<<filename<<", pos:"<< dotPos<<", slashPos:" << slashPos << endl;
-	if(dotPos == string::npos)
+    int idxExtPos = filename.find(FILEVECTOR_INDEX_FILE_SUFFIX);
+    int dataExtPos = filename.find(FILEVECTOR_DATA_FILE_SUFFIX);
+    if(idxExtPos == filename.size() - FILEVECTOR_INDEX_FILE_SUFFIX.size() )
+    {
+        return filename.substr(0,idxExtPos);
+	}
+	else if(dataExtPos == filename.size() - FILEVECTOR_DATA_FILE_SUFFIX.size() )
 	{
-        return filename;
+	    return filename.substr(0,dataExtPos );
 	}
 	else
 	{
-		return filename.substr(0,dotPos);
+		return filename;
 	}
 }
 
