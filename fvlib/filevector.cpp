@@ -277,8 +277,7 @@ void filevector::read_observation(unsigned long int nobs, void * outvec)
 	for( int i = 0; i< get_nvariables(); i++)
 	{
 		read_variable(i, tmpdata);
-//		outvec[i] = tmpdata[nobs];
-		memcpy((char*)outvec+i*getDataSize(),tmpdata+getDataSize()*i,getDataSize());
+		memcpy((char*)outvec+i*getDataSize(),tmpdata+getDataSize()*nobs,getDataSize());
 	}
 	delete[] tmpdata;
 }
@@ -349,9 +348,8 @@ void filevector::write_element(unsigned long int nvar, unsigned long int nobs, v
 
 	if (nvar >= in_cache_from && nvar <= in_cache_to)
 	{
-		unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations;
-		memcpy(cached_data+(offset+nobs)*getDataSize(),data,getDataSize() );
-		//cached_data[offset+nobs]= data;
+		unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getDataSize() + nobs *getDataSize();
+		memcpy(cached_data+offset,data,getDataSize() );
 	}
 }
 
