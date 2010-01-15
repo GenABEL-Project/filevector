@@ -7,7 +7,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <climits>
-#include <new>
+#include <cmath>
 #include <string>
 
 #include <sys/types.h>
@@ -37,7 +37,7 @@ public:
 	unsigned long int header_size;
 // cache size (Mb) requested by user
 	unsigned long int cache_size_Mb;
-// if the objct is connected to file
+// if the object is connected to file
 	short int connected;
 // cache size internal; these ones are exact and used internaly
 	unsigned long int cache_size_nvars;
@@ -100,6 +100,7 @@ public:
 	void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes);
 	void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes);
 
+	unsigned long int get_cachesizeMb();
 	void set_cachesizeMb( unsigned long int cachesizeMb );
 
 	virtual short unsigned getDataSize();

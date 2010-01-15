@@ -138,6 +138,10 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 	connected = 1;
 }
 
+unsigned long int filevector::get_cachesizeMb()
+{
+	return(cache_size_Mb);
+}
 
 void filevector::set_cachesizeMb( unsigned long int cachesizeMb )
 {
@@ -147,11 +151,13 @@ void filevector::set_cachesizeMb( unsigned long int cachesizeMb )
 	if (cache_size_nvars<1) {
 		message("attempting to set cache size to 1 var (%f Mb)\n",
 		         (float) data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
+		cache_size_Mb = ceil((float) data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
 		cache_size_nvars = 1;
 	} else if (cache_size_nvars>data_type.nvariables) {
 		message("attempting to cache all the data (%u variables, %f Mb)\n",
 			 data_type.nvariables,
 		         (float) data_type.nvariables*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
+		cache_size_Mb = ceil((float) data_type.nvariables*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
 		cache_size_nvars = data_type.nvariables;
 	} else {
 		message("attempting to cache specified amount of data (%u variables, %f Mb)\n",

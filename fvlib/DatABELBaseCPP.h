@@ -157,7 +157,9 @@ public:
 // HIGH -- here I see the possibility to make these functions faster then "random" access functions
 
     // changing cache size on the fly
+    virtual unsigned long int get_cachesizeMb() = 0;
     virtual void set_cachesizeMb( unsigned long int cachesizeMb ) = 0;
+
     virtual fixedchar read_observation_name(unsigned long int nobs) = 0;
     virtual fixedchar read_variable_name(unsigned long int nvar) = 0;
 
