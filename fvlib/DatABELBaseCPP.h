@@ -175,7 +175,9 @@ private:
     // HIGH -- here I see the possibility to make these functions faster then "random" access functions
     // adds variable at the end = write_variable with nvar=NVARS?
 	    // todo loooong future -- control that name is unique!
-    virtual void add_variable(void * invec, string varname) = 0; 
+    virtual void add_variable(void * invec, string varname) = 0;
+   //todo later
+//    virtual void add_observation(void * invec, string obsname) = 0;
 
 
     // write single element
