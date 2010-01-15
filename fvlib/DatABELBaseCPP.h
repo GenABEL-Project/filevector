@@ -17,6 +17,8 @@ public:
     //	required:
     DatABELBaseCPP(string filename_toload, unsigned long int desired_cache_size_Mb, int oFlag, int dbFormat){};
 
+    virtual ~DatABELBaseCPP(){};
+
     // added free_resources
     template <class DT> void performCast(DT &dest, void*src, int srcType)
     {
@@ -158,7 +160,7 @@ public:
     virtual void set_cachesizeMb( unsigned long int cachesizeMb ) = 0;
     virtual fixedchar read_observation_name(unsigned long int nobs) = 0;
     virtual fixedchar read_variable_name(unsigned long int nvar) = 0;
-    
+
 
 private:
 
