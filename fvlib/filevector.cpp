@@ -335,8 +335,7 @@ void filevector::read_element(unsigned long int nvar, unsigned long int nobs, vo
     //todo use cache
 	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
 	data_file.seekg(pos*getDataSize(), ios::beg);
-	data_file.read((char*)&out,getDataSize());
-	if (!data_file) error("failed to read an element from file '%s'\n",data_filename.c_str());
+	data_file.read((char*)out,getDataSize());
 }
 
 

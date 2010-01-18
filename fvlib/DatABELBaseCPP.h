@@ -170,7 +170,7 @@ private:
 	virtual void read_variable(unsigned long int nvar, void * outvec) = 0;
 
 
-// should only be used for reading single random elements!
+    // should only be used for reading single random elements!
 	virtual void read_element(unsigned long int nvar, unsigned long int nobs, void * elem) = 0;
 
 	// write single variable
@@ -178,7 +178,7 @@ private:
 
     // HIGH -- here I see the possibility to make these functions faster then "random" access functions
     // adds variable at the end = write_variable with nvar=NVARS?
-	    // todo loooong future -- control that name is unique!
+	// todo loooong future -- control that name is unique!
     virtual void add_variable(void * invec, string varname) = 0;
    //todo later
 //    virtual void add_observation(void * invec, string obsname) = 0;

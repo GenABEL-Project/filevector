@@ -21,11 +21,11 @@ string extract_base_file_name(string filename)
     int dataExtPos = filename.find(FILEVECTOR_DATA_FILE_SUFFIX);
     if(idxExtPos == filename.size() - FILEVECTOR_INDEX_FILE_SUFFIX.size() )
     {
-        return filename.substr(0,idxExtPos);
+        return filename.substr(0, idxExtPos);
 	}
 	else if(dataExtPos == filename.size() - FILEVECTOR_DATA_FILE_SUFFIX.size() )
 	{
-	    return filename.substr(0,dataExtPos );
+	    return filename.substr(0, dataExtPos );
 	}
 	else
 	{
