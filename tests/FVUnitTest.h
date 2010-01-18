@@ -184,33 +184,34 @@ public:
 
 	void test_read_write_observation()
 	{
-	    unsigned long int nvariables =10;
-		unsigned long int nobservations =20;
+	    unsigned long nvariables = 5;
+		unsigned long nobservations = 3;
         create_empty_filevector(nvariables, nobservations);
         string tmp_file_name = get_temp_file_name();
 		DatABELBaseCPP* fv = new filevector( tmp_file_name, 1 );
 
-        float * var = new float [fv->get_nvariables()];
-        float * var2 = new float [fv->get_nvariables()];
-        for(int i = 0; i<fv->get_nvariables(); i++)
+        float * var1 = new float [fv->get_nobservations()];
+        float * var2 = new float [fv->get_nobservations()];
+        int i;
+        for(i = 0; i<fv->get_nvariables(); i++)
         {
-            var[i] = i;
+            var1[i] = i;
 		}
 
-        fv->write_observation(0,var);
-        fv->read_observation(0,var2);
+        fv->write_observation(2, var1);
+        fv->read_observation(2, var2);
 
-        CPPUNIT_ASSERT( compare_arrays(var, var2 , fv->get_nvariables()));
+        CPPUNIT_ASSERT( compare_arrays(var1, var2, fv->get_nobservations()));
         delete fv;
 
 		//reopen file and check
 		DatABELBaseCPP* fv2 = new filevector( tmp_file_name, 1 );
-		fv2->read_observation(0,var2);
-		CPPUNIT_ASSERT( compare_arrays(var, var2 , nvariables));
+		fv2->read_observation(2,var2);
+		CPPUNIT_ASSERT( compare_arrays(var1, var2 , nvariables));
         delete fv2;
         
-        delete var;
-        delete var2;
+        delete [] var1;
+        delete [] var2;
 	}
 
 
@@ -229,10 +230,10 @@ public:
         {
             var[i] = i + (float)i/10;
 		}
-		fv->write_variable_as(0,var);
+		fv->write_variable_as(1,var);
 
 		int * int_var = new int[fv->get_nobservations()];
-		fv->read_variable_as(0,int_var);
+		fv->read_variable_as(1,int_var);
 
 		CPPUNIT_ASSERT_EQUAL(0, int_var[0]);
 		CPPUNIT_ASSERT_EQUAL(1, int_var[1]);

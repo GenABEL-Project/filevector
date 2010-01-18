@@ -305,13 +305,8 @@ void filevector::write_variable(unsigned long int nvar, void * datavec)
 
 	if (nvar >= in_cache_from && nvar <= in_cache_to)
 	{
-//	    cout<< "updating data in cache" << endl;
-	    unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations;
-//		for (unsigned long int i = 0;i<data_type.nobservations;i++)
-//		{
-		    //cached_data[offset+i]= datavec[i];
-//        }
- 	    memcpy(cached_data+offset,datavec,getDataSize()*data_type.nobservations);
+	    unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getDataSize();
+ 	    memcpy(cached_data + offset,datavec,getDataSize()*data_type.nobservations);
 	}
 
 //TMP
