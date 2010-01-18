@@ -15,8 +15,8 @@ class CorrectnessTest : public CppUnit::TestFixture {
     /*void testReadVariableName();*/
 
     CPPUNIT_TEST_SUITE( CorrectnessTest );
-  //  CPPUNIT_TEST( testReadVariable );
-//    CPPUNIT_TEST( testRandomReadObservations );
+    CPPUNIT_TEST( testReadVariable );
+    CPPUNIT_TEST( testRandomReadObservations );
     CPPUNIT_TEST( testSubMatrix );
 /*    CPPUNIT_TEST( testReadElement );
     CPPUNIT_TEST( testReadObservationName );
