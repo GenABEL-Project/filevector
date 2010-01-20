@@ -8,7 +8,8 @@ void text2fvf(
 		std::string rownamesfilename, std::string colnamesfilename,
 		int rownames, int colnames,
 		int skiprows, int skipcols,
-		int transpose, int Rmatrix
+		int transpose, int Rmatrix,
+		unsigned short int type
 )
 {
 
@@ -144,7 +145,8 @@ void text2fvf(
 		out_nvars = ncols;
 		out_nobs = nrows;
 	}
-	initialize_empty_file(outfilename, out_nvars, out_nobs, FLOAT);
+// HERE IS THE TYPE
+	initialize_empty_file(outfilename, out_nvars, out_nobs, type);
 
 	message("number of variables in FVF-file '%s' will be %d\n",outfilename.c_str(),out_nvars);
 	message("number of observations in FVF-file '%s' will be %d\n\n",outfilename.c_str(),out_nobs);

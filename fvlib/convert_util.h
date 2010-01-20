@@ -21,7 +21,8 @@ void text2fvf(
 		string rownamesfilename, string colnamesfilename,
 		int rownames, int colnames,
 		int skiprows, int skipcols,
-		int transpose, int Rmatrix
+		int transpose, int Rmatrix,
+		unsigned short int type
 );
 
 
