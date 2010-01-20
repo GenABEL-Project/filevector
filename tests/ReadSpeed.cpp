@@ -33,7 +33,7 @@ int main ( int argc, char * argv[] )
 
 	for ( unsigned long int i=0 ; i < indata1->get_nvariables() ; i++ )
 	{
-		indata1->read_variable( i,tmpdat );
+		indata1->read_variable_as( i, tmpdat );
 		if( i % 10000 == 0 )
 		{
 			std::cout << "Read:"<< i << "/" << indata1->get_nvariables() << " variables \n";

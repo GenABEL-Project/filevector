@@ -33,7 +33,7 @@ int main(int argc, char * argv[])
 
   	cout << "Generating data to file "<< filename<< ",vars*obs: "<< nvars<< "*"<<nobs <<" , cache:"<< cache_size << endl;
 	initialize_empty_file( (char *)filename.c_str(), nvars, nobs, FLOAT);
-	filevector<float> fv(filename,cache_size);
+	filevector fv(filename,cache_size);
 
     float * tmp = new float[fv.get_nobservations()];
 	for(int i=0;i<fv.get_nvariables();i++)

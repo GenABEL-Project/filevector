@@ -9,7 +9,6 @@ using namespace std;
 
 void filevector::free_resources()
 {
-	if (connected) {
 	    index_file.seekp(0, ios::beg);
 	    index_file.write((char*)&data_type, sizeof(data_type));
 		index_file.seekp(sizeof(data_type), ios::beg);
@@ -24,8 +23,6 @@ void filevector::free_resources()
 		delete [] observation_names;
 		delete [] variable_names;
 //		cout << "!!! destr + free !!!\n";
-	}
-	connected = 0;
 	index_file.close();
 	data_file.close();
 //	cout << "!!! destr !!!\n";
@@ -36,58 +33,59 @@ filevector::~filevector()
     free_resources();
 }
 
+/*
+	const bool createIfNotExists;
+	const bool exclusiveCreate;
+	const bool readOnly;
+*/
+
 void filevector::initialize(string filename_toload, unsigned long int cachesizeMb)
 {
 	if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported\n");
 
     index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;
+    data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
 
-    if(!file_exists(index_filename))
-          error("index file not exists: %s",index_filename.c_str());
+    bool indexFileExists = file_exists(index_filename);
+    bool dataFileExists = file_exists(data_filename);
 
-   data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
-    if(!file_exists(data_filename))
-         error("data file not exists: %s",data_filename.c_str());
+    if (indexFileExists != dataFileExists) {
+        error("index file doesn't exist but data file does or vice versa.");
+    }
 
+    if( !createIfNotExists)
+    {
+        string errorMsg = string("data or index files not exist.(createIfNotExist mode not enabled) ") + filename_toload;
+        if (!indexFileExists || !dataFileExists )
+            error(errorMsg.c_str());
+    }
 
-
-	if (connected) error("trying to ini already ini-ed object!\n\n");
+    if(exclusiveCreate)
+    {
+        if (indexFileExists && dataFileExists )
+            error("data & index files already exist.(exclusiveCreate mode)");
+    }
 
 	struct stat index_filestatus;
 	int res = stat( index_filename.c_str() , &index_filestatus);
-	cout << "stat (" + index_filename + ") = " << res << endl;
-	cout << "index_filestatus.st_size = " << index_filestatus.st_size << endl;
-	cout << "sizeof(data_type) = " << sizeof(data_type) << endl;
     if (index_filestatus.st_size < sizeof(data_type))
            error("index file %s is too short to contain an FV-index\n",index_filename.c_str());
 
 	struct stat data_filestatus;
 	stat( data_filename.c_str() , &data_filestatus);
 
-//	cout << "1" << endl;
-
 	index_file.open(index_filename.c_str(), ios::out | ios::in | ios::binary);
 	if (!index_file)
 		error("opening file %s for write & read failed\n",index_filename.c_str());
-
-//	cout << "2" << endl;
 
 	data_file.open(data_filename.c_str(), ios::out | ios::in | ios::binary);
 	if (!data_file)
 		error("opening file %s for write & read failed\n",data_filename.c_str());
 
-//	cout << "3" << endl;
-
 	index_file.read((char*)&data_type,sizeof(data_type));
 	if (!index_file)
         error("failed to read datainfo from file '%s'\n",index_filename.c_str());
 
-//	cout << "4" << endl;
-
-//    // some integrity checks
-//	if (getDataSize() != data_type.bytes_per_record)
-//		error("system data type size (%d) and file data type size (%d) do not match\n",
-//			getDataSize(),data_type.bytes_per_record);
 	//!!! nelements should actually be long to ensure !!!
 	if (data_type.nelements != (data_type.nobservations*data_type.nvariables))
 		error("number of variables (%lu) and observations (%lu) do not multiply to nelements (%lu) (file integrity issue?)\n",
@@ -132,10 +130,8 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 		index_file.read((char*)(variable_names+i),sizeof(fixedchar));
 
 //	cout << "6" << endl;
-
     set_cachesizeMb(cachesizeMb);
     update_cache(0);
-	connected = 1;
 }
 
 unsigned long int filevector::get_cachesizeMb()
@@ -350,10 +346,6 @@ void filevector::write_element(unsigned long int nvar, unsigned long int nobs, v
 
 unsigned int filevector::get_nvariables()
 {
-   if(!connected)
-   {
-       error("cannot return nvariables, not connected\n");
-   }
    return data_type.nvariables;
 }
 
@@ -361,10 +353,6 @@ unsigned int filevector::get_nvariables()
 
 unsigned int filevector::get_nobservations()
 {
-   if(!connected)
-   {
-       error("cannot return nobservations, not connected\n");
-   }
    return data_type.nobservations;
 }
 

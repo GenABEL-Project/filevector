@@ -22,6 +22,10 @@
 
 using namespace std;
 
+#define DB_CREATE 1
+#define DB_EXCL 2
+#define DB_RDONLY 4
+
 class filevector: public DatABELBaseCPP
 {
 public:
@@ -37,8 +41,6 @@ public:
 	unsigned long int header_size;
 // cache size (Mb) requested by user
 	unsigned long int cache_size_Mb;
-// if the object is connected to file
-	short int connected;
 // cache size internal; these ones are exact and used internaly
 	unsigned long int cache_size_nvars;
 	unsigned long int cache_size_bytes;
@@ -49,16 +51,32 @@ public:
 	char * cached_data;
 	char * char_buffer;
 
+	bool createIfNotExists;
+	bool exclusiveCreate;
+	bool readOnly; 
+
 // prototypes
 	filevector();
 	~filevector();
 
-// constructor based on initialize
-    filevector(string filename_toload, unsigned long int cachesizeMb): DatABELBaseCPP::DatABELBaseCPP(filename_toload,cachesizeMb)
+    filevector(string &filename_toload, unsigned long int cachesizeMb, int oFlag)
+    : createIfNotExists(oFlag & DB_CREATE), exclusiveCreate(oFlag & DB_EXCL), readOnly(oFlag & DB_RDONLY)
     {
-	    connected = 0;
     	char_buffer = 0;
-	    initialize(filename_toload,cachesizeMb);
+	    initialize(filename_toload, cachesizeMb);
+    }
+
+    filevector(string &filename_toload, unsigned long int cachesizeMb)
+    : createIfNotExists(false), exclusiveCreate(false), readOnly(false)
+    {
+    	char_buffer = 0;
+	    initialize(filename_toload, cachesizeMb);   
+    }
+
+    filevector(char *filename_toload, unsigned long int cachesizeMb) {
+        string filename(filename_toload);
+        char_buffer = 0;
+        initialize(filename_toload, cachesizeMb);
     }
 
 // these ones are the actual used to initialize and free up

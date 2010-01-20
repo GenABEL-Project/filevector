@@ -246,7 +246,8 @@ public:
 	void test_add_variable()
 	{
 		create_empty_filevector(10,20);
-		DatABELBaseCPP* fv = new filevector( get_temp_file_name(), 1 );
+		string tempFileName = get_temp_file_name();
+		DatABELBaseCPP* fv = new filevector( tempFileName, 1 );
 		float * var = new float [fv->get_nobservations()];
 		create_and_fill_variable(fv->get_nobservations(),var);
 
@@ -262,7 +263,8 @@ public:
         CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
         delete fv;
 
-        DatABELBaseCPP* fv2 = new filevector( get_temp_file_name(), 1 );
+        tempFileName = get_temp_file_name();
+        DatABELBaseCPP* fv2 = new filevector( tempFileName, 1 );
 
         CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv2->get_nvariables());
 		_fc_varname_loaded = fv2->read_variable_name(10);

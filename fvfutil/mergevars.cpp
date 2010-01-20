@@ -21,7 +21,7 @@ int main(int argc, char * argv[])
 
 // sanity checks: can we merge these files?
 // are dimensions compatible?
-	if (indata1.data_type.nobservations != indata2.data_type.nobservations) 
+	if (indata1.data_type.nobservations != indata2.data_type.nobservations)
 		error("can not merge files with different number of observations\n\n");
 	else
 		message("file dimensions are compatible\n");

@@ -13,10 +13,6 @@ public:
     // constructor
     // current:
 
-    DatABELBaseCPP(string filename_toload, unsigned long int cachesizeMb){};
-    //	required:
-    DatABELBaseCPP(string filename_toload, unsigned long int desired_cache_size_Mb, int oFlag, int dbFormat){};
-
     virtual ~DatABELBaseCPP(){};
 
     // added free_resources

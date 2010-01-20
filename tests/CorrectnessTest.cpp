@@ -194,7 +194,6 @@ void CorrectnessTest::testSubMatrix() {
 	while (getline(subMatrixData, subMatrixString)) {
 	    string varName;
 	    vector<string> subMatrixElements;
-	    cout << subMatrixString << endl;
 	    tokenize(subMatrixString, subMatrixElements);
 	    varName = subMatrixElements[0];
 	    unsigned long varIdx = varToIdx[varName];
@@ -204,8 +203,6 @@ void CorrectnessTest::testSubMatrix() {
 	        float submatrixElem;
 	        submatrixElem = atof(subMatrixElements[i+1].c_str());
 	        data->read_element_as(varIdx, obsIdexes[i], matrixElem);
-	        cout << "matrixElem=" << matrixElem << endl;
-	        cout << "submatrixElem=" << submatrixElem << endl;
 	        float relDiff = TestUtil::relativeDifference(matrixElem, submatrixElem);
 	        CPPUNIT_ASSERT( relDiff = 0./0. || relDiff < 1E-4 );
 	    }

@@ -72,6 +72,9 @@ converter : $(CONVERT)
 $(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp  $(SRCDIR)/convert.cpp -o $(CONVERT)
 
-writevarspeed : $(WRITE_VAR_SPEED)
+writespeed : $(WRITE_VAR_SPEED)
 $(WRITE_VAR_SPEED): $(LIBFILES) $(SRCDIR)/convert.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp  $(TESTSDIR)/WriteVariablesSpeed.cpp -o $(WRITE_VAR_SPEED)
+
+tests : correctnesstest	readspeed modificationtest unittest writespeed
+	
