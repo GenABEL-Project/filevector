@@ -142,6 +142,8 @@ public:
   	*/
    	virtual void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes) = 0;
 
+    virtual void save(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes) = 0;
+
     //virtual void add_variable(void * invec, fixedchar varname) = 0; // adds variable at the end = write_variable with nvar=NVARS?
     // loooong future -- control that name is unique!
 	virtual void read_observation(unsigned long int nobs, void * outvec) = 0;

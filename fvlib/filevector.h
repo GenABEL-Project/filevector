@@ -117,6 +117,7 @@ public:
 	void save( string new_file_name );
 	void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes);
 	void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes);
+	void save(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes);
 
 	unsigned long int get_cachesizeMb();
 	void set_cachesizeMb( unsigned long int cachesizeMb );
@@ -130,6 +131,8 @@ public:
 //	DT * read_observation(unsigned long int nobs);
 // should only be used for reading single random elements!
 //	DT read_element(unsigned long int nelment);
+private :
+    void copy_variable(char * to, char * from, int n, unsigned long int * indexes );
 
 };
 
