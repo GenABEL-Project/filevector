@@ -239,7 +239,8 @@ void filevector::write_observation_name(unsigned long int nobs, fixedchar name)
 
 fixedchar filevector::read_variable_name(unsigned long int nvar)
 {
-	if (nvar>=data_type.nvariables) error("trying to get name of var out of range");
+	if (nvar>=data_type.nvariables)
+		error("trying to get name of var out of range (%lu >= %lu)",nvar,data_type.nvariables);
 	return(variable_names[nvar]);
 }
 
