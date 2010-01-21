@@ -437,22 +437,6 @@ void filevector::save_obs( string new_file_name, unsigned long int nobss, unsign
     delete [] out_variable;
 }
 
-/*
-* copy elements from "from" array to "to" array, according to "n" and "indexes" parameters
-*/
-void filevector::copy_variable(char * to, char * from, int n, unsigned long int * indexes )
-{
-	for ( int j=0 ; j<n ; j++ )
-	{
-		//copy only selected observations to out_variable  from in_variable
-		int read_offset = indexes[j]*getDataSize();
-		if(read_offset + getDataSize() > get_nobservations() * getDataSize())
-		  error( "when saving selected observations: index in obsindexes(%d) is out of range, source nobs is %d",indexes[j],get_nobservations());
-		memcpy(to + j*getDataSize(),from + read_offset,getDataSize());
-	}
-}
-
-
 void filevector::save(string new_file_name, unsigned long int nvars, unsigned long int nobss,
      unsigned long int * varindexes, unsigned long int * obsindexes)
 {
@@ -485,6 +469,24 @@ void filevector::save(string new_file_name, unsigned long int nvars, unsigned lo
 	delete[] out_variable;
 
 }
+
+
+/*
+* copy elements from "from" array to "to" array, according to "n" and "indexes" parameters
+*/
+void filevector::copy_variable(char * to, char * from, int n, unsigned long int * indexes )
+{
+	for ( int j=0 ; j<n ; j++ )
+	{
+		//copy only selected observations to out_variable  from in_variable
+		int read_offset = indexes[j]*getDataSize();
+		if(read_offset + getDataSize() > get_nobservations() * getDataSize())
+		  error( "when saving selected observations: index in obsindexes(%d) is out of range, source nobs is %d",indexes[j],get_nobservations());
+		memcpy(to + j*getDataSize(),from + read_offset,getDataSize());
+	}
+}
+
+
 
 short unsigned filevector::getDataSize(){
     return calcDataSize(data_type.type);
