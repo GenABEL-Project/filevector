@@ -437,7 +437,7 @@ void filevector::save_obs( string new_file_name, unsigned long int nobss, unsign
         outdata.write_variable_name( i, read_variable_name(i));
         //write variables
         read_variable(i, in_variable);
-        memcpy(out_variable,in_variable,getDataSize()*nobss);
+        copy_variable(out_variable,in_variable,nobss, obsindexes);
         outdata.write_variable(i,out_variable);
     }
 
