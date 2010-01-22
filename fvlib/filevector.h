@@ -117,8 +117,7 @@ public:
 	void save( string new_file_name );
 	void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes);
 	void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes);
-	void save(string new_file_name, unsigned long int nvars, unsigned long int nobss,
-	unsigned long int * varindexes, unsigned long int * obsindexes);
+	void save(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes);
 
 	unsigned long int get_cachesizeMb();
 	void set_cachesizeMb( unsigned long int cachesizeMb );

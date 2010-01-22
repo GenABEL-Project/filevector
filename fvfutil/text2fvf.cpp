@@ -6,20 +6,21 @@ int main(int argc, char * argv[])
 	print_text2fvf_welcome();
 
 	int next_option;
-	const char * const short_options = "i:o:c:r:1:2:3:4:t:R";
+	const char * const short_options = "i:o:c:r:1:2:3:4:t:R:T";
 	const struct option long_options [] =
 	{
-			{"infile",    required_argument, NULL, 'i'},
-			{"outfile",   required_argument, NULL, 'o'},
-			{"skipcols",  required_argument, NULL, 'c'},
-			{"skiprows",  required_argument, NULL, 'r'},
-			{"rncol",     required_argument, NULL, '1'},
-			{"cnrow",     required_argument, NULL, '2'},
-			{"rnfile",    required_argument, NULL, '3'},
-			{"cnfile",    required_argument, NULL, '4'},
-			{"transpose", no_argument,       NULL, 't'},
-			{"Rmatrix",   no_argument,       NULL, 'R'},
-			{ NULL     ,  no_argument,       NULL,  0 }
+	    {"infile",    required_argument, NULL, 'i'},
+		{"outfile",   required_argument, NULL, 'o'},
+		{"skipcols",  required_argument, NULL, 'c'},
+		{"skiprows",  required_argument, NULL, 'r'},
+		{"rncol",     required_argument, NULL, '1'},
+		{"cnrow",     required_argument, NULL, '2'},
+		{"rnfile",    required_argument, NULL, '3'},
+		{"cnfile",    required_argument, NULL, '4'},
+		{"transpose", no_argument,       NULL, 't'},
+		{"Rmatrix",   no_argument,       NULL, 'R'},
+		{"outType",   required_argument, NULL, 'T'},
+		{ NULL     ,  no_argument,       NULL,  0 }
 	};
 
 	char * program_name = argv[0];

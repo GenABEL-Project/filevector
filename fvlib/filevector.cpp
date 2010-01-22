@@ -445,6 +445,54 @@ void filevector::save_obs( string new_file_name, unsigned long int nobss, unsign
     delete [] out_variable;
 }
 
+/*
+* copy elements from "from" array to "to" array, according to "n" and "indexes" parameters
+*/
+void filevector::copy_variable(char * to, char * from, int n, unsigned long int * indexes )
+{
+	for ( int j=0 ; j<n ; j++ )
+	{
+		//copy only selected observations to out_variable  from in_variable
+		int read_offset = indexes[j]*getDataSize();
+		if(read_offset + getDataSize() > get_nobservations() * getDataSize())
+		  error( "when saving selected observations: index in obsindexes(%d) is out of range, source nobs is %d",indexes[j],get_nobservations());
+		memcpy(to + j*getDataSize(),from + read_offset,getDataSize());
+	}
+}
+
+
+void filevector::save(string new_file_name, unsigned long int nvars, unsigned long int nobss,
+     unsigned long int * varindexes, unsigned long int * obsindexes) {
+    initialize_empty_file( (char *)new_file_name.c_str(), nvars, nobss, data_type.type);
+    filevector outdata( new_file_name, 64 );//todo which size for cache to use?
+
+    // copy observation names from the first object
+	for( unsigned long int i=0 ; i < nobss ; i++ )
+		outdata.write_observation_name( i, read_observation_name( obsindexes[i] ) );
+
+    char * out_variable = new (nothrow) char[nobss*getDataSize()];
+        if (!out_variable) error("can not allocate memory for out_variable");
+
+	char * in_variable = new (nothrow) char[get_nobservations()*getDataSize()];
+		if (!in_variable) error("can not allocate memory for in_variable\n\n");
+
+
+	for( unsigned long int i=0 ; i<nvars ; i++ )
+	{
+		unsigned long int selected_index =  varindexes[i];
+		//write var names
+		outdata.write_variable_name( i, read_variable_name(selected_index ));
+		//write variables
+		read_variable(selected_index,in_variable);
+		copy_variable(out_variable,in_variable,nobss, obsindexes);
+		outdata.write_variable(i,out_variable );
+	}
+
+	delete[] in_variable;
+	delete[] out_variable;
+}
+
+
 short unsigned filevector::getDataSize(){
     return calcDataSize(data_type.type);
 }
