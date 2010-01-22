@@ -10,6 +10,7 @@ MERGEVARS = $(BINDIR)/mergevars
 
 READSPEED = $(BINDIR)/readspeed
 CORRECTNESSTEST = $(BINDIR)/correctnesstest
+ACCESSMODETEST = $(BINDIR)/accessmodetest 
 MODIFTEST = $(BINDIR)/modificationtest
 UNITTEST = $(BINDIR)/fvunittest
 CONVERT = $(BINDIR)/convert
@@ -52,7 +53,6 @@ clean:
 
 
 correctnesstest : $(CORRECTNESSTEST)
-
 $(CORRECTNESSTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/CorrectnessTest.cpp
 	$(CPP) $(CFLAGS) ${CPPUNITFLAGS} $(LIBDIR)/*.cpp $(TESTSDIR)/CorrectnessTest.cpp ${TESTSDIR}/TestUtil.cpp -o $(CORRECTNESSTEST)
 
@@ -74,7 +74,11 @@ $(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
 
 writespeed : $(WRITE_VAR_SPEED)
 $(WRITE_VAR_SPEED): $(LIBFILES) $(SRCDIR)/convert.cpp
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp  $(TESTSDIR)/WriteVariablesSpeed.cpp -o $(WRITE_VAR_SPEED)
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/WriteVariablesSpeed.cpp -o $(WRITE_VAR_SPEED)
 
-tests : correctnesstest	readspeed modificationtest unittest writespeed
+accessmodetest : $(ACCESSMODETEST)
+$(ACCESSMODETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/AccessModeTest.cpp
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/AccessModeTest.cpp -o $(ACCESSMODETEST)
+
+tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest
 	

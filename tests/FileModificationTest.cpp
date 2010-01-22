@@ -9,7 +9,7 @@ using namespace std;
 
 string FileModificationTest::get_file_name_to_write()
 {
-    return TestUtil::get_base_dir() + string("/../tests/data/2write/modify_me.fvf");
+    return TestUtil::get_base_dir() + string("/../tests/data/2write/modify_me");
 }
 
 int main( int argc, char **argv)

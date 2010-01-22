@@ -85,7 +85,7 @@ int main(int argc, char * argv[])
 			RFname, CFname,
 			rownames, colnames,
 			skiprows, skipcols,
-			transpose, Rmatrix);
+			transpose, Rmatrix,0);
 
 	return(0);
 }

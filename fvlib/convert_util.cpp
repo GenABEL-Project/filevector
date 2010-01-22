@@ -85,7 +85,7 @@ void text2fvf(
 		if (!rownamesfile) error("can not open row names file '%s'\n\n",rownamesfilename.c_str());
 		while (rownamesfile >> tmpstr) words_in_rownamesfile++;
 		rownamesfile.close();
-		message("number of names in row-names file '%s' is %d\n\n",rownamesfilename.c_str(),words_in_rownamesfile);
+		message("number of names in row-names file '%s' is %d\n\n", rownamesfilename.c_str(), words_in_rownamesfile );
 	}
 
 	// find out the number of rows and columns + some checks

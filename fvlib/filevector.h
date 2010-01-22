@@ -59,14 +59,14 @@ public:
 	filevector();
 	~filevector();
 
-    filevector(string &filename_toload, unsigned long int cachesizeMb, int oFlag)
+    filevector(string filename_toload, unsigned long int cachesizeMb, int oFlag)
     : createIfNotExists(oFlag & DB_CREATE), exclusiveCreate(oFlag & DB_EXCL), readOnly(oFlag & DB_RDONLY)
     {
     	char_buffer = 0;
 	    initialize(filename_toload, cachesizeMb);
     }
 
-    filevector(string &filename_toload, unsigned long int cachesizeMb)
+    filevector(string filename_toload, unsigned long int cachesizeMb)
     : createIfNotExists(false), exclusiveCreate(false), readOnly(false)
     {
     	char_buffer = 0;
@@ -117,7 +117,8 @@ public:
 	void save( string new_file_name );
 	void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes);
 	void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes);
-	void save(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes);
+	void save(string new_file_name, unsigned long int nvars, unsigned long int nobss,
+	unsigned long int * varindexes, unsigned long int * obsindexes);
 
 	unsigned long int get_cachesizeMb();
 	void set_cachesizeMb( unsigned long int cachesizeMb );
