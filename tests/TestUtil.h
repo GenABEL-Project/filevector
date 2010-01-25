@@ -30,6 +30,10 @@ public :
     template<class DT> static DT relativeDifference(DT x, DT y) {
         return 2.*(abs(x)-abs(y))/(abs(x)+abs(y));
     }
+
+    static void create_and_fill_variable(unsigned int  nobs, float * in );
+    static void create_empty_filevector(string tmp_file_name,unsigned int  nvars, unsigned int  nobs);
+    static bool compare_arrays(float * a1,float * a2, int size);
 };
 
 #endif

@@ -13,6 +13,7 @@
 #include<stdio.h>
 
 #include "filevector.h"
+#include "TestUtil.h"
 
 using namespace std;
 
@@ -240,8 +241,9 @@ public:
 	{
 	    unsigned long nvariables = 5;
 		unsigned long nobservations = 3;
-        create_empty_filevector(nvariables, nobservations);
+
         string tmp_file_name = get_temp_file_name();
+        TestUtil::create_empty_filevector(tmp_file_name,nvariables, nobservations);
 		DatABELBaseCPP* fv = new filevector( tmp_file_name, 1 );
 
         float * var1 = new float [fv->get_nvariables()];
@@ -255,13 +257,13 @@ public:
         fv->write_observation(2, var1);
         fv->read_observation(2, var2);
 
-        CPPUNIT_ASSERT( compare_arrays(var1, var2, fv->get_nobservations()));
+        CPPUNIT_ASSERT( TestUtil::compare_arrays(var1, var2, fv->get_nobservations()));
         delete fv;
 
 		//reopen file and check
 		DatABELBaseCPP* fv2 = new filevector( tmp_file_name, 1 );
 		fv2->read_observation(2,var2);
-		CPPUNIT_ASSERT( compare_arrays(var1, var2 , nvariables));
+		CPPUNIT_ASSERT( TestUtil::compare_arrays(var1, var2 , nvariables));
         delete fv2;
 
         delete [] var1;
@@ -274,8 +276,8 @@ public:
 
 		unsigned long int nvariables =10;
 		unsigned long int nobservations =3;
-		create_empty_filevector(nvariables, nobservations);
 		string tmp_file_name = get_temp_file_name();
+		TestUtil::create_empty_filevector(tmp_file_name,nvariables, nobservations);
 
 		DatABELBaseCPP* fv = new filevector( tmp_file_name, 1 );
 
@@ -299,11 +301,11 @@ public:
 
 	void test_add_variable()
 	{
-		create_empty_filevector(10,20);
 		string tempFileName = get_temp_file_name();
+		TestUtil::create_empty_filevector(tempFileName,10,20);
 		DatABELBaseCPP* fv = new filevector( tempFileName, 1 );
 		float * var = new float [fv->get_nobservations()];
-		create_and_fill_variable(fv->get_nobservations(),var);
+		TestUtil::create_and_fill_variable(fv->get_nobservations(),var);
 
         string varname = "added";
         string varname2 = "added2";
@@ -343,36 +345,6 @@ public:
 	    CPPUNIT_ASSERT_EQUAL( fn , base );
 	}
 
-	//==========================  utility methods ==================
-
-    void create_and_fill_variable(unsigned int  nobs, float * in )
-    {
-        for(int i = 0; i<nobs; i++)
-        {
-            in[i] = i + (float)i/10;
-		}
-    }
-
-	void create_empty_filevector(unsigned int  nvars, unsigned int  nobs)
-	{
-	    string tmp_file_name = get_temp_file_name();
-		remove((tmp_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
-		remove((tmp_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
-		initialize_empty_file( (char *)tmp_file_name.c_str(), nvars, nobs, FLOAT);
-	}
-
-	bool compare_arrays(float * a1,float * a2, int size)
-	{
-		for(int i =0; i< size ; i++)
-		{
-			if(a1[i] != a2[i])
-			{
-			  cout<< "compare_arrays: " << i<<" elements not equal:"<< a1[i]<<","<<a2[i]<<endl;
-			  return false;
-			}
-		}
-		return true;
-	}
 
 
 };
