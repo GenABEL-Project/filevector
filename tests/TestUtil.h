@@ -21,6 +21,9 @@ public :
     /* detects executed binary file dir to use it as a base dir to find data files etc */
     static void detect_base_dir(string binpath);
     static string get_base_dir();
+	static string get_dir_name_to_write();
+	static string get_temp_file_name();
+
 
     static float random_float();
 

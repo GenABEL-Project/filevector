@@ -41,8 +41,6 @@ class FVUnitTest : public CppUnit::TestFixture
 public:
 
     string get_file_name_to_write();
-    string get_dir_name_to_write();
-    string get_temp_file_name();
 
     void testCacheUpdatedOnWrite()
     {
@@ -102,7 +100,7 @@ public:
     {
         string src_file_name = get_file_name_to_write();
 
-        string dest_file_name = get_dir_name_to_write()+"/save_test";
+        string dest_file_name = TestUtil::get_dir_name_to_write()+"/save_test";
         remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
         remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
@@ -128,7 +126,7 @@ public:
     void test_save_vars()
     {
         string src_file_name = get_file_name_to_write();
-        string dest_file_name = get_dir_name_to_write()+"/save_vars_test";
+        string dest_file_name = TestUtil::get_dir_name_to_write()+"/save_vars_test";
         remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
         remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
@@ -144,7 +142,7 @@ public:
     void test_save_obs()
     {
         string src_file_name = get_file_name_to_write();
-        string dest_file_name = get_dir_name_to_write()+"/save_obs_test";
+        string dest_file_name = TestUtil::get_dir_name_to_write()+"/save_obs_test";
         remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
         remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
@@ -177,7 +175,7 @@ public:
 	{
 		string src_file_name = get_file_name_to_write();
 
-		string dest_file_name = get_dir_name_to_write()+"/save_test";
+		string dest_file_name = TestUtil::get_dir_name_to_write()+"/save_test";
 		remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
 		remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
@@ -242,7 +240,7 @@ public:
 	    unsigned long nvariables = 5;
 		unsigned long nobservations = 3;
 
-        string tmp_file_name = get_temp_file_name();
+        string tmp_file_name = TestUtil::get_temp_file_name();
         TestUtil::create_empty_filevector(tmp_file_name,nvariables, nobservations);
 		DatABELBaseCPP* fv = new filevector( tmp_file_name, 1 );
 
@@ -276,7 +274,7 @@ public:
 
 		unsigned long int nvariables =10;
 		unsigned long int nobservations =3;
-		string tmp_file_name = get_temp_file_name();
+		string tmp_file_name = TestUtil::get_temp_file_name();
 		TestUtil::create_empty_filevector(tmp_file_name,nvariables, nobservations);
 
 		DatABELBaseCPP* fv = new filevector( tmp_file_name, 1 );
@@ -301,7 +299,7 @@ public:
 
 	void test_add_variable()
 	{
-		string tempFileName = get_temp_file_name();
+		string tempFileName = TestUtil::get_temp_file_name();
 		TestUtil::create_empty_filevector(tempFileName,10,20);
 		DatABELBaseCPP* fv = new filevector( tempFileName, 1 );
 		float * var = new float [fv->get_nobservations()];
@@ -319,7 +317,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
         delete fv;
 
-        tempFileName = get_temp_file_name();
+        tempFileName = TestUtil::get_temp_file_name();
         DatABELBaseCPP* fv2 = new filevector( tempFileName, 1 );
 
         CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv2->get_nvariables());

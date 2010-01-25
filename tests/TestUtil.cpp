@@ -71,4 +71,15 @@ bool TestUtil::compare_arrays(float * a1,float * a2, int size)
 	return true;
 }
 
+string TestUtil::get_temp_file_name()
+{
+    return TestUtil::get_base_dir() + string("/../tests/data/2write/tmp");
+}
+
+string TestUtil::get_dir_name_to_write()
+{
+    return TestUtil::get_base_dir() + string("/../tests/data/2write");
+}
+
+
 
