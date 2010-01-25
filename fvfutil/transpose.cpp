@@ -46,7 +46,6 @@ int main(int argc, char * argv[])
     tr.copy_data(src_data_file_name,dest_data_file_name,src_nvars,src_nobss,data_size);
     cout<< "done"<< endl;
 
-
  }
 
 
@@ -66,13 +65,19 @@ unsigned long int src_nobss, unsigned int data_size)
 {
 cout<< "Copying data..."<< src_nobss << "x"<< src_nvars << endl;
   //number of elements in square side. square_size^2 elements will be processed at one time:read and write
-  unsigned int square_size = 1000;
+  unsigned int square_size = 10000;
 
   unsigned long int obs_pages = src_nobss / square_size;
   if(src_nobss % square_size > 0) obs_pages++;
 
   unsigned long int var_pages = src_nvars / square_size;
   if(src_nvars % square_size > 0) var_pages++;
+
+  ifstream * src_stream = new ifstream();
+  src_stream->open(src_data_file_name.c_str(),ifstream::in );
+
+  ofstream * dest_stream = new ofstream;
+  dest_stream->open(dest_data_file_name.c_str(),ofstream::out );
 
   for( unsigned long int i =0; i< var_pages;i++)
   {
@@ -86,12 +91,81 @@ cout<< "Copying data..."<< src_nobss << "x"<< src_nvars << endl;
           if((i + 1 )* square_size > src_nvars)
               var_length = src_nvars % square_size;
 
-          cout << ">"<< obs_length << "x" << var_length << "^ " ;
-//          char * data_part = new (nothrow) char[var_length*obs_length*data_size];
-//          if(!data_part) error("can not allocate memory for data_part");
+//          cout << ">"<< obs_length << "x" << var_length << "^ " ;
+          cout << ".";
+          char * data_part = new (nothrow) char[var_length*obs_length*data_size];
+          if(!data_part) error("can not allocate memory for data_part");
+          char * data_part_transposed = new (nothrow) char[var_length*obs_length*data_size];
+          if(!data_part_transposed) error("can not allocate memory for data_part_transposed");
+          
+          read_part(src_stream, data_part, j * square_size , obs_length, i * square_size , var_length,  data_size );
+
+          transpose_part(data_part,data_part_transposed,obs_length,var_length, data_size);
+
+          write_part(dest_stream, data_part_transposed, i * square_size, var_length, j* square_size , obs_length,  data_size );
+
+          delete data_part;
+          delete data_part_transposed;
       }
       cout << endl;
   }
 
+  src_stream->close();
+  delete src_stream;
+  dest_stream->close();
+  delete dest_stream;
+
   cout<< "data written" << endl;
+}
+
+
+/*
+* read next piece of data with size = obs_length x var_length, starting from var_start, obs_start coordinates    
+*/
+void transpose::read_part(ifstream * src_stream, char * data_part, unsigned long int obs_start , unsigned long int obs_length,
+unsigned long int var_start, unsigned long int var_length , unsigned int  data_size)
+{
+//cout << "read_part"<<endl;
+	for(unsigned long int i=0; i<var_length ;i++)
+	{
+	   //seek to the beginning of the next var
+	   src_stream->seekg( ( var_start + i )* obs_start * data_size );
+	   //read next var to input buffer
+	   src_stream->read( data_part + ( i * obs_length * data_size ), obs_length * data_size );
+	}
+}
+
+/*
+* write next piece of transposed data with size = obs_length' x var_length'    
+*/
+void transpose::write_part(ofstream * dest_stream, char * data_part_transposed, unsigned long int obs_start , unsigned long int obs_length,
+unsigned long int var_start, unsigned long int var_length , unsigned int  data_size)
+{
+//cout << "write_part"<<endl;
+	for(unsigned long int i=0; i<var_length ;i++)
+	{
+	   //seek to the beginning of the next var
+	   dest_stream->seekp( ( var_start + i )* obs_start * data_size );
+	   //read next var to input buffer
+	   dest_stream->write( data_part_transposed + ( i * obs_length * data_size ), obs_length * data_size );
+	}
+}
+
+/*
+transpose piece of data to write to the new file.
+original axb matrix flipped to bxa matrix.
+*/
+void transpose::transpose_part(char * data_part, char * data_part_transposed,
+unsigned long int obs_length,unsigned long int var_length, unsigned int data_size )
+{
+//cout << "transpose_part"<<endl;
+	for(unsigned long int i=0; i<var_length ;i++)
+	{
+		for(unsigned long int j=0; j<obs_length ;j++)
+		{
+		   memcpy(data_part_transposed + j * obs_length* data_size + i * data_size,
+		          data_part + i * obs_length* data_size + j * data_size,
+		          data_size);
+		}
+	}
 }
