@@ -88,10 +88,7 @@ cout<< "Copying data..."<< src_nobss << "x"<< src_nvars << endl;
           if(!data_part_transposed) error("can not allocate memory for data_part_transposed");
 
           read_part(src_stream, data_part, j * square_size , obs_length, i * square_size , var_length,  data_size, src_nobss );
-
-int* test_ptr= (int*)data_part ;
           transpose_part(data_part,data_part_transposed,obs_length,var_length, data_size);
-int* test_ptr_tr= (int*)data_part_transposed ;
           write_part(dest_stream, data_part_transposed, i * square_size, var_length, j* square_size , obs_length,  data_size, src_nvars );
 
           delete data_part;
@@ -123,8 +120,6 @@ unsigned long int var_start, unsigned long int var_length , unsigned int  data_s
 	   src_stream->seekg( read_pos * data_size );
 	   //read next var to input buffer
 	   src_stream->read( data_part + ( i * obs_length * data_size ), obs_length * data_size );
-	   int* test_ptr= (int*)data_part + i * obs_length ;
-	   int x=1;
 	}
 }
 
@@ -134,22 +129,13 @@ unsigned long int var_start, unsigned long int var_length , unsigned int  data_s
 void transpose::write_part(ofstream * dest_stream, char * data_part_transposed, unsigned long int obs_start , unsigned long int obs_length,
 unsigned long int var_start, unsigned long int var_length , unsigned int  data_size, unsigned long int dest_obs_length )
 {
-//cout << "write_part"<<endl;
 	for(unsigned long int i=0; i<var_length ;i++)
 	{
-
 	   //seek to the beginning of the next var
 	   unsigned long int write_pos =   (var_start + i )* dest_obs_length  + obs_start ;
-//	   cout << "write pos:" << write_pos << endl;
 	   dest_stream->seekp( write_pos * data_size );
 	   //write next piece of var to file
 	   dest_stream->write( data_part_transposed + ( i * obs_length * data_size ), obs_length * data_size );
-
-       int* test_ptr= (int*)data_part_transposed;
-	   int* wrote = test_ptr +  i * obs_length ;
-//       cout << "wrote:" << *wrote << endl;
-
-	   int x =1;
 	}
 }
 
@@ -160,15 +146,12 @@ original axb matrix flipped to bxa matrix.
 void transpose::transpose_part(void * data_part, void * data_part_transposed,
 unsigned long int obs_length,unsigned long int var_length, unsigned int data_size )
 {
-//cout << "transpose_part"<<endl;
 	for(unsigned long int i=0; i<var_length ;i++)
 	{
 		for(unsigned long int j=0; j<obs_length ;j++)
 		{
            int from_pos =  (i * obs_length + j )* data_size;
            int to_pos = ( j * var_length  + i ) * data_size;
-//           cout << "from i="<<i << ",j="<<j<<"("<<from_pos<<")" <<endl;
-//           cout << "to j="<<j << ",i="<<i <<"("<<to_pos<<")"<<endl;
 		   memcpy((char*)data_part_transposed + to_pos,
 		          (char*)data_part + from_pos,
 		          data_size);
