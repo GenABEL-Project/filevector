@@ -12,9 +12,12 @@ READSPEED = $(BINDIR)/readspeed
 CORRECTNESSTEST = $(BINDIR)/correctnesstest
 ACCESSMODETEST = $(BINDIR)/accessmodetest 
 MODIFTEST = $(BINDIR)/modificationtest
-UNITTEST = $(BINDIR)/fvunittest
 CONVERT = $(BINDIR)/convert
 WRITE_VAR_SPEED = $(BINDIR)/writevarspeed
+TRANSPOSE = $(BINDIR)/transpose
+
+UNITTEST = $(BINDIR)/fvunittest
+TRANSPOSETEST = $(BINDIR)/transposetest 
 
 
 # GNU compiler
@@ -22,7 +25,7 @@ CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -g #-m64 
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -O2 -m64
 CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS)
 
@@ -64,13 +67,21 @@ modificationtest : $(MODIFTEST)
 $(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FileModificationTest.cpp  -o $(MODIFTEST)
 
-unittest : $(UNITTEST)
+unittest : $(UNITTEST) $(TRANSPOSETEST)
 $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FVUnitTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FVUnitTest.cpp  -o $(UNITTEST)
+
+$(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(SRCDIR)/transpose.cpp $(TESTSDIR)/TransposeTest.cpp  -o $(TRANSPOSETEST)
 
 converter : $(CONVERT)
 $(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp  $(SRCDIR)/convert.cpp -o $(CONVERT)
+
+transpose :$(TRANSPOSE)
+$(TRANSPOSE) :  $(LIBFILES) $(SRCDIR)/transpose_main.cpp
+	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp  $(SRCDIR)/transpose.cpp $(SRCDIR)/transpose_main.cpp -o $(TRANSPOSE)
+
 
 writespeed : $(WRITE_VAR_SPEED)
 $(WRITE_VAR_SPEED): $(LIBFILES) $(SRCDIR)/convert.cpp
@@ -81,4 +92,5 @@ $(ACCESSMODETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/AccessModeTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/AccessModeTest.cpp -o $(ACCESSMODETEST)
 
 tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest
-	
+
+
