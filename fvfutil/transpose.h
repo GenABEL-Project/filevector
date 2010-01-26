@@ -3,7 +3,15 @@
 
 #include "filevector.h"
 
-
+/*
+this class transposes filevector files without reading them fully into memory.
+data copying is working as explained below:
+ some square_size value is used for partial copy.
+ the square window traverses source data, ( cycle with i/j )
+ the piece of data is read into memory,
+ then it's being transposed
+ and written to the destination file ( j/i )
+*/
 class transpose
 {
 public :
