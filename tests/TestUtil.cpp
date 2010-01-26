@@ -53,9 +53,13 @@ void TestUtil::create_and_fill_variable(unsigned int  nobs, float * in )
 
 void TestUtil::create_empty_filevector(string tmp_file_name ,unsigned int  nvars, unsigned int  nobs)
 {
+    create_empty_filevector(tmp_file_name ,nvars, nobs, FLOAT);
+}
+void TestUtil::create_empty_filevector(string tmp_file_name ,unsigned int  nvars, unsigned int  nobs, unsigned short int type)
+{
 	remove((tmp_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
 	remove((tmp_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
-	initialize_empty_file( (char *)tmp_file_name.c_str(), nvars, nobs, FLOAT);
+	initialize_empty_file( (char *)tmp_file_name.c_str(), nvars, nobs, type);
 }
 
 bool TestUtil::compare_arrays(float * a1,float * a2, int size)
