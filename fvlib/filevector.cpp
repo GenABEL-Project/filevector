@@ -151,7 +151,6 @@ void filevector::set_cachesizeMb( unsigned long int cachesizeMb )
 	in_cache_to = 0;
 }
 
-
 void filevector::update_cache(unsigned long int from_var)
 {
 	unsigned long int current_cache_size_bytes = cache_size_bytes;
@@ -189,13 +188,11 @@ void filevector::update_cache(unsigned long int from_var)
 	cached_data = char_buffer;
 }
 
-
 void filevector::write_variable_name(unsigned long int nvar, fixedchar name)
 {
 	if (nvar>=data_type.nvariables) error("trying to set name of obs out of range (%lu)\n\n",nvar);
 	variable_names[nvar] = name;
 }
-
 
 void filevector::write_observation_name(unsigned long int nobs, fixedchar name)
 {
@@ -245,6 +242,9 @@ void filevector::read_observation(unsigned long int nobs, void * outvec)
 
 void filevector::write_observation(unsigned long int nobs, void * invec)
 {
+    if (readOnly) {
+        error("Trying to write to the readonly file.");
+    }
 	for( int i = 0; i< get_nvariables(); i++)
 	{
 		write_element( i, nobs, (char*)invec+ i*getDataSize() );
@@ -252,9 +252,11 @@ void filevector::write_observation(unsigned long int nobs, void * invec)
 }
 
 // can write single variable
-
 void filevector::write_variable(unsigned long int nvar, void * datavec)
 {
+    if (readOnly) {
+        error("Trying to write to the readonly file.");
+    }
 	unsigned long int pos = nrnc_to_nelem(nvar, 0);
 	data_file.seekp(pos*getDataSize(), ios::beg);
 	data_file.write((char*)datavec,getDataSize()*data_type.nobservations);
@@ -272,8 +274,6 @@ void filevector::write_variable(unsigned long int nvar, void * datavec)
 //TMP
 //	for (unsigned int i=0;i<data_type.nobservations;i++) cout << " " << datavec[i];
 }
-
-
 
 unsigned long int filevector::nrnc_to_nelem(unsigned long int nvar, unsigned long int nobs)
 {
@@ -296,8 +296,11 @@ void filevector::read_element(unsigned long int nvar, unsigned long int nobs, vo
 
 void filevector::write_element(unsigned long int nvar, unsigned long int nobs, void* data)
 {
+    if (readOnly) {
+        error("Trying to write to the readonly file.");
+    }
 	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
-	data_file.seekp(pos*getDataSize(), ios::beg);
+    data_file.seekp(pos*getDataSize(), ios::beg);
 	data_file.write((char*)data,getDataSize());
 
 	if (nvar >= in_cache_from && nvar <= in_cache_to)
@@ -306,7 +309,6 @@ void filevector::write_element(unsigned long int nvar, unsigned long int nobs, v
 		memcpy(cached_data+offset,data,getDataSize() );
 	}
 }
-
 
 unsigned int filevector::get_nvariables()
 {
@@ -320,6 +322,9 @@ unsigned int filevector::get_nobservations()
 
 void filevector::save( string new_file_name )
 {
+    if (readOnly) {
+        error("Trying to write to the readonly file.");
+    }
     initialize_empty_file( (char *)new_file_name.c_str(), get_nvariables(), get_nobservations(), data_type.type);
     filevector *outdata = new filevector( new_file_name, 64 );//todo which size for cache to use?
 
@@ -344,6 +349,9 @@ void filevector::save( string new_file_name )
 
 void filevector::save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes)
 {
+    if (readOnly) {
+        error("Trying to write to the readonly file.");
+    }
     initialize_empty_file( (char *)new_file_name.c_str(), nvars, get_nobservations(), data_type.type);
     filevector outdata( new_file_name, 64 );//todo which size for cache to use?
 
@@ -369,6 +377,9 @@ void filevector::save_vars( string new_file_name, unsigned long int nvars, unsig
 
 void filevector::save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes)
 {
+    if (readOnly) {
+        error("Trying to write to the readonly file.");
+    }
     initialize_empty_file( (char *)new_file_name.c_str(), get_nvariables(), nobss, data_type.type);
     filevector outdata( new_file_name, 64 );//todo which size for cache to use?
 
@@ -411,9 +422,11 @@ void filevector::copy_variable(char* to, char* from, int n, unsigned long int * 
 	}
 }
 
-
 void filevector::save(string new_file_name, unsigned long int nvars, unsigned long int nobss,
-     unsigned long int * varindexes, unsigned long int * obsindexes) {
+    unsigned long int * varindexes, unsigned long int * obsindexes) {
+    if (readOnly) {
+        error("Trying to write to the readonly file.");
+    }
     initialize_empty_file( (char *)new_file_name.c_str(), nvars, nobss, data_type.type);
     filevector outdata( new_file_name, 64 );//todo which size for cache to use?
 
@@ -492,6 +505,9 @@ short unsigned filevector::getDataType(){
 
 void filevector::add_variable(void * invec, string varname)
 {
+    if (readOnly) {
+        error("Trying to write to the readonly file.");
+    }
       data_type.nvariables++;
       data_type.nelements = data_type.nvariables*data_type.nobservations;//recalculate
 

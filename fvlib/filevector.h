@@ -55,13 +55,29 @@ public:
 	filevector();
 	~filevector();
 
+	bool readOnly;
+
     filevector(string filename_toload, unsigned long int cachesizeMb)
     {
     	char_buffer = 0;
 	    initialize(filename_toload, cachesizeMb);
     }
 
-    filevector(char *filename_toload, unsigned long int cachesizeMb) {
+    filevector(string filename_toload, unsigned long int cachesizeMb, bool iReadOnly) : readOnly(iReadOnly)
+    {
+    	char_buffer = 0;
+	    initialize(filename_toload, cachesizeMb);
+    }
+
+    filevector(char *filename_toload, unsigned long int cachesizeMb)
+    {
+        string filename(filename_toload);
+        char_buffer = 0;
+        initialize(filename_toload, cachesizeMb);
+    }
+
+    filevector(char *filename_toload, unsigned long int cachesizeMb, bool iReadOnly) : readOnly(iReadOnly)
+    {
         string filename(filename_toload);
         char_buffer = 0;
         initialize(filename_toload, cachesizeMb);
@@ -113,7 +129,6 @@ public:
 
 	virtual short unsigned getDataSize();
     virtual short unsigned getDataType();
-
 
 // FOR FUTURE:
 // very slow one!
