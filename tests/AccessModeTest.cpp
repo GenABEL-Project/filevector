@@ -19,18 +19,12 @@ string getDirName()
     return TestUtil::get_base_dir() + string("/../tests/data/modetests");
 }
 
-/*
-#define DB_CREATE 1
-#define DB_EXCL 2
-#define DB_RDONLY 4
-*/
-
 void AccessModeTest::test() {
-    string fileName = getDirName() + string("/db_create");
-    filevector * f = new filevector(fileName, 1, DB_CREATE);
+/*    string fileName = getDirName() + string("/db_create");
+    filevector * f = new filevector(fileName, 1);
     CPPUNIT_ASSERT(file_exists(fileName + FILEVECTOR_DATA_FILE_SUFFIX) == true);
     CPPUNIT_ASSERT(file_exists(fileName + FILEVECTOR_INDEX_FILE_SUFFIX) == true);
-    delete f;
+    delete f;*/
 }
 
 

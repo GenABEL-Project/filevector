@@ -40,106 +40,72 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
     index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;
     data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
 
-    bool indexFileExists = file_exists(index_filename);
-    bool dataFileExists = file_exists(data_filename);
+    if(!file_exists(index_filename))
+        error("index file not exists: %s",index_filename.c_str());
 
-    cout << "index_filename" << index_filename << endl;
-
-    ios_base::openmode openmode;
-
-    if (indexFileExists != dataFileExists) {
-        error("index file doesn't exist but data file does or vice versa.");
-    }
-
-    if( !createIfNotExists)
-    {
-        string errorMsg = string("data or index files not exist.(createIfNotExist mode not enabled) ") + filename_toload;
-        if (!indexFileExists || !dataFileExists )
-            error(errorMsg.c_str());
-	    openmode = ios::out | ios::in | ios::binary;
-    } else {
-	    openmode = ios::out | ios::binary;
-    }
-
-    if(exclusiveCreate)
-    {
-        if (indexFileExists && dataFileExists )
-            error("data & index files already exist.(exclusiveCreate mode)");
-    }
-
-    if( readOnly) {
-        openmode = ios::in | ios::binary;
-    }
-
-	struct stat index_filestatus;
-    if (!createIfNotExists) {
-    	stat( index_filename.c_str() , &index_filestatus);
-        if (index_filestatus.st_size < sizeof(data_type))
-            error("index file %s is too short to contain an FV-index\n",index_filename.c_str());
-    }
+    data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
+    if(!file_exists(data_filename))
+        error("data file not exists: %s",data_filename.c_str());
 
 	struct stat data_filestatus;
 	stat( data_filename.c_str() , &data_filestatus);
 
-	index_file.open(index_filename.c_str(), openmode);
+	struct stat index_filestatus;
+	stat( index_filename.c_str() , &index_filestatus);
+
+	index_file.open(index_filename.c_str(), ios::out | ios::in | ios::binary);
 	if (!index_file)
 		error("opening file %s for write & read failed\n",index_filename.c_str());
 
-	data_file.open(data_filename.c_str(), openmode);
+	data_file.open(data_filename.c_str(), ios::out | ios::in | ios::binary);
 	if (!data_file)
 		error("opening file %s for write & read failed\n",data_filename.c_str());
 
-    if (!createIfNotExists) {
-	    index_file.read((char*)&data_type,sizeof(data_type));
-	    if (!index_file)
-            error("failed to read datainfo from file '%s'\n",index_filename.c_str());
+	index_file.read((char*)&data_type,sizeof(data_type));
+	if (!index_file)
+        error("failed to read datainfo from file '%s'\n",index_filename.c_str());
 
-    	//!!! nelements should actually be long to ensure !!!
-	    if (data_type.nelements != (data_type.nobservations*data_type.nvariables))
-		    error("number of variables (%lu) and observations (%lu) do not multiply to nelements (%lu) (file integrity issue?)\n",
-			    data_type.nvariables, data_type.nobservations, data_type.nelements);
-	    if ((data_type.bytes_per_record != (data_type.bits_per_record/8)) ||
-	         ((data_type.bits_per_record % 8) != 0) || (data_type.bits_per_record < 8))
-		    perror("size in bytes/bits do not match or bit-size of char !=8 or non-byte recods (file integrity issue?)");
+    // some integrity checks
+	if (getDataSize() != data_type.bytes_per_record)
+		error("system data type size (%d) and file data type size (%d) do not match\n",
+			getDataSize(),data_type.bytes_per_record);
 
-    	header_size = sizeof(data_type) + sizeof(fixedchar)*(data_type.nvariables+data_type.nobservations);
-        if(header_size != index_filestatus.st_size)
-            error("index file size(%lu) differs from the expected(%lu)",index_filestatus.st_size,header_size );
+	//!!! nelements should actually be long to ensure !!!
+	if (data_type.nelements != (data_type.nobservations*data_type.nvariables))
+		error("number of variables (%lu) and observations (%lu) do not multiply to nelements (%lu) (file integrity issue?)\n",
+			data_type.nvariables, data_type.nobservations, data_type.nelements);
 
-        // reserved for future use -- if bits storage ever used ...
-        //	unsigned long int extrabits = 0;
-        //	unsigned long int estimated_size = data_type.bits_per_record*data_type.nelements;
-        //	unsigned long int resid = (estimated_size % 8);
-        //	if (resid != 0) estimated_size += (8 - resid);
-        //	estimated_size /= 8;
-        //	cout << "5" << endl;
+	if ((data_type.bytes_per_record != (data_type.bits_per_record/8)) ||
+	     ((data_type.bits_per_record % 8) != 0) || (data_type.bits_per_record < 8))
+		perror("size in bytes/bits do not match or bit-size of char !=8 or non-byte recods (file integrity issue?)");
+
+  	header_size = sizeof(data_type) + sizeof(fixedchar)*(data_type.nvariables+data_type.nobservations);
+    if(header_size != index_filestatus.st_size)
+        error("index file size(%lu) differs from the expected(%lu)",index_filestatus.st_size,header_size );
 
 	// temp fix because nelements is not yet long ... !!!
-//	unsigned long int estimated_size = data_type.bytes_per_record*data_type.nelements + header_size;
-    	unsigned long int estimated_size =
+    //	unsigned long int estimated_size = data_type.bytes_per_record*data_type.nelements + header_size;
+	unsigned long int estimated_size =
 			(unsigned long int) data_type.bytes_per_record *
 			(unsigned long int) data_type.nvariables *
 			(unsigned long int) data_type.nobservations;
-	    if (estimated_size != data_filestatus.st_size)
-		    error("data file size (%lu) differ from the expected (%lu) [%lu,%lu]",
-			    data_filestatus.st_size,estimated_size,data_type.nvariables,data_type.nobservations);
+	if (estimated_size != data_filestatus.st_size)
+        error("data file size (%lu) differ from the expected (%lu) [%lu,%lu]",
+		    data_filestatus.st_size,estimated_size,data_type.nvariables,data_type.nobservations);
 
-// read in variable and observation names
+    // read in variable and observation names
+	variable_names = new (nothrow) fixedchar [data_type.nvariables];
+	if (!variable_names) error("can not get RAM for variable names");
+	observation_names = new (nothrow) fixedchar [data_type.nobservations];
+	if (!observation_names) error("can not get RAM for observation names");
+	index_file.seekg(sizeof(data_type), ios::beg);
+	for (unsigned long int i=0;i<data_type.nobservations;i++)
+		index_file.read((char*)(observation_names+i),sizeof(fixedchar));
+	for (unsigned long int i=0;i<data_type.nvariables;i++)
+		index_file.read((char*)(variable_names+i),sizeof(fixedchar));
 
-	    variable_names = new (nothrow) fixedchar [data_type.nvariables];
-	    if (!variable_names) error("can not get RAM for variable names");
-	    observation_names = new (nothrow) fixedchar [data_type.nobservations];
-	    if (!observation_names) error("can not get RAM for observation names");
-	    index_file.seekg(sizeof(data_type), ios::beg);
-	    for (unsigned long int i=0;i<data_type.nobservations;i++)
-		    index_file.read((char*)(observation_names+i),sizeof(fixedchar));
-	    for (unsigned long int i=0;i<data_type.nvariables;i++)
-    		index_file.read((char*)(variable_names+i),sizeof(fixedchar));
-
-//	cout << "6" << endl;
-        set_cachesizeMb(cachesizeMb);
-        update_cache(0);
-    }
+    set_cachesizeMb(cachesizeMb);
+    update_cache(0);
 }
 
 unsigned long int filevector::get_cachesizeMb()
@@ -221,12 +187,6 @@ void filevector::update_cache(unsigned long int from_var)
 		}
 	}
 	cached_data = char_buffer;
-//TMP
-//	for (int i=0;i<cache_size_nvars;i++) {
-//	for (int j=0;j<data_type.nobservations;j++)
-//	cout << " " << cached_data[i*data_type.nobservations+j];
-//	cout<<"\n";
-//	}
 }
 
 
@@ -243,14 +203,11 @@ void filevector::write_observation_name(unsigned long int nobs, fixedchar name)
 	observation_names[nobs] = name;
 }
 
-
-
 fixedchar filevector::read_variable_name(unsigned long int nvar)
 {
 	if (nvar>=data_type.nvariables) error("trying to get name of var out of range");
 	return(variable_names[nvar]);
 }
-
 
 fixedchar filevector::read_observation_name(unsigned long int nobs)
 {
@@ -259,7 +216,6 @@ fixedchar filevector::read_observation_name(unsigned long int nobs)
 }
 
 // can read single variable
-
 void filevector::read_variable(unsigned long int nvar, void * outvec)
 {
 	if (nvar>=data_type.nvariables) error("nvar out of range (%lu >= %lu)",nvar,data_type.nvariables);
@@ -357,13 +313,10 @@ unsigned int filevector::get_nvariables()
    return data_type.nvariables;
 }
 
-
-
 unsigned int filevector::get_nobservations()
 {
    return data_type.nobservations;
 }
-
 
 void filevector::save( string new_file_name )
 {
@@ -388,8 +341,6 @@ void filevector::save( string new_file_name )
     delete outdata;
     delete [] tmpvariable;
 }
-
-
 
 void filevector::save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes)
 {
@@ -437,7 +388,7 @@ void filevector::save_obs( string new_file_name, unsigned long int nobss, unsign
         outdata.write_variable_name( i, read_variable_name(i));
         //write variables
         read_variable(i, in_variable);
-        copy_variable(out_variable,in_variable,nobss, obsindexes);
+        copy_variable(out_variable,in_variable, nobss, obsindexes);
         outdata.write_variable(i,out_variable);
     }
 
@@ -448,7 +399,7 @@ void filevector::save_obs( string new_file_name, unsigned long int nobss, unsign
 /*
 * copy elements from "from" array to "to" array, according to "n" and "indexes" parameters
 */
-void filevector::copy_variable(char * to, char * from, int n, unsigned long int * indexes )
+void filevector::copy_variable(char* to, char* from, int n, unsigned long int * indexes )
 {
 	for ( int j=0 ; j<n ; j++ )
 	{
@@ -491,6 +442,44 @@ void filevector::save(string new_file_name, unsigned long int nvars, unsigned lo
 	delete[] in_variable;
 	delete[] out_variable;
 }
+
+void filevector::save_as_text(string new_file_name, unsigned long int nvars, unsigned long int nobss,
+    unsigned long int * varindexes, unsigned long int * obsindexes) {
+
+    ofstream textfile(new_file_name.c_str(), ios::out);
+
+    // copy observation names from the first object
+	for( unsigned long int i=0 ; i < nobss ; i++ ){
+	    fixedchar fc = read_observation_name( obsindexes[i] ) ;
+        textfile << fc.name;
+    }
+
+    char * out_variable = new (nothrow) char[nobss*getDataSize()];
+        if (!out_variable) error("can not allocate memory for out_variable");
+
+	char * in_variable = new (nothrow) char[get_nobservations()*getDataSize()];
+		if (!in_variable) error("can not allocate memory for in_variable\n\n");
+
+	for( unsigned long int i=0 ; i<nvars ; i++ )
+    {
+		unsigned long int selected_index = varindexes[i];
+    	//write var names
+    	fixedchar fc = read_variable_name(selected_index);
+		textfile << fc.name;
+		//write variables
+		read_variable(selected_index, in_variable);
+		copy_variable(out_variable, in_variable, nobss, obsindexes);
+
+	    for( unsigned long int j=0 ; i<nobss ; i++ )
+	    {
+		    textfile << out_variable [i];
+		}
+	}
+
+	delete[] in_variable;
+	delete[] out_variable;
+}
+
 
 
 short unsigned filevector::getDataSize(){

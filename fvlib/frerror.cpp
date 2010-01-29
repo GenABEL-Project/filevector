@@ -2,9 +2,7 @@
 	This function should be re-implemented using Rprintf
 	if compiled as a part of R library
 */
-
 #include "frerror.h"
-
 
 void error (const char * format, ... )
 {

@@ -44,27 +44,27 @@ public:
 
     template <class DT> void performCast(void*dest, DT&src, int destType)
     {
-	    switch (destType) {
-    	  case UNSIGNED_SHORT_INT:
-    		*((unsigned short int*)dest) = src;
-    		break;
-    	  case SHORT_INT:
-    		*((short int*)dest) = src;
-    		break;
-    	  case UNSIGNED_INT:
-    		*((unsigned int*)dest) = src;
-    		break;
-    	  case INT:
-    		*((int*)dest) = src;
-    		break;
-    	  case FLOAT:
-    		*((float*)dest) = src;
-    		break;
-    	  case DOUBLE:
-    		*((double*)dest) = src;
-    		break;
-    	  default:
-    		error("file contains data of unknown type\n");
+        switch (destType) {
+    	    case UNSIGNED_SHORT_INT:
+    		    *((unsigned short int*)dest) = src;
+    		    break;
+    	    case SHORT_INT:
+    		    *((short int*)dest) = src;
+    		    break;
+    	    case UNSIGNED_INT:
+        		*((unsigned int*)dest) = src;
+        		break;
+    	    case INT:
+    		    *((int*)dest) = src;
+    		    break;
+    	    case FLOAT:
+    		    *((float*)dest) = src;
+    		    break;
+    	    case DOUBLE:
+        		*((double*)dest) = src;
+        		break;
+    	      default:
+    		    error("file contains data of unknown type\n");
     	}
     }
 
@@ -143,6 +143,7 @@ public:
    	virtual void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes) = 0;
 
     virtual void save(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes) = 0;
+    virtual void save_as_text(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes) = 0;
 
     //virtual void add_variable(void * invec, fixedchar varname) = 0; // adds variable at the end = write_variable with nvar=NVARS?
     // loooong future -- control that name is unique!

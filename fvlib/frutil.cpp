@@ -64,11 +64,10 @@ void initialize_empty_file(string filename, unsigned long int nvariables, unsign
 {
     string index_filename = filename + FILEVECTOR_INDEX_FILE_SUFFIX;
     string data_filename = filename + FILEVECTOR_DATA_FILE_SUFFIX;
-	
 
 	fr_type metadata;
 // data element size
-	unsigned long int desize=calcDataSize(type);
+	unsigned long int desize = calcDataSize(type);
 	metadata.type = type;
 	metadata.nvariables = nvariables;
 	metadata.nobservations = nobservations;

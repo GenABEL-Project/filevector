@@ -12,6 +12,7 @@ READSPEED = $(BINDIR)/readspeed
 CORRECTNESSTEST = $(BINDIR)/correctnesstest
 ACCESSMODETEST = $(BINDIR)/accessmodetest 
 MODIFTEST = $(BINDIR)/modificationtest
+CONVERTTEST = $(BINDIR)/converttest
 CONVERT = $(BINDIR)/convert
 WRITE_VAR_SPEED = $(BINDIR)/writevarspeed
 TRANSPOSE = $(BINDIR)/transpose
@@ -90,7 +91,13 @@ $(WRITE_VAR_SPEED): $(LIBFILES) $(SRCDIR)/convert.cpp
 accessmodetest : $(ACCESSMODETEST)
 $(ACCESSMODETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/AccessModeTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/AccessModeTest.cpp -o $(ACCESSMODETEST)
+	
+converttest : $(CONVERTTEST)
+$(CONVERTTEST):$(LIBFILES) $(TESTFILES) $(TESTSDIR)/ConvertTest.cpp 
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/ConvertTest.cpp -o $(CONVERTTEST)
 
-tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest
+tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest 
+runtests : tests
+	${CORRECTNESSTEST} ${TRANSPOSETEST} ${UNITTEST} ${CONVERT} ${TRANSPOSE} ${ACCESSMODETEST}
 
 
