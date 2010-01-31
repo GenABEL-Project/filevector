@@ -59,7 +59,7 @@ public:
 
 	filevector(string filename_toload, unsigned long int cachesizeMb)
 	{
-		readOnly = FALSE;
+		readOnly = false;
 		char_buffer = 0;
 		initialize(filename_toload, cachesizeMb);
 	}
@@ -72,7 +72,7 @@ public:
 
 	filevector(char *filename_toload, unsigned long int cachesizeMb)
 	{
-		readOnly = FALSE;
+		readOnly = false;
 		string filename(filename_toload);
 		char_buffer = 0;
 		initialize(filename_toload, cachesizeMb);
