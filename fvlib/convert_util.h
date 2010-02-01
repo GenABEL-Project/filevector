@@ -22,7 +22,8 @@ void text2fvf(
 		int rownames, int colnames,
 		int skiprows, int skipcols,
 		int transpose, int Rmatrix,
-		unsigned short int type
+		unsigned short int type,
+		bool quiet
 );
 
 
