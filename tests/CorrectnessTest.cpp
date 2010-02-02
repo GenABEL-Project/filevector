@@ -98,7 +98,7 @@ void CorrectnessTest::testRandomReadObservations(){
 
     for (i = 0 ; i < numObservationsToTest ; i++ )
 	{
-	cout << i << "(" << observationIdx[i] << ")" << endl;
+	    cout << i << "(" << observationIdx[i] << ")" << endl;
 	    //data.read_observation(observationIdx[i], tmpdat);
 	    float calcSumm;
 

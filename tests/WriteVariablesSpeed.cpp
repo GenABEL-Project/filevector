@@ -10,7 +10,6 @@ Select 2,500 random variables,  */
 int main(int argc, char * argv[])
 {
 
-  	
 	int nvars = 100000;
 	int nobs = 1000;
 	int to_add = 20000;
@@ -32,7 +31,7 @@ int main(int argc, char * argv[])
 
 
   	cout << "Generating data to file "<< filename<< ",vars*obs: "<< nvars<< "*"<<nobs <<" , cache:"<< cache_size << endl;
-	initialize_empty_file( (char *)filename.c_str(), nvars, nobs, FLOAT);
+	initialize_empty_file( (char *)filename.c_str(), nvars, nobs, FLOAT, true);
 	filevector fv(filename,cache_size);
 
     float * tmp = new float[fv.get_nobservations()];

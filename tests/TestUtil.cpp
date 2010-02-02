@@ -59,16 +59,16 @@ void TestUtil::create_empty_filevector(string tmp_file_name ,unsigned int  nvars
 {
 	remove((tmp_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
 	remove((tmp_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
-	initialize_empty_file( (char *)tmp_file_name.c_str(), nvars, nobs, type);
+	initialize_empty_file( (char *)tmp_file_name.c_str(), nvars, nobs, type, true);
 }
 
-bool TestUtil::compare_arrays(float * a1,float * a2, int size)
+bool TestUtil::compare_arrays(float * a1, float * a2, int size)
 {
 	for(int i =0; i< size ; i++)
 	{
 		if(a1[i] != a2[i])
 		{
-		  cout<< "compare_arrays: " << i<<" elements not equal:"<< a1[i]<<","<<a2[i]<<endl;
+		  cout<< "compare_arrays: " << i << " elements not equal:"<< a1[i]<<","<<a2[i]<<endl;
 		  return false;
 		}
 	}

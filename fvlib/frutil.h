@@ -81,10 +81,11 @@ void make_fake_file(char * fake_filename, unsigned long int nvariables, unsigned
 
 fr_type get_file_type(char * filename);
 
-void initialize_empty_file(string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type);
+void initialize_empty_file(string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type, bool override);
 
 string extract_base_file_name(string filename);
 bool file_exists(string fileName);
+bool headerOrDataExists(string fileName);
 unsigned short calcDataSize(unsigned short int type);
 
 #endif

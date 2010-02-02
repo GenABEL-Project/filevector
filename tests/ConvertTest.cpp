@@ -10,33 +10,35 @@
 #include "TestUtil.h"
 #include "FVUnitTest.h"
 #include "filevector.h"
+#include "frutil.h"
 #include "DatABELBaseCPP.h"
 
 void ConvertTest::test() {
-	unsigned long int nvariables = 3;
-	unsigned long int nobservations = 3;
-	string tmp_file_name = TestUtil::get_base_dir() + string("/../tests/data/2write/txttest");
-	string textFileName = TestUtil::get_base_dir() + string("/../tests/data/2write/test.txt");
+    unsigned long int nvariables = 3;
+    unsigned long int nobservations = 3;
+    string tmp_file_name = TestUtil::get_base_dir() + string("/../tests/data/2write/txttest");
+    string textFileName = TestUtil::get_base_dir() + string("/../tests/data/2write/test.txt");
 
-	DatABELBaseCPP* fv = new filevector( tmp_file_name, 1 , DB_CREATE);
+  //string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type, bool override
+  initialize_empty_file(tmp_file_name, nvariables, nobservations, FLOAT, true);
+  DatABELBaseCPP* fv = new filevector( tmp_file_name, 1);
 
-	float * var = new float [fv->get_nobservations()];
+  float * var = new float [fv->get_nobservations()];
 	
-	for(int i = 0; i< fv->get_nobservations(); i++)
-    {
-       var[i] = i + (float)i/10;
-    }
+  for(int i = 0; i< fv->get_nobservations(); i++) {
+    var[i] = i + (float)i/10;
+  }
 
-	fv->write_variable_as(1, var);
+  fv->write_variable_as(1, var);
 
-	delete[] var;
+  delete[] var;
 
-    unsigned long varMask[] = {0, 2};
-    unsigned long obsMask[] = {1, 2};
+  unsigned long varMask[] = {0, 2};
+  unsigned long obsMask[] = {1, 2};
 
-	fv->save_as_text(textFileName, 2, 2, varMask, obsMask);
+  fv->save_as_text(textFileName, 2, 2, varMask, obsMask);
 
-	delete fv;
+  delete fv;
 }
 
 int main(int numargs, char**args) {

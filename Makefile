@@ -96,8 +96,8 @@ converttest : $(CONVERTTEST)
 $(CONVERTTEST):$(LIBFILES) $(TESTFILES) $(TESTSDIR)/ConvertTest.cpp 
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/ConvertTest.cpp -o $(CONVERTTEST)
 
-tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest 
+tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest converttest
 runtests : tests
-	${CORRECTNESSTEST} ${TRANSPOSETEST} ${UNITTEST} ${CONVERT} ${TRANSPOSE} ${ACCESSMODETEST}
+	${CORRECTNESSTEST} ${TRANSPOSETEST} ${UNITTEST} ${CONVERTTEST} ${TRANSPOSE} ${ACCESSMODETEST} 
 
 

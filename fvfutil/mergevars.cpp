@@ -38,7 +38,7 @@ int main(int argc, char * argv[])
 	unsigned long int out_nvars = indata1.data_type.nvariables + indata2.data_type.nvariables;
 	unsigned long int out_nobs = indata1.data_type.nobservations;
 	std::cout << "initalizing FVF-file '" << ofname << "'...\n";
-	initialize_empty_file(ofname, out_nvars, out_nobs, FLOAT);
+	initialize_empty_file(ofname, out_nvars, out_nobs, FLOAT, true);
 	std::cout << "writing out the data ... \n";
 
 	filevector outdata(ofname, cachesize);

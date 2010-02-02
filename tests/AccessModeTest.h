@@ -9,10 +9,10 @@
 using namespace std;
 
 class AccessModeTest : public CppUnit::TestFixture {
-    void test();
+    void testReadOnly();
 
     CPPUNIT_TEST_SUITE( AccessModeTest);
-    CPPUNIT_TEST( test );
+    CPPUNIT_TEST( testReadOnly );
     CPPUNIT_TEST_SUITE_END();
 
 public:

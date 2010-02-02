@@ -26,7 +26,12 @@ void transpose::process(string filename)
 
     string src_data_file_name = extract_base_file_name(filename)+FILEVECTOR_DATA_FILE_SUFFIX;
     string dest_data_file_name = extract_base_file_name(filename)+"_transposed"+FILEVECTOR_DATA_FILE_SUFFIX;
-    initialize_empty_file(dest_file_name, src_fv->get_nobservations(), src_fv->get_nvariables(), src_fv->getDataType());
+
+    if (headerOrDataExists(dest_file_name)) {
+        error("File %s already exists.", dest_file_name.c_str());
+    }
+
+    initialize_empty_file(dest_file_name, src_fv->get_nobservations(), src_fv->get_nvariables(), src_fv->getDataType(),true);
 
     filevector* dest_fv = new filevector(dest_file_name,1);
     cout<< "Copying var/obs names...";
@@ -40,7 +45,7 @@ void transpose::process(string filename)
     cout<< "done"<< endl;
 }
 
-void transpose::write_var_obs_names(filevector * src_fv, filevector * dest_fv)
+void transpose::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
 {
    // copy observations and variables names
    for( unsigned long int i=0 ; i < src_fv->get_nvariables(); i++ )

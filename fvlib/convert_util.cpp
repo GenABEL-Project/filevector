@@ -147,7 +147,7 @@ void text2fvf(
 		out_nobs = nrows;
 	}
 	// HERE IS THE TYPE
-	initialize_empty_file(outfilename, out_nvars, out_nobs, type);
+	initialize_empty_file(outfilename, out_nvars, out_nobs, type, true);
 
 	if (!quiet) message("number of variables in FVF-file '%s' will be %d\n",outfilename.c_str(),out_nvars);
 	if (!quiet) message("number of observations in FVF-file '%s' will be %d\n\n",outfilename.c_str(),out_nobs);

@@ -4,7 +4,6 @@
 #include "const.h"
 #include "filevector.h"
 
-
 fr_type get_file_type(char * filename) {
 	fr_type out;
 	ifstream myfile(filename, ios::binary | ios::in);
@@ -60,7 +59,7 @@ unsigned short calcDataSize(unsigned short int type){
 	return desize;
 }
 
-void initialize_empty_file(string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type)
+void initialize_empty_file(string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type, bool override)
 {
     string index_filename = filename + FILEVECTOR_INDEX_FILE_SUFFIX;
     string data_filename = filename + FILEVECTOR_DATA_FILE_SUFFIX;
@@ -75,16 +74,20 @@ void initialize_empty_file(string filename, unsigned long int nvariables, unsign
 	metadata.bytes_per_record = desize;
 	metadata.bits_per_record = desize*8;
 
-	if(file_exists( index_filename ))
-	     error("initialize_empty_file error:file %s already exist",index_filename.c_str());
+	bool bHeaderOrDataExists = headerOrDataExists( filename );
+
+	if (override && bHeaderOrDataExists) {
+	    unlink(index_filename.c_str());
+	    unlink(data_filename.c_str());
+	}
+
+	if (!override && bHeaderOrDataExists) {
+	    error("File %s already exists.", filename.c_str());
+	}
 
 	ofstream idx_file(index_filename.c_str(), ios::binary | ios::out);
-
-	if(file_exists( data_filename ))
-	     error("initialize_empty_file error:file %s already exist",data_filename.c_str());
 	ofstream data_file(data_filename.c_str(), ios::binary | ios::out);
 
-	     
 	idx_file.write((char*)&metadata,sizeof(metadata));
 
 	fixedchar obsname;
@@ -107,15 +110,18 @@ void initialize_empty_file(string filename, unsigned long int nvariables, unsign
 	idx_file.close();
 }
 
+bool headerOrDataExists(string fileName) {
+    return file_exists(fileName + FILEVECTOR_INDEX_FILE_SUFFIX) || file_exists(fileName + FILEVECTOR_INDEX_FILE_SUFFIX);
+}
+
 bool file_exists(string fileName)
 {
-   struct stat buf;
-   int i = stat ( fileName.c_str(), &buf );
+    struct stat buf;
+    int i = stat ( fileName.c_str(), &buf );
      /* File found */
-     if ( i == 0 )
-     {
-       return true;
-     }
-     return false;
-
+    if ( i == 0 )
+    {
+        return true;
+    }
+    return false;
 }
