@@ -386,7 +386,6 @@ void filevector::save_obs( string new_file_name, unsigned long int nobss, unsign
   	for( unsigned long int i=0 ; i < nobss ; i++ )
   	    outdata.write_observation_name( i, read_observation_name( obsindexes[i] ) );
 
-
     char * in_variable = new (nothrow) char[get_nobservations()*getDataSize()];
     if (!in_variable) error("can not allocate memory for tmpvariable\n\n");
 
@@ -492,7 +491,9 @@ void filevector::save_as_text(string new_file_name, unsigned long int nvars, uns
 
 	    for( unsigned long int j=0 ; j<nobss ; j++ )
 	    {
-		    textfile << out_variable [j] << " ";
+	        double x;
+	        performCast(x, &out_variable[j*getDataSize()],getDataType());
+		    textfile << x << " ";
 		}
 		textfile << endl;
 	}
