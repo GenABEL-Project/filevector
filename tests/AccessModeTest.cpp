@@ -21,9 +21,12 @@ string getDirName()
 
 void AccessModeTest::testReadOnly() {
     string fileName = getDirName() + string("/db_create");
+    initialize_empty_file(fileName, 3,5, DOUBLE, true );
+
     DatABELBaseCPP * f = new filevector(fileName, 1);
     int p = 0;
-    f->write_element_as(1,1,p);
+    f->write_element_as(1, 1, p);
+
     delete f;
 }
 

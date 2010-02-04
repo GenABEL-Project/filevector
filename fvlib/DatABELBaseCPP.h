@@ -12,7 +12,6 @@ class DatABELBaseCPP
 public:
     // constructor
     // current:
-
     virtual ~DatABELBaseCPP(){};
 
     // added free_resources
@@ -74,13 +73,10 @@ public:
         char* tmp = new (nothrow) char [get_nobservations()*getDataSize()];
         if(!tmp)
             error("write_variable_as allocation error");
-
         for(int i = 0; i< get_nobservations();i++){
             performCast(&tmp[i*getDataSize()],outvec[i],getDataType());
         }
-
         write_variable(nvar, tmp);
-
         delete[] tmp;
     }
 
@@ -90,13 +86,10 @@ public:
         char* tmp = new (nothrow) char [get_nobservations()*getDataSize()];
         if(!tmp)
             error("read_variable_convert_to allocation error");
-
         for(int i = 0; i< get_nobservations();i++){
             performCast(&tmp[i*getDataSize()],outvec[i],getDataType());
         }
-
         add_variable (tmp, varname);
-
         delete[] tmp;
     }
 
@@ -105,14 +98,11 @@ public:
     {
        char * tmp = new (nothrow) char[get_nobservations()*getDataSize()];
        read_variable(nvar, tmp);
-
        for(int i = 0; i< get_nobservations();i++) {
             performCast(outvec[i],&tmp[i*getDataSize()],getDataType());
        }
-
        delete[] tmp;
     }
-
 
     void read_element_as(unsigned long varNumber, unsigned long obsNumber, float& element){
         char *ret= new char [getDataSize()];
@@ -162,12 +152,11 @@ public:
     virtual fixedchar read_observation_name(unsigned long int nobs) = 0;
     virtual fixedchar read_variable_name(unsigned long int nvar) = 0;
 
+    virtual void setUpdateNamesOnWrite(bool bUpdate) = 0;
 
 private:
-
- // can read single variable
+    // can read single variable
 	virtual void read_variable(unsigned long int nvar, void * outvec) = 0;
-
 
     // should only be used for reading single random elements!
 	virtual void read_element(unsigned long int nvar, unsigned long int nobs, void * elem) = 0;
@@ -179,9 +168,8 @@ private:
     // adds variable at the end = write_variable with nvar=NVARS?
 	// todo loooong future -- control that name is unique!
     virtual void add_variable(void * invec, string varname) = 0;
-   //todo later
-//    virtual void add_observation(void * invec, string obsname) = 0;
-
+    // todo later
+    //    virtual void add_observation(void * invec, string obsname) = 0;
 
     // write single element
     // CURRENTLY CACHE IS NOT UPDATED!

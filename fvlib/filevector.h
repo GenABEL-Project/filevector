@@ -56,6 +56,7 @@ public:
 	~filevector();
 
 	bool readOnly;
+	bool updateNamesOnWrite;	
 
 	filevector(string filename_toload, unsigned long int cachesizeMb)
 	{
@@ -65,10 +66,10 @@ public:
 	}
 
 	filevector(string filename_toload, unsigned long int cachesizeMb, bool iReadOnly) : readOnly(iReadOnly)
-    		{
+    {
 		char_buffer = 0;
 		initialize(filename_toload, cachesizeMb);
-    		}
+    }
 
 	filevector(char *filename_toload, unsigned long int cachesizeMb)
 	{
@@ -79,15 +80,14 @@ public:
 	}
 
 	filevector(char *filename_toload, unsigned long int cachesizeMb, bool iReadOnly) : readOnly(iReadOnly)
-    		{
+	{
 		string filename(filename_toload);
 		char_buffer = 0;
 		initialize(filename_toload, cachesizeMb);
-    		}
+	}
 
 	// these ones are the actual used to initialize and free up
 	void initialize(string filename_toload, unsigned long int cachesizeMb);
-	void free_resources();
 	// this one updates cache
 	void update_cache(unsigned long int from_var);
 	// gives element number from nvar & nobs
@@ -131,6 +131,9 @@ public:
 
 	virtual short unsigned getDataSize();
 	virtual short unsigned getDataType();
+	void saveIndexFile();
+
+	virtual void setUpdateNamesOnWrite(bool bUpdate);
 
 	// FOR FUTURE:
 	// very slow one!
@@ -139,6 +142,7 @@ public:
 	//	DT read_element(unsigned long int nelment);
 private :
 	void copy_variable(char * to, char * from, int n, unsigned long int * indexes );
+	void free_resources();
 
 };
 

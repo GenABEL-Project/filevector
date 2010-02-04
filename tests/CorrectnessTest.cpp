@@ -110,7 +110,7 @@ void CorrectnessTest::testRandomReadObservations(){
 
     delete[] tmpdat;
     delete[] sumData;
-    
+
     delete data;
 
     cout << "Finished" << endl;

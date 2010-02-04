@@ -98,6 +98,6 @@ $(CONVERTTEST):$(LIBFILES) $(TESTFILES) $(TESTSDIR)/ConvertTest.cpp
 
 tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest converttest
 runtests : tests
-	${CORRECTNESSTEST} ${TRANSPOSETEST} ${UNITTEST} ${CONVERTTEST} ${TRANSPOSE} ${ACCESSMODETEST} 
+	${CORRECTNESSTEST}; ${TRANSPOSETEST}; ${UNITTEST}; ${CONVERTTEST}; ${TRANSPOSETEST}; ${ACCESSMODETEST};
 
 

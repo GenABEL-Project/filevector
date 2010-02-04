@@ -7,25 +7,27 @@ using namespace std;
 #include "filevector.h"
 #include "frutil.h"
 
-void filevector::free_resources()
-{
+void filevector::saveIndexFile(){
   index_file.seekp(0, ios::beg);
   index_file.write((char*)&data_type, sizeof(data_type));
   index_file.seekp(sizeof(data_type), ios::beg);
 // may be have to fix: is the buffer always enough???
   if (sizeof(fixedchar)*data_type.nobservations > INT_MAX) error("sizeof(fixedchar)*data_type.nobservations > INT_MAX\n\n");
-  index_file.write((char*)observation_names,sizeof(fixedchar)*data_type.nobservations);
+  index_file.write((char*)observation_names, sizeof(fixedchar)*data_type.nobservations);
   index_file.seekp(sizeof(data_type)+sizeof(fixedchar)*data_type.nobservations, ios::beg);
 // may be have to fix: is the buffer always enough???
   if (sizeof(fixedchar)*data_type.nvariables > INT_MAX) error("sizeof(fixedchar)*data_type.nvariables > INT_MAX\n\n");
-    index_file.write((char*)variable_names,sizeof(fixedchar)*data_type.nvariables);
+  index_file.write((char*)variable_names,sizeof(fixedchar)*data_type.nvariables);
+}
+
+void filevector::free_resources()
+{
+  saveIndexFile();
   delete [] char_buffer;
   delete [] observation_names;
   delete [] variable_names;
-//		cout << "!!! destr + free !!!\n";
-	index_file.close();
-	data_file.close();
-//	cout << "!!! destr !!!\n";
+  index_file.close();
+  data_file.close();
 }
 
 filevector::~filevector()
@@ -81,7 +83,7 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 
   	header_size = sizeof(data_type) + sizeof(fixedchar)*(data_type.nvariables+data_type.nobservations);
     if(header_size != index_filestatus.st_size)
-        error("index file size(%lu) differs from the expected(%lu)",index_filestatus.st_size,header_size );
+        error("index file size(%lu) differs from the expected(%lu)", index_filestatus.st_size, header_size );
 
 	// temp fix because nelements is not yet long ... !!!
     //	unsigned long int estimated_size = data_type.bytes_per_record*data_type.nelements + header_size;
@@ -192,16 +194,28 @@ void filevector::update_cache(unsigned long int from_var)
 	cached_data = char_buffer;
 }
 
+void filevector::setUpdateNamesOnWrite(bool bUpdate) {
+    updateNamesOnWrite = bUpdate;
+}
+
 void filevector::write_variable_name(unsigned long int nvar, fixedchar name)
 {
 	if (nvar>=data_type.nvariables) error("trying to set name of obs out of range (%lu)\n\n",nvar);
+	if (updateNamesOnWrite){
+	    index_file.seekp(sizeof(data_type) + sizeof(fixedchar)*(nvar + data_type.nobservations), ios::beg);
+	    index_file.write((char*)&name, sizeof(data_type));
+	}
 	variable_names[nvar] = name;
 }
 
 void filevector::write_observation_name(unsigned long int nobs, fixedchar name)
 {
 	if (nobs>=data_type.nobservations) error("trying to set name of vars out of range (%lu)\n\n",nobs);
-	observation_names[nobs] = name;
+	if (updateNamesOnWrite){
+	    index_file.seekp(sizeof(data_type) + sizeof(fixedchar)*(nobs), ios::beg);
+	    index_file.write((char*)&name, sizeof(data_type));
+    }
+    observation_names[nobs] = name;
 }
 
 fixedchar filevector::read_variable_name(unsigned long int nvar)

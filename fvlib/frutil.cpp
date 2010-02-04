@@ -59,7 +59,7 @@ unsigned short calcDataSize(unsigned short int type){
 	return desize;
 }
 
-void initialize_empty_file(string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type, bool override)
+void initialize_empty_file(string filename, unsigned long nvariables, unsigned long nobservations, unsigned short type, bool override)
 {
     string index_filename = filename + FILEVECTOR_INDEX_FILE_SUFFIX;
     string data_filename = filename + FILEVECTOR_DATA_FILE_SUFFIX;

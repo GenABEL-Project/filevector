@@ -58,8 +58,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-//    fv.dump_variable_names();
-	fv.free_resources();
 
 	delete[] tmp;
 }
