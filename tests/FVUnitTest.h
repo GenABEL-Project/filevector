@@ -24,7 +24,7 @@ class FVUnitTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE( FVUnitTest );
     CPPUNIT_TEST( testCacheUpdatedOnWrite );
-    CPPUNIT_TEST( test_write_variable_name );
+/*    CPPUNIT_TEST( test_write_variable_name );
     CPPUNIT_TEST( test_write_observation_name );
     CPPUNIT_TEST( test_save );
     CPPUNIT_TEST( test_save_vars );
@@ -34,7 +34,7 @@ class FVUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST( test_read_write_observation );
     CPPUNIT_TEST( test_read_variable_convert_to );
     CPPUNIT_TEST( test_add_variable );
-    CPPUNIT_TEST( test_extract_base_file_name );
+    CPPUNIT_TEST( test_extract_base_file_name );*/
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -45,6 +45,7 @@ public:
     void testCacheUpdatedOnWrite()
     {
         string file_name = get_file_name_to_write();
+
         DatABELBaseCPP *fv = new filevector( file_name, 2 );//no need in big cache
         float * var = new float [fv->get_nobservations()];
         fv->read_variable_as(0,var);
@@ -241,7 +242,7 @@ public:
 		unsigned long nobservations = 3;
 
         string tmp_file_name = TestUtil::get_temp_file_name();
-        TestUtil::create_empty_filevector(tmp_file_name,nvariables, nobservations);
+        TestUtil::create_empty_filevector(tmp_file_name.c_str(), nvariables, nobservations);
 		DatABELBaseCPP* fv = new filevector( tmp_file_name, 1 );
 
         float * var1 = new float [fv->get_nvariables()];
