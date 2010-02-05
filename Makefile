@@ -72,7 +72,7 @@ unittest : $(UNITTEST) $(TRANSPOSETEST)
 $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FVUnitTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FVUnitTest.cpp  -o $(UNITTEST)
 
-$(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp
+$(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp $(TESTSDIR)/*.h
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(SRCDIR)/transpose.cpp $(TESTSDIR)/TransposeTest.cpp  -o $(TRANSPOSETEST)
 
 converter : $(CONVERT)
@@ -98,6 +98,6 @@ $(CONVERTTEST):$(LIBFILES) $(TESTFILES) $(TESTSDIR)/ConvertTest.cpp
 
 tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest converttest
 runtests : tests
-	${CORRECTNESSTEST}; ${TRANSPOSETEST}; ${UNITTEST}; ${CONVERTTEST}; ${TRANSPOSETEST}; ${ACCESSMODETEST};
+	echo correctnesstest; ${CORRECTNESSTEST}; echo transposetest; ${TRANSPOSETEST}; echo unittest; ${UNITTEST}; echo converttests; ${CONVERTTEST}; echo transposetest; ${TRANSPOSETEST}; echo accessmodetest; ${ACCESSMODETEST};
 
 

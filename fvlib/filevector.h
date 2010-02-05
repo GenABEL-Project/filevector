@@ -61,18 +61,21 @@ public:
 	filevector(string filename_toload, unsigned long int cachesizeMb)
 	{
 		readOnly = false;
+		updateNamesOnWrite = false;
 		char_buffer = 0;
 		initialize(filename_toload, cachesizeMb);
 	}
 
 	filevector(string filename_toload, unsigned long int cachesizeMb, bool iReadOnly) : readOnly(iReadOnly)
     {
+		updateNamesOnWrite = false;
 		char_buffer = 0;
 		initialize(filename_toload, cachesizeMb);
     }
 
 	filevector(char *filename_toload, unsigned long int cachesizeMb)
 	{
+		updateNamesOnWrite = false;
 		readOnly = false;
 		string filename(filename_toload);
 		char_buffer = 0;
@@ -81,6 +84,7 @@ public:
 
 	filevector(char *filename_toload, unsigned long int cachesizeMb, bool iReadOnly) : readOnly(iReadOnly)
 	{
+		updateNamesOnWrite = false;
 		string filename(filename_toload);
 		char_buffer = 0;
 		initialize(filename_toload, cachesizeMb);

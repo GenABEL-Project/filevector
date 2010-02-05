@@ -22,6 +22,7 @@ void filevector::saveIndexFile(){
 
 void filevector::free_resources()
 {
+  cout << "Closing filevector" << endl;
   saveIndexFile();
   delete [] char_buffer;
   delete [] observation_names;
@@ -37,6 +38,7 @@ filevector::~filevector()
 
 void filevector::initialize(string filename_toload, unsigned long int cachesizeMb)
 {
+    cout << "Opening filevector " << filename_toload.c_str() << endl;
     if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported\n");
 
     index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;

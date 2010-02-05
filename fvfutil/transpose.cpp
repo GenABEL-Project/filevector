@@ -59,13 +59,14 @@ void transpose::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
 void transpose::copy_data(string src_data_file_name,string dest_data_file_name, unsigned long int src_nvars,
 unsigned long int src_nobss, unsigned int data_size)
 {
-cout<< "Copying data..."<< src_nobss << "x"<< src_nvars << endl;
+  cout<< "Copying data..."<< src_nobss << "x"<< src_nvars << endl;
 
   unsigned long int obs_pages = src_nobss / square_size;
   if(src_nobss % square_size > 0) obs_pages++;
 
   unsigned long int var_pages = src_nvars / square_size;
   if(src_nvars % square_size > 0) var_pages++;
+
 
   ifstream * src_stream = new ifstream();
   src_stream->open(src_data_file_name.c_str(),ifstream::in );

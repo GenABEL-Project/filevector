@@ -44,6 +44,6 @@ void message (const char * format, ... )
 #ifdef R_R_H
 	Rprintf("%s",buffer);
 #else
-	printf("%s\n",buffer);
+	//printf("%s\n",buffer);
 #endif
 }
