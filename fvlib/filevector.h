@@ -15,7 +15,7 @@
 #include <limits.h>
 #include <unistd.h>
 
-#include "frutil.h"
+#include "fvutil.h"
 #include "frerror.h"
 
 #include "DatABELBaseCPP.h"

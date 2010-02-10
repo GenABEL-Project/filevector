@@ -44,6 +44,11 @@ void message (const char * format, ... )
 #ifdef R_R_H
 	Rprintf("%s",buffer);
 #else
-	//printf("%s\n",buffer);
+	printf("%s",buffer);
 #endif
+}
+
+void messageOnOff(int bit)
+{
+    message(bit?"ON":"OFF");
 }

@@ -4,7 +4,7 @@ Select 2,500 random variables,  */
 #include <sstream>
 
 #include "frerror.h"
-#include "frutil.h"
+#include "fvutil.h"
 #include "filevector.h"
 
 int main(int argc, char * argv[])

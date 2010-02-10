@@ -5,7 +5,7 @@
 using namespace std;
 
 #include "filevector.h"
-#include "frutil.h"
+#include "fvutil.h"
 
 void filevector::saveIndexFile(){
   index_file.seekp(0, ios::beg);
@@ -110,6 +110,7 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 
     set_cachesizeMb(cachesizeMb);
     update_cache(0);
+    cout << "Filevector " << filename_toload << " opened." << endl;
 }
 
 unsigned long int filevector::get_cachesizeMb()
@@ -259,7 +260,6 @@ void filevector::read_observation(unsigned long int nobs, void * outvec)
 	delete[] tmpdata;
 }
 
-
 void filevector::write_observation(unsigned long int nobs, void * invec)
 {
     if (readOnly) {
@@ -290,16 +290,13 @@ void filevector::write_variable(unsigned long int nvar, void * datavec)
 	    unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getDataSize();
  	    memcpy(cached_data + offset,datavec,getDataSize()*data_type.nobservations);
 	}
-
-//TMP
-//	for (unsigned int i=0;i<data_type.nobservations;i++) cout << " " << datavec[i];
 }
 
 unsigned long int filevector::nrnc_to_nelem(unsigned long int nvar, unsigned long int nobs)
 {
 	if (nvar >= data_type.nvariables || nobs >= data_type.nobservations)
 		error("nvar >= real or nobs >= real (%u >= %u || %u >= %u)\n",
-			nvar,data_type.nvariables,nobs,data_type.nobservations);
+			nvar, data_type.nvariables, nobs, data_type.nobservations);
 	return( nvar * data_type.nobservations + nobs );
 }
 
@@ -312,7 +309,6 @@ void filevector::read_element(unsigned long int nvar, unsigned long int nobs, vo
 	data_file.seekg(pos*getDataSize(), ios::beg);
 	data_file.read((char*)out,getDataSize());
 }
-
 
 void filevector::write_element(unsigned long int nvar, unsigned long int nobs, void* data)
 {
@@ -517,8 +513,6 @@ void filevector::save_as_text(string new_file_name, unsigned long int nvars, uns
 	delete[] in_variable;
 	delete[] out_variable;
 }
-
-
 
 short unsigned filevector::getDataSize(){
     return calcDataSize(data_type.type);

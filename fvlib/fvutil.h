@@ -5,6 +5,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
+#include <vector>
 #include "frerror.h"
 #include "const.h"
 
@@ -87,5 +88,6 @@ string extract_base_file_name(string filename);
 bool file_exists(string fileName);
 bool headerOrDataExists(string fileName);
 unsigned short calcDataSize(unsigned short int type);
+void tokenize(const string& str, vector<string>& tokens, const string& delimiters = " ");
 
 #endif

@@ -5,16 +5,13 @@
 
 using namespace std;
 
-#include "frutil.h"
+#include "fvutil.h"
 
 class DatABELBaseCPP
 {
 public:
-    // constructor
-    // current:
     virtual ~DatABELBaseCPP(){};
 
-    // added free_resources
     template <class DT> void performCast(DT &dest, void*src, int srcType)
     {
 	    switch (srcType) {

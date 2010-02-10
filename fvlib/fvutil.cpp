@@ -1,6 +1,8 @@
 #include <sys/stat.h>
+#include <string>
+#include <vector>
 
-#include "frutil.h"
+#include "fvutil.h"
 #include "const.h"
 #include "filevector.h"
 
@@ -18,11 +20,11 @@ string extract_base_file_name(string filename)
 {
     int idxExtPos = filename.find(FILEVECTOR_INDEX_FILE_SUFFIX);
     int dataExtPos = filename.find(FILEVECTOR_DATA_FILE_SUFFIX);
-    if(idxExtPos == filename.size() - FILEVECTOR_INDEX_FILE_SUFFIX.size() )
+    if (idxExtPos == filename.size() - FILEVECTOR_INDEX_FILE_SUFFIX.size() )
     {
         return filename.substr(0, idxExtPos);
 	}
-	else if(dataExtPos == filename.size() - FILEVECTOR_DATA_FILE_SUFFIX.size() )
+	else if (dataExtPos == filename.size() - FILEVECTOR_DATA_FILE_SUFFIX.size() )
 	{
 	    return filename.substr(0, dataExtPos );
 	}
@@ -61,11 +63,11 @@ unsigned short calcDataSize(unsigned short int type){
 
 void initialize_empty_file(string filename, unsigned long nvariables, unsigned long nobservations, unsigned short type, bool override)
 {
+    cout << "Initizlizing empty file '" << filename << "', type " << type << "." << endl;
     string index_filename = filename + FILEVECTOR_INDEX_FILE_SUFFIX;
     string data_filename = filename + FILEVECTOR_DATA_FILE_SUFFIX;
 
 	fr_type metadata;
-// data element size
 	unsigned long int desize = calcDataSize(type);
 	metadata.type = type;
 	metadata.nvariables = nvariables;
@@ -108,6 +110,7 @@ void initialize_empty_file(string filename, unsigned long nvariables, unsigned l
 	data_file.put('E');
 	data_file.close();
 	idx_file.close();
+    cout << "File '" << filename << "' initialized."<< endl;
 }
 
 bool headerOrDataExists(string fileName) {
@@ -125,3 +128,15 @@ bool file_exists(string fileName)
     }
     return false;
 }
+
+void tokenize(const string& str, vector<string>& tokens, const string& delimiters) {
+    string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+    string::size_type pos = str.find_first_of(delimiters, lastPos);
+    while (string::npos != pos || string::npos != lastPos) {
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+        lastPos = str.find_first_not_of(delimiters, pos);
+        pos = str.find_first_of(delimiters, lastPos);
+    }
+}
+
+    
