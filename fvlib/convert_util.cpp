@@ -135,7 +135,9 @@ void text2fvf(string program_name, string infilename, string outfilename,
 
     cout << "Number of lines in source file is " << numLines << endl;
 
-    bool removeFirstElement = Rmatrix > 0;
+    bool removeFirstElement = !(Rmatrix > 0);
+
+    cout << "RemoveFirstElement = " <<  removeFirstElement << endl; 
 
     vector<string> resultColumns (firstLineWords.begin() + (removeFirstElement ? 1:0) + skipcols , firstLineWords.end());
 
