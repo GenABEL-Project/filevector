@@ -7,7 +7,7 @@
 
 #include "frversion.h"
 #include "frerror.h"
-#include "fvutil.h"
+#include "frutil.h"
 #include "filevector.h"
 
 #include "usage.h"

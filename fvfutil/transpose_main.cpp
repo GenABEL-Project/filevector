@@ -8,7 +8,7 @@ advanced text tools behaviour.
 #include <cstring>
 
 #include "frerror.h"
-#include "fvutil.h"
+#include "frutil.h"
 #include "filevector.h"
 #include "transpose.h"
 

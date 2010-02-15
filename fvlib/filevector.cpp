@@ -5,7 +5,7 @@
 using namespace std;
 
 #include "filevector.h"
-#include "fvutil.h"
+#include "frutil.h"
 
 void filevector::saveIndexFile(){
   index_file.seekp(0, ios::beg);

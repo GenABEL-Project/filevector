@@ -7,7 +7,7 @@
 #include <cstring>
 
 #include "frerror.h"
-#include "fvutil.h"
+#include "frutil.h"
 #include "filevector.h"
 
 using namespace std;

@@ -10,7 +10,7 @@
 #include "TestUtil.h"
 #include "FVUnitTest.h"
 #include "filevector.h"
-#include "fvutil.h"
+#include "frutil.h"
 #include "DatABELBaseCPP.h"
 
 void ConvertTest::test() {

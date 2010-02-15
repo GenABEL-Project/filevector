@@ -3,5 +3,7 @@
 
 using namespace std;
 
+unsigned long calcNumLines(string fileName);
+void parseStringToArbType(string s, int destType, void *destData); 
 
 #endif
