@@ -42,8 +42,8 @@ void text2fvf(string program_name, string infilename, string outfilename,
 	unsigned long skiprows, unsigned long skipcols, int transpose, int Rmatrix,
 	unsigned short type, bool quiet) {
 
-  	if (colnamesfilename != "") colnames = -1;
-    if (rownamesfilename != "") rownames = -1;
+  	if (colnamesfilename != "") colnames = 1;
+    if (rownamesfilename != "") rownames = 1;
 
     if (!quiet) {
         message("Options in effect: \n");
@@ -127,7 +127,16 @@ void text2fvf(string program_name, string infilename, string outfilename,
 
     string firstLine;
 
-    getline(srcFile, firstLine);
+    if(colnames) { // read from file
+        cout << "Reading column names from file " << colnamesfilename.c_str() << endl; 
+		ifstream colnamesfile(colnamesfilename.c_str());
+        getline(colnamesfile, firstLine);
+    } else {
+        getline(srcFile, firstLine);
+    }
+
+//    cout << "FirstLine = " << firstLine << endl;
+
     vector<string> firstLineWords;
     tokenize(firstLine, firstLineWords, " ");
 
@@ -143,7 +152,15 @@ void text2fvf(string program_name, string infilename, string outfilename,
 
     cout << "Number of columns is " << resultColumns.size() << endl;
 
-    initialize_empty_file(outfilename, numLines - 1 - skiprows, resultColumns.size(), type, true );
+    cout << "skiprows = " << skiprows << endl;
+    cout << "colnames = " << colnames << endl;
+
+    int numRows = numLines - 1 - skiprows + colnames;
+    int numColumns = resultColumns.size();
+
+    cout << "Creating file with numRows = " << numRows << endl;
+    cout << "Creating file with numColumns = " << numColumns << endl;
+    initialize_empty_file(outfilename, numRows, numColumns, type, true );
     filevector out(outfilename, 1);
 
     string line;
@@ -152,12 +169,13 @@ void text2fvf(string program_name, string infilename, string outfilename,
     while(getline(srcFile, line)) {
         vector<string> lineWords;
         tokenize(line, lineWords, " ");
+//        cout << "Reading line: " << line << endl;
 
         string rowName = lineWords[0];
 
         unsigned long colCnt = 0;
         unsigned long i;
-        for (i=1+colnames; i<lineWords.size(); i++){
+        for (i=1+rownames; i<lineWords.size(); i++){
             char buf [20];
             parseStringToArbType(lineWords[i], type, buf);
             out.write_element(rowCnt, colCnt, buf);
