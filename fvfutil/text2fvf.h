@@ -15,5 +15,6 @@ void text2fvf(
 	int rownames, int colnames,	unsigned long skiprows, unsigned long skipcols, int transpose, int Rmatrix, unsigned short int type, bool quiet
 );
 
+unsigned short int dataTypeFromString(string type);
 
 #endif
