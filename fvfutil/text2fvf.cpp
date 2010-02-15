@@ -122,29 +122,3 @@ int main(int argc, char * argv[])
 }
 
 #define REPORT_EVERY 10000
-
-unsigned long calcNumLines(string fileName){
-    ifstream file(fileName.c_str());
-    string line;
-    unsigned long numlines = 0;
-    while(getline(file, line)){
-        numlines++;
-    }
-    return numlines;
-}
-
-void parseStringToArbType(string s, int destType, void *destData) {
-    map<int, string> fmt;
-
-    fmt[UNSIGNED_SHORT_INT] = string("%hu");
-    fmt[SHORT_INT] = string("%sd");
-    fmt[UNSIGNED_INT] = string("%ud");
-    fmt[INT] = string("%d");
-    fmt[FLOAT] = string("%f");
-    fmt[DOUBLE] = string("%lg");
-
-    string format = fmt[destType];
-
-    sscanf(s.c_str(), format.c_str(), destData);
-}
-
