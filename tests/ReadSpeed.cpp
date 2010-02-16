@@ -31,15 +31,17 @@ int main ( int argc, char * argv[] )
 		exit(1);
 	}
 
-	for ( unsigned long int i=0 ; i < indata1->get_nvariables() ; i++ )
-	{
-		indata1->read_variable_as( i, tmpdat );
-		if( i % 10000 == 0 )
-		{
-			std::cout << "Read:"<< i << "/" << indata1->get_nvariables() << " variables \n";
-		}
-	}
+        for ( unsigned long int i=0 ; i < indata1->get_nvariables() ; i++ )
+        {
+            indata1->read_variable_as( i, tmpdat );
+            if( i % 10000 == 0 )
+            {
+                std::cout << "Read:"<< i << "/" << indata1->get_nvariables() << " variables \n";
+            }
+        }
 
 	delete tmpdat;
+        delete indata1;
+
 	std::cout << "Finished";
 }
