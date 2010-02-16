@@ -82,7 +82,7 @@ public:
     {
         char* tmp = new (nothrow) char [get_nobservations()*getDataSize()];
         if(!tmp)
-            error("read_variable_convert_to allocation error");
+            error("add_variable_as allocation error");
         for(int i = 0; i< get_nobservations();i++){
             performCast(&tmp[i*getDataSize()],outvec[i],getDataType());
         }
@@ -134,7 +134,7 @@ public:
 
     //virtual void add_variable(void * invec, fixedchar varname) = 0; // adds variable at the end = write_variable with nvar=NVARS?
     // loooong future -- control that name is unique!
-	virtual void read_observation(unsigned long int nobs, void * outvec) = 0;
+    virtual void read_observation(unsigned long int nobs, void * outvec) = 0;
     virtual void write_observation(unsigned long int nobs, void * invec) = 0;
 
     virtual void write_variable_name(unsigned long int nvar, fixedchar newname) = 0;  // todo loooong future -- control that name is unique
