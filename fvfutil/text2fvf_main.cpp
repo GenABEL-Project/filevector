@@ -5,7 +5,7 @@ int main(int argc, char * argv[])
 	print_text2fvf_welcome();
 
 	int next_option;
-	int quiet;
+	int quiet = 0;
 	const char * const short_options = "i:o:c:r:1:2:3:4:t:R:T:d";
 	const struct option long_options [] =
 	{
