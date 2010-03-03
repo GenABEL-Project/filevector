@@ -124,24 +124,19 @@ void filevector::set_cachesizeMb( unsigned long int cachesizeMb )
 	cache_size_Mb = cachesizeMb;
 	cache_size_nvars = (unsigned long int) 1024*1024*cache_size_Mb/(data_type.nobservations*data_type.bytes_per_record);
 	if (cache_size_nvars<1) {
-		message("attempting to set cache size to 1 var (%f Mb)\n",
-		         (float) data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
+//		message("attempting to set cache size to 1 var (%f Mb)\n", (float) data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
 		cache_size_Mb = (long unsigned int) ceil(
 				(float) data_type.nobservations*data_type.bytes_per_record/(1024.*1024.)
 				);
 		cache_size_nvars = 1;
 	} else if (cache_size_nvars>data_type.nvariables) {
-		message("attempting to cache all the data (%u variables, %f Mb)\n",
-			 data_type.nvariables,
-		         (float) data_type.nvariables*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
+//		message("attempting to cache all the data (%u variables, %f Mb)\n", data_type.nvariables, (float) data_type.nvariables*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
 		cache_size_Mb = (long unsigned int) ceil(
 				(float) data_type.nvariables*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.)
 				);
 		cache_size_nvars = data_type.nvariables;
 	} else {
-		message("attempting to cache specified amount of data (%u variables, %f Mb)\n",
-			 cache_size_nvars,
-		         (float) cache_size_nvars*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
+//		message("attempting to cache specified amount of data (%u variables, %f Mb)\n", cache_size_nvars, (float) cache_size_nvars*data_type.nobservations*data_type.bytes_per_record/(1024.*1024.));
 	}
 	cache_size_bytes = cache_size_nvars*data_type.bytes_per_record*data_type.nobservations*sizeof(char);
 
@@ -294,10 +289,9 @@ void filevector::write_variable(unsigned long int nvar, void * datavec)
 
 unsigned long int filevector::nrnc_to_nelem(unsigned long int nvar, unsigned long int nobs)
 {
-	if (nvar >= data_type.nvariables || nobs >= data_type.nobservations)
-		error("nvar >= real or nobs >= real (%u >= %u || %u >= %u)\n",
-			nvar, data_type.nvariables, nobs, data_type.nobservations);
-	return( nvar * data_type.nobservations + nobs );
+    if (nvar >= data_type.nvariables || nobs >= data_type.nobservations)
+        error("nvar >= real or nobs >= real (%u >= %u || %u >= %u)\n",nvar, data_type.nvariables, nobs, data_type.nobservations);
+    return( nvar * data_type.nobservations + nobs );
 }
 
 // should only be used for reading single random elements!
@@ -305,9 +299,9 @@ unsigned long int filevector::nrnc_to_nelem(unsigned long int nvar, unsigned lon
 void filevector::read_element(unsigned long int nvar, unsigned long int nobs, void * out)
 {
     //todo use cache
-	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
-	data_file.seekg(pos*getDataSize(), ios::beg);
-	data_file.read((char*)out,getDataSize());
+    unsigned long int pos = nrnc_to_nelem(nvar, nobs);
+    data_file.seekg(pos*getDataSize(), ios::beg);
+    data_file.read((char*)out,getDataSize());
 }
 
 void filevector::write_element(unsigned long int nvar, unsigned long int nobs, void* data)
@@ -315,15 +309,16 @@ void filevector::write_element(unsigned long int nvar, unsigned long int nobs, v
     if (readOnly) {
         error("Trying to write to the readonly file.");
     }
-	unsigned long int pos = nrnc_to_nelem(nvar, nobs);
+    unsigned long int pos = nrnc_to_nelem(nvar, nobs);
     data_file.seekp(pos*getDataSize(), ios::beg);
-	data_file.write((char*)data,getDataSize());
+    data_file.write((char*)data,getDataSize());
+    data_file.flush();
 
-	if (nvar >= in_cache_from && nvar <= in_cache_to)
-	{
-		unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getDataSize() + nobs *getDataSize();
-		memcpy(cached_data+offset,data,getDataSize() );
-	}
+    if (nvar >= in_cache_from && nvar <= in_cache_to)
+    {
+	unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getDataSize() + nobs *getDataSize();
+	memcpy(cached_data+offset,data,getDataSize() );
+    }
 }
 
 unsigned int filevector::get_nvariables()
@@ -480,7 +475,7 @@ void filevector::save_as_text(string new_file_name, unsigned long int nvars, uns
         textfile << fc.name << " ";
     }
 
-    textfile << endl;    
+    textfile << endl;
 
     char * out_variable = new (nothrow) char[nobss*getDataSize()];
     if (!out_variable)
@@ -534,8 +529,8 @@ void filevector::add_variable(void * invec, string varname)
       if (!new_variable_names)
           error("can not allocate memory in add_variable()");
 
-	  //reallocate greater array for var names
-	  memcpy(new_variable_names,variable_names,sizeof(fixedchar)*(data_type.nvariables-1));
+      //reallocate greater array for var names
+      memcpy(new_variable_names,variable_names,sizeof(fixedchar)*(data_type.nvariables-1));
       fixedchar _fc_varname(varname);
       new_variable_names[data_type.nvariables - 1] = _fc_varname;
       fixedchar * oldvar_names = variable_names;

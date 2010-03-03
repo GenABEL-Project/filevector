@@ -15,6 +15,18 @@ void text2fvf(
 	int rownames, int colnames,	unsigned long skiprows, unsigned long skipcols, int transpose, int Rmatrix, unsigned short int type, bool quiet
 );
 
+
+void text2fvf_246(
+		std::string program_name,
+		std::string infilename, std::string outfilename,
+		std::string rownamesfilename, std::string colnamesfilename,
+		int rownames, int colnames,
+		int skiprows, int skipcols,
+		int transpose, int Rmatrix,
+		unsigned short int type,
+		bool quiet
+);
+
 unsigned short int dataTypeFromString(string type);
 
 #endif

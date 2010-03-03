@@ -3,190 +3,15 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include "filevector.h"
+#include <unistd.h>
 
 using namespace std;
 
+#include "filevector.h"
+#include "transpose.h"
 #include "frerror.h"
 
 #include "convert_util.h"
-
-
-unsigned long calcNumLines(string fileName){
-    ifstream file(fileName.c_str());
-    string line;
-    unsigned long numlines = 0;
-    while(getline(file, line)){
-        numlines++;
-    }
-    return numlines;
-}
-
-void parseStringToArbType(string s, int destType, void *destData) {
-    map<int, string> fmt;
-
-    fmt[UNSIGNED_SHORT_INT] = string("%hu");
-    fmt[SHORT_INT] = string("%sd");
-    fmt[UNSIGNED_INT] = string("%ud");
-    fmt[INT] = string("%d");
-    fmt[FLOAT] = string("%f");
-    fmt[DOUBLE] = string("%lg");
-
-    string format = fmt[destType];
-
-    sscanf(s.c_str(), format.c_str(), destData);
-}
-
-void text2fvf(string program_name, string infilename, string outfilename,
-	string rownamesfilename, string colnamesfilename, int rownames, int colnames,
-	unsigned long skiprows, unsigned long skipcols, int transpose, int Rmatrix,
-	unsigned short type, bool quiet) {
-
-  	if (colnamesfilename != "") colnames = 1;
-    if (rownamesfilename != "") rownames = 1;
-
-    if (!quiet) {
-        message("Options in effect: \n");
-        message("\t --infile    = %s\n",infilename.c_str());
-        message("\t --outfile   = %s\n",outfilename.c_str());
-        message("\t --skiprows  = ");
-    	if (skiprows)
-    	    message("%d\n",skiprows);
-	    else
-	        message("OFF\n");
-
-	    message("\t --skipcols  = ");
-    	if (skipcols) message("%d\n",skipcols); else message("OFF\n");
-    	message("\t --rncol     = ");
-    	if (rownames) message("%d\n",rownames); else message("OFF\n");
-    	message("\t --cnrow     = ");
-    	if (colnames) message("%d\n",colnames); else message("OFF\n");
-	        message("\t --colnames  = ");
-    	if (colnames) {
-	    	if (colnamesfilename == "")
-		    	    message("ON, using line %d of '%s'\n",colnames,infilename.c_str());
-			    else
-			        message("ON, using data from file '%s'\n",colnamesfilename.c_str());
-	    } else message("OFF\n");
-	    message("\t --rownames  = ");
-
-    	if (rownames) {
-	    	if (rownamesfilename == "")
-		    	message("ON, using column %d of '%s'\n",rownames,infilename.c_str());
-			else
-			    message("ON, using data from file '%s'\n",rownamesfilename.c_str());
-	    } else
-	        message("OFF\n");
-
-	    message("\t --transpose = ");
-	    messageOnOff(transpose);
-	    message("\n");
-    	message("\t --Rmatrix   = ");
-    	messageOnOff(Rmatrix);
-	    message("\n");
-    }
-
-	// check that it is mentioned how many columns to skip when reading row names
-	if (rownamesfilename=="" && rownames && !skipcols)
-		error("\n\nPlease tell how many columns to skip when you provide the column containing row names!\n\n");
-	if (skipcols && (rownames > skipcols))
-		error("rownames > skipcols");
-	if (colnamesfilename=="" && colnames && !skiprows)
-		error("\n\nPlease tell how many rows to skip when you provide the row containing column names!\n\n");
-	if (skiprows && (colnames > skiprows))
-		error("colnames > skiprows");
-
-	ifstream infile(infilename.c_str());
-	if (!infile) error("can not open file '%s' for reading\n\n",infilename.c_str());
-
-	// column names specified in a separate file; check the number of columns
-	unsigned long int words_in_colnamesfile = 0;
-	if (colnames & colnamesfilename != "")
-	{
-		ifstream colnamesfile(colnamesfilename.c_str());
-		string tmpstr;
-		if (!colnamesfile) error("can not open column names file '%s'\n\n",colnamesfilename.c_str());
-		while (colnamesfile >> tmpstr) words_in_colnamesfile++;
-		colnamesfile.close();
-		if (!quiet) message("number of names in column-names file '%s' is %d\n\n",colnamesfilename.c_str(),words_in_colnamesfile);
-	}
-
-	// row names specified in a separate file; check the number of columns
-	unsigned long int words_in_rownamesfile = 0;
-	if (rownames & rownamesfilename != "")
-	{
-		ifstream rownamesfile(rownamesfilename.c_str());
-		string tmpstr;
-		if (!rownamesfile) error("can not open row names file '%s'\n\n",rownamesfilename.c_str());
-		while (rownamesfile >> tmpstr) words_in_rownamesfile++;
-		rownamesfile.close();
-		if (!quiet) message("number of names in row-names file '%s' is %d\n\n", rownamesfilename.c_str(), words_in_rownamesfile );
-	}
-
-    ifstream srcFile(infilename.c_str());
-
-    string firstLine;
-
-    if(colnames) { // read from file
-        cout << "Reading column names from file " << colnamesfilename.c_str() << endl; 
-		ifstream colnamesfile(colnamesfilename.c_str());
-        getline(colnamesfile, firstLine);
-    } else {
-        getline(srcFile, firstLine);
-    }
-
-//    cout << "FirstLine = " << firstLine << endl;
-
-    vector<string> firstLineWords;
-    tokenize(firstLine, firstLineWords, " ");
-
-    unsigned long numLines = calcNumLines(infilename);
-
-    cout << "Number of lines in source file is " << numLines << endl;
-
-    bool removeFirstElement = !(Rmatrix > 0);
-
-    cout << "RemoveFirstElement = " <<  removeFirstElement << endl; 
-
-    vector<string> resultColumns (firstLineWords.begin() + (removeFirstElement ? 1:0) + skipcols , firstLineWords.end());
-
-    cout << "Number of columns is " << resultColumns.size() << endl;
-
-    cout << "skiprows = " << skiprows << endl;
-    cout << "colnames = " << colnames << endl;
-
-    int numRows = numLines - 1 - skiprows + colnames;
-    int numColumns = resultColumns.size();
-
-    cout << "Creating file with numRows = " << numRows << endl;
-    cout << "Creating file with numColumns = " << numColumns << endl;
-    initialize_empty_file(outfilename, numRows, numColumns, type, true );
-    filevector out(outfilename, 1);
-
-    string line;
-    unsigned long rowCnt = 0;
-
-    while(getline(srcFile, line)) {
-        vector<string> lineWords;
-        tokenize(line, lineWords, " ");
-//        cout << "Reading line: " << line << endl;
-
-        string rowName = lineWords[0];
-
-        unsigned long colCnt = 0;
-        unsigned long i;
-        for (i=1+rownames; i<lineWords.size(); i++){
-            char buf [20];
-            parseStringToArbType(lineWords[i], type, buf);
-            out.write_element(rowCnt, colCnt, buf);
-            colCnt++;
-        }
-
-        rowCnt++;
-    }
-}
-
-
 
 // old version (246) works with DatABEL
 
@@ -201,7 +26,7 @@ void text2fvf_246(
 		std::string program_name,
 		std::string infilename, std::string outfilename,
 		std::string rownamesfilename, std::string colnamesfilename,
-		int rownames, int colnames,
+		int rncol, int cnrow,
 		int skiprows, int skipcols,
 		int transpose, int Rmatrix,
 		unsigned short int type,
@@ -217,24 +42,24 @@ void text2fvf_246(
 	if (!quiet) message("\t --skipcols  = ");
 	if (skipcols) if (!quiet) message("%d\n",skipcols); else if (!quiet) message("OFF\n");
 	if (!quiet) message("\t --rncol     = ");
-	if (rownames) if (!quiet) message("%d\n",rownames); else if (!quiet) message("OFF\n");
+	if (rncol) if (!quiet) message("%d\n",rncol); else if (!quiet) message("OFF\n");
 	if (!quiet) message("\t --cnrow     = ");
-	if (colnames) if (!quiet) message("%d\n",colnames); else if (!quiet) message("OFF\n");
+	if (cnrow) if (!quiet) message("%d\n",cnrow); else if (!quiet) message("OFF\n");
 
-	if (colnamesfilename != "") colnames = -1;
-	if (rownamesfilename != "") rownames = -1;
-	if (!quiet) message("\t --colnames  = ");
-	if (colnames) {
-		if (colnamesfilename == "")
-			if (!quiet) message("ON, using line %d of '%s'\n",colnames,infilename.c_str());
-			else
-				if (!quiet) message("ON, using data from file '%s'\n",colnamesfilename.c_str());
+	if (colnamesfilename != "") cnrow = -1;
+	if (rownamesfilename != "") rncol = -1;
+	if (!quiet) message("\t --cnrow  = ");
+	if (cnrow) {
+	    if (colnamesfilename == "")
+		if (!quiet) message("ON, using line %d of '%s'\n",cnrow,infilename.c_str());
+		    else
+		if (!quiet) message("ON, using data from file '%s'\n",colnamesfilename.c_str());
 	} else if (!quiet) message("OFF\n");
 
-	if (!quiet) message("\t --rownames  = ");
-	if (rownames) {
+	if (!quiet) message("\t --rncol  = ");
+	if (rncol) {
 		if (rownamesfilename == "")
-			if (!quiet) message("ON, using column %d of '%s'\n",rownames,infilename.c_str());
+			if (!quiet) message("ON, using column %d of '%s'\n",rncol,infilename.c_str());
 			else
 				if (!quiet) message("ON, using data from file '%s'\n",rownamesfilename.c_str());
 	} else if (!quiet) message("OFF\n");
@@ -247,14 +72,14 @@ void text2fvf_246(
 
 
 	// check that it is mentioned how many columns to skip when reading row names
-	if (rownamesfilename=="" && rownames && !skipcols)
+	if (rownamesfilename=="" && rncol && !skipcols)
 		error("\n\nPlease tell how many columns to skip when you provide the column containing row names!\n\n");
-	if (skipcols && (rownames > skipcols))
-		error("rownames > skipcols");
-	if (colnamesfilename=="" && colnames && !skiprows)
+	if (skipcols && (rncol > skipcols))
+		error("rncol > skipcols");
+	if (colnamesfilename=="" && cnrow && !skiprows)
 		error("\n\nPlease tell how many rows to skip when you provide the row containing column names!\n\n");
-	if (skiprows && (colnames > skiprows))
-		error("colnames > skiprows");
+	if (skiprows && (cnrow > skiprows))
+		error("cnrow > skiprows");
 
 
 	std::ifstream infile(infilename.c_str());
@@ -262,7 +87,7 @@ void text2fvf_246(
 
 	// column names specified in a separate file; check the number of columns
 	unsigned long int words_in_colnamesfile = 0;
-	if (colnames & colnamesfilename != "")
+	if (cnrow & colnamesfilename != "")
 	{
 		std::ifstream colnamesfile(colnamesfilename.c_str());
 		std::string tmpstr;
@@ -274,7 +99,7 @@ void text2fvf_246(
 
 	// row names specified in a separate file; check the number of columns
 	unsigned long int words_in_rownamesfile = 0;
-	if (rownames & rownamesfilename != "")
+	if (rncol & rownamesfilename != "")
 	{
 		std::ifstream rownamesfile(rownamesfilename.c_str());
 		std::string tmpstr;
@@ -310,7 +135,7 @@ void text2fvf_246(
 	if (!quiet) message("file '%s' column count = %d\n",infilename.c_str(),line_wordcount);
 	if ( infile_linecount == 0 || line_wordcount ==0 ) error("file '%s' contains no lines/columns\n\n",infilename.c_str());
 
-	if (colnames & colnamesfilename != "")
+	if (cnrow & colnamesfilename != "")
 		if ((line_wordcount - skipcols) != words_in_colnamesfile)
 			error("number of column names (%lu) does not match number of data columns (%lu)\n\n",
 					words_in_colnamesfile,(line_wordcount-skipcols));
@@ -352,7 +177,7 @@ void text2fvf_246(
 	fixedchar tmpname;
 
 	// read column names
-	if (colnames)
+	if (cnrow)
 		if (colnamesfilename=="") {
 			int cur_line = 0;
 			while (cur_line<skiprows)
@@ -360,7 +185,7 @@ void text2fvf_246(
 				cur_line++;
 				getline(infile,sline);
 				std::istringstream stream_sline(sline);
-				if (cur_line == colnames) {
+				if (cur_line == cnrow) {
 					int toCol = ncols;
 					if (!Rmatrix) toCol = ncols + skipcols;
 					//					Rprintf("toCol=%u\n",toCol);
@@ -395,7 +220,7 @@ void text2fvf_246(
 		}
 
 	// read row names file if present
-	if (rownames && rownamesfilename != "")
+	if (rncol && rownamesfilename != "")
 	{
 		std::ifstream rownamesfile(rownamesfilename.c_str());
 		if (!rownamesfile) error("can not open row names file '%s'\n\n",rownamesfilename.c_str());
@@ -424,7 +249,7 @@ void text2fvf_246(
 		unsigned long int current_word = 0;
 		while (stream_sline >> sword) {
 			current_word++;
-			if (current_word == rownames) {
+			if (current_word == rncol) {
 				strcpy(tmpname.name,sword.c_str());
 				if (transpose)
 					outdata->write_variable_name(cline,tmpname);
@@ -446,7 +271,7 @@ void text2fvf_246(
 	infile.close();
 
 	// check that row names are the same length as data
-	if (rownames & rownamesfilename != "")
+	if (rncol & rownamesfilename != "")
 		if ((cline) != words_in_rownamesfile)
 			error("number of row names (%lu) does not match number of data rows (%lu)\n\n",
 					words_in_rownamesfile,(cline-skiprows));
@@ -490,4 +315,295 @@ void text2fvf_246(
 	if (!quiet) message("\nFinished successfully text2fvf\n");
 
 }
+
+
+
+unsigned long calcNumLines(string fileName){
+    ifstream file(fileName.c_str());
+    string line;
+    unsigned long numlines = 0;
+    while(getline(file, line)){
+        numlines++;
+    }
+    return numlines;
+}
+
+unsigned long calcNumWordsInFirstLine(string fileName){
+    ifstream file(fileName.c_str());
+    vector<string> words;
+    string line;
+    unsigned long numlines = 0;
+    getline(file, line);
+    tokenize(line, words);
+    return words.size();
+}
+	    
+void parseStringToArbType(string s, int destType, void *destData) {
+    map<int, string> fmt;
+
+    fmt[UNSIGNED_SHORT_INT] = string("%hu");
+    fmt[SHORT_INT] = string("%sd");
+    fmt[UNSIGNED_INT] = string("%ud");
+    fmt[INT] = string("%d");
+    fmt[FLOAT] = string("%f");
+    fmt[DOUBLE] = string("%lf");
+
+    string format = fmt[destType];
+    
+    sscanf(s.c_str(), format.c_str(), destData);
+}
+
+void text2fvf(string program_name, string infilename, string outfilename,
+	string rownamesfilename, string colnamesfilename, int rncol, int cnrow,
+	unsigned long skiprows, unsigned long skipcols, int bTranspose, int Rmatrix,
+	unsigned short type, bool quiet) {
+	
+    rncol--;
+    cnrow--;
+    
+    if (colnamesfilename != "") cnrow = 1;
+    if (rownamesfilename != "") rncol = 1;
+    
+
+    if (!quiet) {
+        message("Options in effect: \n");
+        message("\t --infile    = %s\n",infilename.c_str());
+        message("\t --outfile   = %s\n",outfilename.c_str());
+        message("\t --skiprows  = ");
+    	if (skiprows)
+    	    message("%d\n",skiprows);
+	else
+	    message("OFF\n");
+
+	message("\t --skipcols  = ");
+    	if (skipcols) message("%d\n",skipcols); else message("OFF\n");
+    	message("\t --rncol     = ");
+    	if (rncol) message("%d\n",rncol); else message("OFF\n");
+    	message("\t --cnrow     = ");
+    	if (cnrow) message("%d\n",cnrow); else message("OFF\n");
+	        message("\t --cnrow  = ");
+    	if (cnrow) {
+	    if (colnamesfilename == "")
+	        message("ON, using line %d of '%s'\n",cnrow,infilename.c_str());
+	    else
+	        message("ON, using data from file '%s'\n",colnamesfilename.c_str());
+	} else {
+	    message("OFF\n");
+	}
+
+	message("\t --rncol  = ");
+
+    	if (rncol) {
+	    if (rownamesfilename == "")
+		message("ON, using column %d of '%s'\n",rncol,infilename.c_str());
+	    else
+	        message("ON, using data from file '%s'\n",rownamesfilename.c_str());
+	} else {
+            message("OFF\n");
+        }
+
+        message("\t --transpose = ");
+        messageOnOff(bTranspose);
+        message("\n");
+    	message("\t --Rmatrix   = ");
+    	messageOnOff(Rmatrix);
+        message("\n");
+    }
+    
+    const string TMP_SUFFIX = "_fvtmp";
+    string realOutFilename = outfilename;
+
+    // if transpose if OFF, do transpose (sic) and write to temp file
+    if (!bTranspose){
+	outfilename = outfilename + TMP_SUFFIX;
+    }
+
+    // check that it is mentioned how many columns to skip when reading row names
+    if (rownamesfilename=="" && rncol && !skipcols) {
+    	error("\n\nPlease tell how many columns to skip when you provide the column containing row names!\n\n");
+    }
+    if (skipcols && (rncol > skipcols)) {
+    	error("rncol > skipcols");
+    }
+    if (colnamesfilename=="" && cnrow && !skiprows) {
+    	error("\n\nPlease tell how many rows to skip when you provide the row containing column names!\n\n");
+    }
+    if (skiprows && (cnrow > skiprows)) {
+	error("cnrow > skiprows");
+    }
+
+    ifstream infile(infilename.c_str());
+    if (!infile) error("can not open file '%s' for reading\n\n",infilename.c_str());
+
+    vector<string> extColNames;
+
+    // column names specified in a separate file; check the number of columns
+    unsigned long int words_in_colnamesfile = 0;
+    
+    cout << "Reading columns from "  << colnamesfilename << ": ";
+    if (colnamesfilename != "")
+    {
+	ifstream colnamesfile(colnamesfilename.c_str());
+	string tmpstr;
+	if (!colnamesfile) {
+	    error("can not open column names file '%s'\n\n", colnamesfilename.c_str());
+	}
+	while (colnamesfile >> tmpstr) {
+	    words_in_colnamesfile++;
+	    extColNames.push_back(tmpstr);
+	}
+	colnamesfile.close();
+	if (!quiet) message("number of names in column-names file '%s' is %d\n\n",colnamesfilename.c_str(),words_in_colnamesfile);
+    }
+
+    vector<string> extRowNames;
+
+    // row names specified in a separate file; check the number of columns
+    unsigned long int words_in_rownamesfile = 0;
+    if (rownamesfilename != "") {
+        ifstream rownamesfile(rownamesfilename.c_str());
+        string tmpstr;
+        if (!rownamesfile) {
+	    error("can not open row names file '%s'\n\n", rownamesfilename.c_str());
+	}
+	while (rownamesfile >> tmpstr) {
+	    words_in_rownamesfile++;
+	    extRowNames.push_back(tmpstr);
+	}
+	
+        rownamesfile.close();
+
+	if (!quiet)
+	     message("number of names in row-names file '%s' is %d\n\n", rownamesfilename.c_str(), words_in_rownamesfile );
+    }
+
+    ifstream srcFile(infilename.c_str());
+
+    string firstLine;
+
+    vector<string> firstLineWords;
+    tokenize(firstLine, firstLineWords, " ");
+
+    unsigned long numLines = calcNumLines(infilename);
+    unsigned long numWords = calcNumWordsInFirstLine(infilename);
+
+    cout << "Number of lines in source file is " << numLines << endl;
+    cout << "Number of words in source file is " << numWords << endl;
+
+    cout << "skiprows = " << skiprows << endl;
+    cout << "cnrow = " << cnrow << endl;
+    cout << "skipcols = " << skipcols << endl;
+    cout << "rncol = " << rncol << endl;
+    cout << "Rmatrix = " << Rmatrix << endl;
+    cout << "numWords = " << numWords << endl;
+
+    int numRows = numLines - skiprows;
+    int numColumns=123;
+        
+    bool colNamesFilePresents = (colnamesfilename!="");
+    bool rowNamesFilePresents = (rownamesfilename!="");
+
+    if (Rmatrix) {
+        if (colNamesFilePresents&&rowNamesFilePresents){
+    	    numColumns = numWords - skipcols;
+        }
+        if (colNamesFilePresents&&!rowNamesFilePresents){
+    	    numColumns = numWords - skipcols;
+        }
+        if (!colNamesFilePresents&&rowNamesFilePresents){
+	    numColumns = numWords - skipcols;
+	}
+        if (!colNamesFilePresents&&!rowNamesFilePresents){
+    	    numColumns = numWords - skipcols + 1;//edited
+        }
+    } else { 
+        if (colNamesFilePresents&&rowNamesFilePresents){
+    	    numColumns = numWords - skipcols; // edited
+    	}
+        if (colNamesFilePresents&&!rowNamesFilePresents){
+    	    numColumns = numWords - skipcols;//edited
+        }
+        if (!colNamesFilePresents&&rowNamesFilePresents){
+	    numColumns = numWords - skipcols;//edited
+	}
+        if (!colNamesFilePresents&&!rowNamesFilePresents){
+    	    numColumns = numWords - skipcols;//edited
+        }
+    }
+
+    cout << "Creating file with numRows = " << numRows << endl;
+    cout << "Creating file with numColumns = " << numColumns << endl;
+    initialize_empty_file(outfilename, numRows, numColumns, type, true );
+    filevector *out = new filevector(outfilename, 1);
+
+    string line;
+    unsigned long rowCnt = 0;
+    unsigned long lineCnt = 0;
+    
+    while(getline(srcFile, line)) {
+        vector<string> lineWords;
+        tokenize(line, lineWords, " ");
+
+        // is this a column name line?
+        if (lineCnt == cnrow && colnamesfilename == "") 
+        {
+    	    unsigned long i;
+    	    // ignoring R-matrix flag for some reason
+    	    for(i=skipcols-Rmatrix; i<lineWords.size(); i++) {
+    		extColNames.push_back(lineWords[i]);
+    	    }
+    	    lineCnt++;
+    	    continue;
+    	}
+    	
+	if (lineCnt < skiprows) 
+	{
+	    lineCnt++;
+	    continue;
+	}
+
+        unsigned long colCnt = 0;
+        unsigned long i;
+        for (i=0; i<lineWords.size(); i++) {
+    	    if (i == rncol && rownamesfilename == "") {
+    		extRowNames.push_back(lineWords[i]);
+    		continue;
+    	    }
+    	    
+    	    if (i < skipcols) {
+    		continue;
+    	    }
+    	    
+            char buf[20] = "01234567";
+            parseStringToArbType(lineWords[i], type, buf);
+            out->write_element(rowCnt, colCnt, buf);
+            colCnt++;
+        }
+
+        rowCnt++;
+        lineCnt++;
+    }
+
+    unsigned long i;
+    for (i=0;i<extColNames.size();i++){
+        out->write_observation_name(i,extColNames[i]);
+    }
+    
+    for (i=0;i<extRowNames.size();i++){
+	out->write_variable_name(i,extRowNames[i]);
+    }
+
+    delete out;
+
+    if(!bTranspose)
+    {
+	cout << "Transposing " << outfilename << " => " << realOutFilename << "." << endl;
+	transpose tr;
+	
+    	tr.process(outfilename, realOutFilename, true);
+    }
+    cout << "text2fvf finished." << endl;
+}
+
+
 

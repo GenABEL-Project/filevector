@@ -5,6 +5,7 @@ TESTSDIR = tests
 #DASRCDIR = DatABEL/src
 BINDIR = bin
 TEXT2FVF = $(BINDIR)/text2fvf
+FV2TEXT = $(BINDIR)/fv2text
 MERGEVARS = $(BINDIR)/mergevars
 #RSHLIB = $(BINDIR)/filevector.so
 
@@ -26,7 +27,7 @@ CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -m64
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) #-m64
 CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS)
 
@@ -39,6 +40,10 @@ all: $(EXECS) # $(RSHLIB)
 
 $(TEXT2FVF): $(LIBFILES) $(REGFILES) $(SRCDIR)/text2fvf.cpp $(SRCDIR)/text2fvf_main.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/usage.cpp $(SRCDIR)/text2fvf.cpp $(SRCDIR)/text2fvf_main.cpp -o $(TEXT2FVF)
+
+fv2text: $(FV2TEXT)
+$(FV2TEXT): $(LIBFILES) $(REGFILES) $(SRCDIR)/fv2text.cpp 
+	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/fv2text.cpp -o $(FV2TEXT)
 
 $(MERGEVARS): $(LIBFILES) $(REGFILES) $(SRCDIR)/mergevars.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/usage.cpp $(SRCDIR)/text2fvf.cpp $(SRCDIR)/mergevars.cpp -o $(MERGEVARS)
@@ -72,8 +77,9 @@ unittest : $(UNITTEST) $(TRANSPOSETEST)
 $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FVUnitTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FVUnitTest.cpp  -o $(UNITTEST)
 
+transposetest: $(TRANSPOSETEST)
 $(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp $(TESTSDIR)/*.h
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(SRCDIR)/transpose.cpp $(TESTSDIR)/TransposeTest.cpp  -o $(TRANSPOSETEST)
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/TransposeTest.cpp  -o $(TRANSPOSETEST)
 
 converter : $(CONVERT)
 $(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
@@ -81,7 +87,7 @@ $(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
 
 transpose :$(TRANSPOSE)
 $(TRANSPOSE) :  $(LIBFILES) $(SRCDIR)/transpose_main.cpp
-	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp  $(SRCDIR)/transpose.cpp $(SRCDIR)/text2fvf.cpp $(SRCDIR)/transpose_main.cpp -o $(TRANSPOSE)
+	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp  $(SRCDIR)/text2fvf.cpp $(SRCDIR)/transpose_main.cpp -o $(TRANSPOSE)
 
 
 writespeed : $(WRITE_VAR_SPEED)

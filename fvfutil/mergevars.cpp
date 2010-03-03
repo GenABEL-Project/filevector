@@ -63,6 +63,6 @@ int main(int argc, char * argv[])
 		indata2.read_variable(i-indata1.data_type.nvariables,tmpdat);
 		outdata.write_variable(i,tmpdat);
 	} 
-	
+
 	return(1);
 }
