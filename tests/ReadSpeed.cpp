@@ -17,7 +17,7 @@ int main ( int argc, char * argv[] )
 	if (argc>2) cachesize = atoi(argv[2]);
 	if (cachesize < 0) error ("cache size must be positive long integer\n\n");
 
-	DatABELBaseCPP *indata1 = new filevector( ifname1, cachesize );
+	AbstractMatrix *indata1 = new filevector( ifname1, cachesize );
 
 	std::cout << "Reading file:"<< ifname1 << "\n";
 	std::cout << "Using cache size:"<< cachesize<< "\n";

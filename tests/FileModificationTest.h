@@ -28,7 +28,7 @@ public:
     {
         string file_name = get_file_name_to_write();
         cout<< "full path:" << get_file_name_to_write() << endl;
-        DatABELBaseCPP* fv = new filevector ( file_name, 64 );
+        AbstractMatrix* fv = new filevector ( file_name, 64 );
         std::cout << "fv.get_nvariables():" << fv->get_nvariables() << "\n";
         CPPUNIT_ASSERT(fv->get_nvariables() == 33815 );
 

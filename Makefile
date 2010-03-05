@@ -29,15 +29,16 @@ CPP = g++
 
 CFLAGS = -I $(LIBDIR) -I $(SRCDIR) #-m64
 CPPUNITFLAGS = -lcppunit
-EXECS = $(TEXT2FVF) $(MERGEVARS)
+EXECS = $(TEXT2FVF) $(MERGEVARS) ${CONVERT}
 
 LIBFILES = $(LIBDIR)/*.cpp $(LIBDIR)/*.h
 REGFILES = $(SRCDIR)/usage.cpp $(SRCDIR)/usage.h
 
 TESTSFILES = $(TESTSDIR)/*.cpp $(TESTSDIR)/*.h
 
-all: $(EXECS) # $(RSHLIB)
+all: converter text2fvf fv2text transpose writespeed # $(RSHLIB)
 
+text2fvf: $(TEXT2FVF)
 $(TEXT2FVF): $(LIBFILES) $(REGFILES) $(SRCDIR)/text2fvf.cpp $(SRCDIR)/text2fvf_main.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/usage.cpp $(SRCDIR)/text2fvf.cpp $(SRCDIR)/text2fvf_main.cpp -o $(TEXT2FVF)
 

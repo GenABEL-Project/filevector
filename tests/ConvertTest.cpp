@@ -11,7 +11,7 @@
 #include "FVUnitTest.h"
 #include "filevector.h"
 #include "frutil.h"
-#include "DatABELBaseCPP.h"
+#include "AbstractMatrix.h"
 
 void ConvertTest::test() {
     unsigned long int nvariables = 3;
@@ -21,7 +21,7 @@ void ConvertTest::test() {
 
   //string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type, bool override
     initialize_empty_file(tmp_file_name, nvariables, nobservations, FLOAT, true);
-    DatABELBaseCPP* fv = new filevector( tmp_file_name, 1);
+    AbstractMatrix* fv = new filevector( tmp_file_name, 1);
 
     float * var = new float [fv->get_nobservations()];
 	

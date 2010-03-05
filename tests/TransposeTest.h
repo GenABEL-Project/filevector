@@ -12,13 +12,12 @@
 
 #include<stdio.h>
 
-#include "DatABELBaseCPP.h"
+#include "AbstractMatrix.h"
 #include "filevector.h"
-#include "transpose.h"
+#include "Transposer.h"
 #include "TestUtil.h"
 
 using namespace std;
-
 
 /*
 * This test is for correctness of filevector operations, while most of other thests are for performance testing
@@ -28,9 +27,9 @@ class TransposeTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE( TransposeTest );
     CPPUNIT_TEST( testTransposeSingleVar );
     CPPUNIT_TEST( testTransposeTwoVars );
-  //  CPPUNIT_TEST( testTranspose3x3_matrix );
-    //CPPUNIT_TEST( testTransposeFlatArray );
-    //CPPUNIT_TEST( testTransposeArrayWith2Vars );
+    CPPUNIT_TEST( testTranspose3x3_matrix );
+    CPPUNIT_TEST( testTransposeFlatArray );
+    CPPUNIT_TEST( testTransposeArrayWith2Vars );
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -57,7 +56,7 @@ public:
 	   unsigned int  nobs =3;
 	   TestUtil::create_empty_filevector(src_file_name,nvars, nobs, INT);
 
-	   DatABELBaseCPP* fv =  new filevector ( src_file_name, 1 );
+	   AbstractMatrix* fv =  new filevector ( src_file_name, 1 );
 	   int var_data[nobs];
 	   var_data[0] = 1;
 	   var_data[1] = 2;
@@ -73,10 +72,10 @@ public:
 	   fv->write_variable_as(2,var_data);
 	   delete fv;
 
-	   transpose tr(2);
+	   Transposer tr(2);
 	   tr.process( src_file_name );
 
-	   DatABELBaseCPP* fv_tr =  new filevector ( dest_file_name, 1 );
+	   AbstractMatrix* fv_tr =  new filevector ( dest_file_name, 1 );
 	   CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->get_nvariables());
 	   CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->get_nobservations());
 
@@ -100,9 +99,6 @@ public:
 
     };
 
-
-
-
     void testTransposeFlatArray()
     {
        int  var_data [3][1];
@@ -111,7 +107,7 @@ public:
 	   var_data[0][1] = 2;
 	   var_data[0][2] = 3;
 
-	   transpose tr;
+	   Transposer tr;
 	   tr.transpose_part(var_data,out_data,3,1,sizeof(int));
 	   CPPUNIT_ASSERT_EQUAL(1, out_data[0][0]);
 	   CPPUNIT_ASSERT_EQUAL(2, out_data[1][0]);
@@ -134,7 +130,7 @@ public:
 	   var_data[4] = 5;
 	   var_data[5] = 6;
 
-	   transpose tr;
+	   Transposer tr;
 	   tr.transpose_part(var_data,out_data,3,2,sizeof(int));
 	   //1 4
 	   //2 5
@@ -147,9 +143,6 @@ public:
 
 	   CPPUNIT_ASSERT_EQUAL(3, out_data[4]);
 	   CPPUNIT_ASSERT_EQUAL(6, out_data[5]);
-
-//	   delete var_data;
-//	   delete out_data;
     }
 
 };

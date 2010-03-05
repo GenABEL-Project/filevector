@@ -13,13 +13,14 @@ data copying is working as explained below:
  and written to the destination file ( j/i )
 */
 
-class transpose
+class Transposer
 {
 public :
-transpose(){ square_size =10000;};
-transpose(int opt_square_size){ square_size=opt_square_size;};
+Transposer(){ square_size =10000;};
+Transposer(int opt_square_size){ square_size=opt_square_size;};
 
-void process(string filename, string destFileName = "", bool forceOverwrite = false);
+void process(string filename, string destFileName, bool forceOverwrite);
+void process(string filename);
 
 void write_var_obs_names(filevector * src_fv, filevector * dest_fv);
 

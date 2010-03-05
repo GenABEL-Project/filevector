@@ -10,24 +10,38 @@ advanced text tools behaviour.
 #include "frerror.h"
 #include "frutil.h"
 #include "filevector.h"
-#include "transpose.h"
+#include "Transposer.h"
 
 using namespace std;
 
+void Transposer::process(string filename){
+    process(filename, string(""), false );
+}
 
-void transpose::process(string filename)
+void Transposer::process(string filename, string destFileName, bool forceOverwrite)
 {
     filevector* src_fv = new filevector(filename,1);
     unsigned long int src_nvars = src_fv->get_nvariables();
     unsigned long int src_nobss = src_fv->get_nobservations();
     unsigned int data_size = src_fv->getDataSize();
 
-    string dest_file_name = extract_base_file_name(filename)+"_transposed";
+    string dest_file_name;
+    string src_data_file_name; 
+    string dest_data_file_name; 
+    
+    if (destFileName=="") { 
+	    // legacy
+    	dest_file_name = extract_base_file_name(filename) + "_transposed";
+	    src_data_file_name = extract_base_file_name(filename) + FILEVECTOR_DATA_FILE_SUFFIX;
+	    dest_data_file_name = extract_base_file_name(filename) + "_transposed" + FILEVECTOR_DATA_FILE_SUFFIX;
+    } else {
+	    dest_file_name = destFileName;   
+	    src_data_file_name = filename + FILEVECTOR_DATA_FILE_SUFFIX;
+	    dest_data_file_name = destFileName + FILEVECTOR_DATA_FILE_SUFFIX;
+    }
 
-    string src_data_file_name = extract_base_file_name(filename)+FILEVECTOR_DATA_FILE_SUFFIX;
-    string dest_data_file_name = extract_base_file_name(filename)+"_transposed"+FILEVECTOR_DATA_FILE_SUFFIX;
 
-    if (headerOrDataExists(dest_file_name)) {
+    if (!forceOverwrite && headerOrDataExists(dest_file_name)) {
         error("File %s already exists.", dest_file_name.c_str());
     }
 
@@ -45,7 +59,7 @@ void transpose::process(string filename)
     cout<< "done"<< endl;
 }
 
-void transpose::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
+void Transposer::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
 {
    // copy observations and variables names
    for( unsigned long int i=0 ; i < src_fv->get_nvariables(); i++ )
@@ -56,7 +70,7 @@ void transpose::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
 }
 
 
-void transpose::copy_data(string src_data_file_name,string dest_data_file_name, unsigned long int src_nvars,
+void Transposer::copy_data(string src_data_file_name,string dest_data_file_name, unsigned long int src_nvars,
 unsigned long int src_nobss, unsigned int data_size)
 {
   cout<< "Copying data..."<< src_nobss << "x"<< src_nvars << endl;
@@ -86,8 +100,8 @@ unsigned long int src_nobss, unsigned int data_size)
           if((i + 1 )* square_size > src_nvars)
               var_length = src_nvars % square_size;
 
-          cout << ">"<< obs_length << "x" << var_length << "^ " ;
-//          cout << ".";
+//          cout << ">"<< obs_length << "x" << var_length << "^ " ;
+
           char * data_part = new (nothrow) char[var_length*obs_length*data_size];
           if(!data_part) error("can not allocate memory for data_part");
           char * data_part_transposed = new (nothrow) char[var_length*obs_length*data_size];
@@ -108,14 +122,14 @@ unsigned long int src_nobss, unsigned int data_size)
   dest_stream->close();
   delete dest_stream;
 
-  cout<< "data written" << endl;
+//  cout<< "data written" << endl;
 }
 
 
 /*
 * read next piece of data with size = obs_length x var_length, starting from var_start, obs_start coordinates
 */
-void transpose::read_part(ifstream * src_stream, char * data_part, unsigned long int obs_start , unsigned long int obs_length,
+void Transposer::read_part(ifstream * src_stream, char * data_part, unsigned long int obs_start , unsigned long int obs_length,
 unsigned long int var_start, unsigned long int var_length , unsigned int  data_size, unsigned long int src_obs_length )
 {
 //cout << "read_part"<<endl;
@@ -132,7 +146,7 @@ unsigned long int var_start, unsigned long int var_length , unsigned int  data_s
 /*
 * write next piece of transposed data with size = obs_length' x var_length'
 */
-void transpose::write_part(ofstream * dest_stream, char * data_part_transposed, unsigned long int obs_start , unsigned long int obs_length,
+void Transposer::write_part(ofstream * dest_stream, char * data_part_transposed, unsigned long int obs_start , unsigned long int obs_length,
 unsigned long int var_start, unsigned long int var_length , unsigned int  data_size, unsigned long int dest_obs_length )
 {
 	for(unsigned long int i=0; i<var_length ;i++)
@@ -146,10 +160,10 @@ unsigned long int var_start, unsigned long int var_length , unsigned int  data_s
 }
 
 /*
-transpose piece of data to write to the new file.
-original axb matrix flipped to bxa matrix.
+* transpose piece of data to write to the new file.
+* original axb matrix flipped to bxa matrix.
 */
-void transpose::transpose_part(void * data_part, void * data_part_transposed,
+void Transposer::transpose_part(void * data_part, void * data_part_transposed,
 unsigned long int obs_length,unsigned long int var_length, unsigned int data_size )
 {
 	for(unsigned long int i=0; i<var_length ;i++)

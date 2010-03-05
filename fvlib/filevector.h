@@ -18,7 +18,7 @@
 #include "frutil.h"
 #include "frerror.h"
 
-#include "DatABELBaseCPP.h"
+#include "AbstractMatrix.h"
 
 using namespace std;
 
@@ -26,7 +26,7 @@ using namespace std;
 #define DB_EXCL 2
 #define DB_RDONLY 4
 
-class filevector: public DatABELBaseCPP
+class filevector: public AbstractMatrix
 {
 public:
 	string data_filename;

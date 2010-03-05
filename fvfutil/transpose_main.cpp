@@ -10,7 +10,7 @@ advanced text tools behaviour.
 #include "frerror.h"
 #include "frutil.h"
 #include "filevector.h"
-#include "transpose.h"
+#include "Transposer.h"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ int main(int argc, char * argv[])
   	}
     string filename = argv[1];
 
-    transpose tr;
+    Transposer tr;
     tr.process(filename);
 }
 

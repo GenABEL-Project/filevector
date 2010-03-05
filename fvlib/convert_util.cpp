@@ -8,7 +8,7 @@
 using namespace std;
 
 #include "filevector.h"
-#include "transpose.h"
+#include "Transposer.h"
 #include "frerror.h"
 
 #include "convert_util.h"
@@ -172,7 +172,7 @@ void text2fvf_246(
 	if (!quiet) message("number of variables in FVF-file '%s' will be %d\n",outfilename.c_str(),out_nvars);
 	if (!quiet) message("number of observations in FVF-file '%s' will be %d\n\n",outfilename.c_str(),out_nobs);
 
-	DatABELBaseCPP * outdata = new filevector(outfilename, (unsigned long int) 64); // this is not nice - fixed cache-size of 64 Mb
+	AbstractMatrix * outdata = new filevector(outfilename, (unsigned long int) 64); // this is not nice - fixed cache-size of 64 Mb
 
 	fixedchar tmpname;
 
@@ -598,7 +598,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
     if(!bTranspose)
     {
 	cout << "Transposing " << outfilename << " => " << realOutFilename << "." << endl;
-	transpose tr;
+	Transposer tr;
 	
     	tr.process(outfilename, realOutFilename, true);
     }

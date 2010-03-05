@@ -1,5 +1,5 @@
-#ifndef __DatABELBaseCPP__
-#define __DatABELBaseCPP__
+#ifndef __AbstractMatrix__
+#define __AbstractMatrix__
 
 #include <string>
 
@@ -7,10 +7,10 @@ using namespace std;
 
 #include "frutil.h"
 
-class DatABELBaseCPP
+class AbstractMatrix
 {
 public:
-    virtual ~DatABELBaseCPP(){};
+    virtual ~AbstractMatrix(){};
 
     template <class DT> void performCast(DT &dest, void*src, int srcType)
     {

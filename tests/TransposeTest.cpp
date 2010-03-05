@@ -16,7 +16,7 @@ using namespace std;
 	   unsigned int nobs = 3;
 	   TestUtil::create_empty_filevector(src_file_name,nvars, nobs, INT);
 
-	   DatABELBaseCPP* fv =  new filevector ( src_file_name, 1 );
+	   AbstractMatrix* fv =  new filevector ( src_file_name, 1 );
 	   int * var_data = new int[nobs];
 	   var_data[0] = 1;
 	   var_data[1] = 2;
@@ -24,10 +24,10 @@ using namespace std;
 	   fv->write_variable_as(0,var_data);
 	   delete fv;
 
-	   transpose tr;
+	   Transposer tr;
 	   tr.process( src_file_name );
 
-	   DatABELBaseCPP* fv_tr =  new filevector ( dest_file_name, 1 );
+	   AbstractMatrix* fv_tr =  new filevector ( dest_file_name, 1 );
        fv_tr->read_observation(0,var_data);
 	   CPPUNIT_ASSERT_EQUAL(1, var_data[0]);
 	   CPPUNIT_ASSERT_EQUAL(2, var_data[1]);
@@ -49,7 +49,7 @@ using namespace std;
 	   unsigned int nobs = 3;
 	   initialize_empty_file(src_file_name, nvars, nobs, INT, true);
 
-	   DatABELBaseCPP* fv =  new filevector ( src_file_name, 1 );
+	   AbstractMatrix* fv =  new filevector ( src_file_name, 1 );
 	   int var_data[nobs];
 	   var_data[0] = 1;
 	   var_data[1] = 2;
@@ -60,11 +60,11 @@ using namespace std;
 	   var_data[2] = 6;
 	   fv->write_variable_as(1,var_data);
 	   delete fv;
-	   transpose tr;
+	   Transposer tr;
 	   tr.process( src_file_name );
        cout << "18" << endl;
 
-	   DatABELBaseCPP* fv_tr =  new filevector ( dest_file_name, 1 );
+	   AbstractMatrix* fv_tr =  new filevector ( dest_file_name, 1 );
 	   CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->get_nvariables());
 	   CPPUNIT_ASSERT_EQUAL((unsigned int)2, fv_tr->get_nobservations());
 

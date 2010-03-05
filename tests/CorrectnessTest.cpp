@@ -24,7 +24,7 @@ float summData(float *data, int length){
 
 void CorrectnessTest::testReadVariable() {
     string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose");
-    DatABELBaseCPP *data =  new filevector( inputFile, 64 );
+    AbstractMatrix *data =  new filevector( inputFile, 64 );
 
     cout << "Reading file:" << inputFile << endl;
 
@@ -64,7 +64,7 @@ void CorrectnessTest::testReadVariable() {
 void CorrectnessTest::testRandomReadObservations(){
     string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose");
     string sumFileName = inputFile + string(".fvf_obssum");
-    DatABELBaseCPP* data = new filevector ( inputFile, 64 );
+    AbstractMatrix* data = new filevector ( inputFile, 64 );
 
     cout << "Reading file:" << inputFile << endl;
 
@@ -126,7 +126,7 @@ void CorrectnessTest::testSubMatrix() {
 
     cout << "obsFileName = " << obsFileName << endl;
 
-    DatABELBaseCPP *data = new filevector ( inputFile, 64 );
+    AbstractMatrix *data = new filevector ( inputFile, 64 );
 
     ifstream subMatrixData(subMatrixFileName.c_str());
     ifstream obsNamesData(obsFileName.c_str());
