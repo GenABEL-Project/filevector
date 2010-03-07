@@ -23,9 +23,9 @@ using namespace std;
 #include <sstream>
 
 void text2fvf_246(
-		std::string program_name,
-		std::string infilename, std::string outfilename,
-		std::string rownamesfilename, std::string colnamesfilename,
+		string program_name,
+		string infilename, string outfilename,
+		string rownamesfilename, string colnamesfilename,
 		int rncol, int cnrow,
 		int skiprows, int skipcols,
 		int transpose, int Rmatrix,
@@ -82,15 +82,15 @@ void text2fvf_246(
 		error("cnrow > skiprows");
 
 
-	std::ifstream infile(infilename.c_str());
+	ifstream infile(infilename.c_str());
 	if (!infile) error("can not open file '%s' for reading\n\n",infilename.c_str());
 
 	// column names specified in a separate file; check the number of columns
 	unsigned long int words_in_colnamesfile = 0;
 	if (cnrow & colnamesfilename != "")
 	{
-		std::ifstream colnamesfile(colnamesfilename.c_str());
-		std::string tmpstr;
+		ifstream colnamesfile(colnamesfilename.c_str());
+		string tmpstr;
 		if (!colnamesfile) error("can not open column names file '%s'\n\n",colnamesfilename.c_str());
 		while (colnamesfile >> tmpstr) words_in_colnamesfile++;
 		colnamesfile.close();
@@ -101,8 +101,8 @@ void text2fvf_246(
 	unsigned long int words_in_rownamesfile = 0;
 	if (rncol & rownamesfilename != "")
 	{
-		std::ifstream rownamesfile(rownamesfilename.c_str());
-		std::string tmpstr;
+		ifstream rownamesfile(rownamesfilename.c_str());
+		string tmpstr;
 		if (!rownamesfile) error("can not open row names file '%s'\n\n",rownamesfilename.c_str());
 		while (rownamesfile >> tmpstr) words_in_rownamesfile++;
 		rownamesfile.close();
@@ -113,12 +113,12 @@ void text2fvf_246(
 	if (!quiet) message("Finding the number of columns and rows in the file + integrity checks ... Line count:\n");
 	unsigned long int infile_linecount = 0, line_wordcount = 0;
 	long int last_word_count = -1;
-	std::string sline, sword;
+	string sline, sword;
 	while (getline(infile,sline))
 	{
 		infile_linecount++;
-		if ((infile_linecount % REPORT_EVERY) == 0) {if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",infile_linecount);std::cout.flush();}
-		std::istringstream stream_sline(sline);
+		if ((infile_linecount % REPORT_EVERY) == 0) {if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",infile_linecount);cout.flush();}
+		istringstream stream_sline(sline);
 		line_wordcount = 0;
 		while (stream_sline >> sword) line_wordcount++;
 		//		if (firstline_add_one) {line_wordcount++;firstline_add_one=0;}
@@ -128,7 +128,7 @@ void text2fvf_246(
 						infilename.c_str(),infile_linecount,line_wordcount,last_word_count);
 		last_word_count = line_wordcount;
 	}
-	if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",infile_linecount);std::cout.flush();
+	if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",infile_linecount);cout.flush();
 	if (!quiet) message("\n");
 	infile.close();
 	if (!quiet) message("file '%s' line count = %d\n",infilename.c_str(),infile_linecount);
@@ -150,7 +150,7 @@ void text2fvf_246(
 	// if file is to be transposed we can read one line at a time and write it immediately
 	if (transpose) num_data_elements = ncols;
 
-	float * data = new (std::nothrow) float [num_data_elements];
+	float * data = new (nothrow) float [num_data_elements];
 
 	if (!data) error("can not get RAM for %u column and %u rows matrix\n\n",ncols,nrows);
 
@@ -184,7 +184,7 @@ void text2fvf_246(
 			{
 				cur_line++;
 				getline(infile,sline);
-				std::istringstream stream_sline(sline);
+				istringstream stream_sline(sline);
 				if (cur_line == cnrow) {
 					int toCol = ncols;
 					if (!Rmatrix) toCol = ncols + skipcols;
@@ -205,9 +205,9 @@ void text2fvf_246(
 				}
 			}
 		} else {
-			std::ifstream colnamesfile(colnamesfilename.c_str());
+			ifstream colnamesfile(colnamesfilename.c_str());
 			if (!colnamesfile) error("can not open column names file '%s'\n\n",colnamesfilename.c_str());
-			std::string tmpstr;
+			string tmpstr;
 			for (unsigned long int i=0;i<ncols;i++) {
 				colnamesfile >> tmpstr;
 				strcpy(tmpname.name,tmpstr.c_str());
@@ -222,9 +222,9 @@ void text2fvf_246(
 	// read row names file if present
 	if (rncol && rownamesfilename != "")
 	{
-		std::ifstream rownamesfile(rownamesfilename.c_str());
+		ifstream rownamesfile(rownamesfilename.c_str());
 		if (!rownamesfile) error("can not open row names file '%s'\n\n",rownamesfilename.c_str());
-		std::string tmpstr;
+		string tmpstr;
 		for (unsigned long int i=0;i<nrows;i++) {
 			rownamesfile >> tmpstr;
 			strcpy(tmpname.name,tmpstr.c_str());
@@ -245,7 +245,7 @@ void text2fvf_246(
 	unsigned long int j = 0, cline = 0;
 	while (getline(infile,sline))
 	{
-		std::istringstream stream_sline(sline);
+		istringstream stream_sline(sline);
 		unsigned long int current_word = 0;
 		while (stream_sline >> sword) {
 			current_word++;
@@ -264,9 +264,9 @@ void text2fvf_246(
 			j=0;
 		}
 		cline++;
-		if ((cline % REPORT_EVERY) == 0) {if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",cline);std::cout.flush();}
+		if ((cline % REPORT_EVERY) == 0) {if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",cline);cout.flush();}
 	}
-	if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",cline);std::cout.flush();
+	if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",cline);cout.flush();
 	if (!quiet) message("\n\n");
 	infile.close();
 
@@ -282,7 +282,7 @@ void text2fvf_246(
 
 		if (!quiet) message("Writing data to FVF-file '%s' ... Writing variable:\n",outfilename.c_str());
 
-		float * tmpdat = new (std::nothrow) float [nrows];
+		float * tmpdat = new (nothrow) float [nrows];
 
 		if (!tmpdat) error("can not get RAM for tmpdat\n\n");
 		unsigned long int current_var;
@@ -295,11 +295,11 @@ void text2fvf_246(
 				for (unsigned long int j=0;j<nrows;j++) tmpdat[j] = data[j * ncols + current_var];
 				outdata->write_variable_as(current_var,tmpdat);
 			}
-			if ((current_var+1 % REPORT_EVERY) == 0) {if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",current_var+1);std::cout.flush();}
+			if ((current_var+1 % REPORT_EVERY) == 0) {if (!quiet) message("\b\b\b\b\b\b\b\b\b\b\b\b%d",current_var+1);cout.flush();}
 		}
 		if (!quiet) {
 			message("\b\b\b\b\b\b\b\b\b\b\b\b%d",(current_var));
-			std::cout.flush();
+			cout.flush();
 			message("\n\n");
 		}
 
@@ -338,20 +338,6 @@ unsigned long calcNumWordsInFirstLine(string fileName){
     return words.size();
 }
 	    
-void parseStringToArbType(string s, int destType, void *destData) {
-    map<int, string> fmt;
-
-    fmt[UNSIGNED_SHORT_INT] = string("%hu");
-    fmt[SHORT_INT] = string("%sd");
-    fmt[UNSIGNED_INT] = string("%ud");
-    fmt[INT] = string("%d");
-    fmt[FLOAT] = string("%f");
-    fmt[DOUBLE] = string("%lf");
-
-    string format = fmt[destType];
-    
-    sscanf(s.c_str(), format.c_str(), destData);
-}
 
 void text2fvf(string program_name, string infilename, string outfilename,
 	string rownamesfilename, string colnamesfilename, int rncol, int cnrow,

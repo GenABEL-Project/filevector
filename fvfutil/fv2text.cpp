@@ -6,25 +6,26 @@
 
 using namespace std;
 
-#include "filevector.h"
+#include "../fvlib/Logger.h"
+#include "../fvlib/filevector.h"
 
 void info() 
 {
-    cout << "fv2text converts .fv? files to a text file" << endl;
-    cout << "Usage: fv2text inputfile outfile.txt --RMatrix" << endl;
+    cout << "fv2text converts .fv* files to a text file" << endl;
+    cout << "Usage: fv2text inputfile outfile.txt [--RMatrix]" << endl;
 }
 
-string printByteSeq(char *data, int length){
+/*string printByteSeq(char *data, int length){
     string ret;
     
     char s[20];
     for(int i=0;i<length;i++){
 	sprintf(s,"%x ", ((unsigned char*)data)[i]);
-	ret += string(s);
+	    ret += string(s);
     }    
 
     return ret;    
-}
+}*/
 
 string bufToString(short int dataType, char *data){
     char ret[20];
@@ -80,23 +81,23 @@ int main(int argc, char* argv[])
     unsigned long row, col;
     
     if (!isRMatrix) {
-	out << "X ";
+	    out << "X ";
     }
     
     for (col=0; col<fv.get_nobservations(); col++){
-	out << fv.read_observation_name(col).name << " ";
+	    out << fv.read_observation_name(col).name << " ";
     }
     
     out << endl;
 	
     for (row=0; row<fv.get_nvariables(); row++){
-	out << fv.read_variable_name(row).name << " ";
+	    out << fv.read_variable_name(row).name << " ";
         for (col=0; col<fv.get_nobservations(); col++){
     	    char data[200];
     	    fv.read_element(row, col, data);
     	    string elem = bufToString(fv.getDataType(), data);    	        	    
-	    out << elem << " ";
-	}
-	out << endl;
+	        out << elem << " ";
+	    }
+	    out << endl;
     }
 }

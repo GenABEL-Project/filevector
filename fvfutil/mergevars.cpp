@@ -10,11 +10,11 @@ int main(int argc, char * argv[])
 	unsigned long int cachesize = 64;
 	if (argc>4) cachesize = atoi(argv[4]);
 	if (cachesize < 0) error ("cache size must be positive long integer\n\n");
-	std::cout << "Options in effect:\n";
-	std::cout << "\tINFILE1   = " << ifname1 << "\n";
-	std::cout << "\tINFILE2   = " << ifname2 << "\n";
-	std::cout << "\tOUTFILE   = " << ofname << "\n";
-	std::cout << "\tcachesize = " << cachesize << " Mb\n\n";
+	dbg << "Options in effect:\n";
+	dbg << "\tINFILE1   = " << ifname1 << "\n";
+	dbg << "\tINFILE2   = " << ifname2 << "\n";
+	dbg << "\tOUTFILE   = " << ofname << "\n";
+	dbg << "\tcachesize = " << cachesize << " Mb\n\n";
 
 	filevector indata1(ifname1, cachesize);
 	filevector indata2(ifname2, cachesize);
@@ -37,9 +37,9 @@ int main(int argc, char * argv[])
 		message("observation names are the same in files '%s' and '%s'\n\n",ifname1,ifname2);
 	unsigned long int out_nvars = indata1.data_type.nvariables + indata2.data_type.nvariables;
 	unsigned long int out_nobs = indata1.data_type.nobservations;
-	std::cout << "initalizing FVF-file '" << ofname << "'...\n";
+	dbg << "initalizing FVF-file '" << ofname << "'...\n";
 	initialize_empty_file(ofname, out_nvars, out_nobs, FLOAT, true);
-	std::cout << "writing out the data ... \n";
+	dbg << "writing out the data ... \n";
 
 	filevector outdata(ofname, cachesize);
 

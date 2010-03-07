@@ -57,7 +57,7 @@ public:
         float * var2 = new float [fv->get_nobservations()];
         fv->read_variable_as(0,var2);
 
-        cout<< "value from read():" << var2[0] << ",newVal: "<<newVal<< endl;
+        dbg<< "value from read():" << var2[0] << ",newVal: "<<newVal<< nl;
         CPPUNIT_ASSERT_EQUAL( var2[0] , newVal );
         delete var;
         delete var2;

@@ -12,15 +12,15 @@ string TestUtil::base_dir;
 
 void TestUtil::detect_base_dir(string binpath)
 {
-    //cout << "binary path:" << binpath <<endl;
+    //dbg << "binary path:" << binpath <<endl;
     size_t slashpos;
     slashpos =  binpath.find_last_of("/");
-    //cout << "slashpos:" << slashpos << endl;
+    dbg << "slashpos:" << slashpos << nl;
     if (slashpos == string::npos)
         error("cannot find slash in path to binary file");
 
     string basedir = binpath.substr(0,slashpos);
-    //cout << "basedir :" << basedir << endl;
+    dbg << "basedir :" << basedir << nl;
 
     TestUtil::base_dir = basedir;
 }
@@ -68,7 +68,7 @@ bool TestUtil::compare_arrays(float * a1, float * a2, int size)
 	{
 		if(a1[i] != a2[i])
 		{
-		  cout<< "compare_arrays: " << i << " elements not equal:"<< a1[i]<<","<<a2[i]<<endl;
+		  dbg << "compare_arrays: " << i << " elements not equal:"<< a1[i]<<","<<a2[i]<<nl;
 		  return false;
 		}
 	}

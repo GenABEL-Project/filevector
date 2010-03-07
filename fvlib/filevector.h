@@ -15,6 +15,7 @@
 #include <limits.h>
 #include <unistd.h>
 
+#include "Logger.h"
 #include "frutil.h"
 #include "frerror.h"
 

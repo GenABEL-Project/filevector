@@ -8,7 +8,7 @@ int main ( int argc, char * argv[] )
 {
 	if ( argc<2 )
 	{
-		std::cout << "Please provide filename!"<< "\n";
+		dbg << "Please provide filename!"<< "\n";
 		exit ( 1 );
 	}
     char * ifname1 = argv[1];
@@ -19,15 +19,15 @@ int main ( int argc, char * argv[] )
 
 	AbstractMatrix *indata1 = new filevector( ifname1, cachesize );
 
-	std::cout << "Reading file:"<< ifname1 << "\n";
-	std::cout << "Using cache size:"<< cachesize<< "\n";
-	std::cout << "Variables:"<< indata1->get_nvariables() << "\n";
-	std::cout << "Observations:"<< indata1->get_nobservations() << "\n";
+	dbg << "Reading file:"<< ifname1 << "\n";
+	dbg << "Using cache size:"<< cachesize<< "\n";
+	dbg << "Variables:"<< indata1->get_nvariables() << "\n";
+	dbg << "Observations:"<< indata1->get_nobservations() << "\n";
 
 	float * tmpdat = new ( std::nothrow ) float [indata1->get_nobservations()];
 	if(!tmpdat )
 	{
-		std::cout << "Cannot allocate buffer" << "\n";
+		dbg << "Cannot allocate buffer" << "\n";
 		exit(1);
 	}
 
@@ -36,12 +36,12 @@ int main ( int argc, char * argv[] )
             indata1->read_variable_as( i, tmpdat );
             if( i % 10000 == 0 )
             {
-                std::cout << "Read:"<< i << "/" << indata1->get_nvariables() << " variables \n";
+                dbg << "Read:"<< i << "/" << indata1->get_nvariables() << " variables \n";
             }
         }
 
 	delete tmpdat;
         delete indata1;
 
-	std::cout << "Finished";
+	dbg << "Finished";
 }

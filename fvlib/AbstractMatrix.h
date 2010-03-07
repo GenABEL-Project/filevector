@@ -6,63 +6,12 @@
 using namespace std;
 
 #include "frutil.h"
+#include "CastUtils.h"
 
 class AbstractMatrix
 {
 public:
     virtual ~AbstractMatrix(){};
-
-    template <class DT> void performCast(DT &dest, void*src, int srcType)
-    {
-	    switch (srcType) {
-    	  case UNSIGNED_SHORT_INT:
-    		dest = (DT)*((unsigned short int*) src);
-    		break;
-    	  case SHORT_INT:
-    		dest = (DT)*((short int*) src);
-    		break;
-    	  case UNSIGNED_INT:
-    		dest = (DT)*((unsigned int*) src);
-    		break;
-    	  case INT:
-    		dest = (DT)*((int*) src);
-    		break;
-    	  case FLOAT:
-    		dest = (DT)*((float*) src);
-    		break;
-    	  case DOUBLE:
-    		dest = (DT)*((double*) src);
-    		break;
-    	  default:
-    		error("file contains data of unknown type\n");
-    	}
-    }
-
-    template <class DT> void performCast(void*dest, DT&src, int destType)
-    {
-        switch (destType) {
-    	    case UNSIGNED_SHORT_INT:
-    		    *((unsigned short int*)dest) = src;
-    		    break;
-    	    case SHORT_INT:
-    		    *((short int*)dest) = src;
-    		    break;
-    	    case UNSIGNED_INT:
-        		*((unsigned int*)dest) = src;
-        		break;
-    	    case INT:
-    		    *((int*)dest) = src;
-    		    break;
-    	    case FLOAT:
-    		    *((float*)dest) = src;
-    		    break;
-    	    case DOUBLE:
-        		*((double*)dest) = src;
-        		break;
-    	      default:
-    		    error("file contains data of unknown type\n");
-    	}
-    }
 
     template <class DT>
     void write_variable_as(unsigned long int nvar, DT * outvec)
@@ -171,7 +120,6 @@ private:
     // write single element
     // CURRENTLY CACHE IS NOT UPDATED!
 	virtual void write_element(unsigned long int nvar, unsigned long int nobs, void * data) = 0;
-
 
 	virtual short unsigned getDataSize() = 0;
 	virtual short unsigned getDataType() = 0;

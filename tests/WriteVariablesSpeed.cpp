@@ -30,7 +30,10 @@ int main(int argc, char * argv[])
         filename = string(argv[5]);
 
 
-  	cout << "Generating data to file "<< filename<< ",vars*obs: "<< nvars<< "*"<<nobs <<" , cache:"<< cache_size << endl;
+  	dbg << "Generating data to file ";
+  	dbg <<filename;
+  	dbg <<",vars*obs: "<< nvars<< "*"<<nobs;
+  	dbg <<" , cache:"<< cache_size << nl;
 	initialize_empty_file( (char *)filename.c_str(), nvars, nobs, FLOAT, true);
 	filevector fv(filename,cache_size);
 
@@ -41,7 +44,7 @@ int main(int argc, char * argv[])
 	    fv.write_variable_name(i,fixedchar("original"));
 	    if( i % 10000 == 0 )
 		{
-			std::cout << "Wrote:"<< i << "/" << fv.get_nvariables() << " variables " << endl;
+			dbg << "Wrote:"<< i << "/" << fv.get_nvariables() << " variables " << nl;
 		}
 	}
 
@@ -54,7 +57,7 @@ int main(int argc, char * argv[])
 	    fv.add_variable( tmp, ss.str() );
 	    if( i % 10000 == 0 )
 		{
-			std::cout << "Added:"<< i << "/" << to_add << " variables " << endl;
+			dbg << "Added:"<< i << "/" << to_add << " variables " << nl;
 		}
 	}
 

@@ -4,6 +4,7 @@
 
 #include "FileModificationTest.h"
 #include "TestUtil.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ string FileModificationTest::get_file_name_to_write()
 int main( int argc, char **argv)
 {
     TestUtil::detect_base_dir(string(argv[0]));
-    cout << "base_dir :" << TestUtil::get_base_dir() << "\n";
+    dbg << "base_dir :" << TestUtil::get_base_dir() << nl;
 
     CppUnit::TextUi::TestRunner runner;
     runner.addTest( FileModificationTest::suite() );

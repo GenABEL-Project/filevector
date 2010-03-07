@@ -63,7 +63,7 @@ unsigned short calcDataSize(unsigned short int type){
 
 void initialize_empty_file(string filename, unsigned long nvariables, unsigned long nobservations, unsigned short type, bool override)
 {
-    cout << "Initizlizing empty file '" << filename << "', type " << type << "." << endl;
+    dbg << "Initizlizing empty file '" << filename << "', type " << type << "." << nl;
     string index_filename = filename + FILEVECTOR_INDEX_FILE_SUFFIX;
     string data_filename = filename + FILEVECTOR_DATA_FILE_SUFFIX;
 
@@ -110,7 +110,7 @@ void initialize_empty_file(string filename, unsigned long nvariables, unsigned l
 	data_file.put('E');
 	data_file.close();
 	idx_file.close();
-    cout << "File '" << filename << "' initialized."<< endl;
+    dbg << "File '" << filename << "' initialized."<< nl;
 }
 
 bool headerOrDataExists(string fileName) {

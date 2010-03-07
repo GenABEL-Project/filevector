@@ -48,15 +48,15 @@ void Transposer::process(string filename, string destFileName, bool forceOverwri
     initialize_empty_file(dest_file_name, src_fv->get_nobservations(), src_fv->get_nvariables(), src_fv->getDataType(),true);
 
     filevector* dest_fv = new filevector(dest_file_name,1);
-    cout<< "Copying var/obs names...";
+    dbg<< "Copying var/obs names...";
     write_var_obs_names(src_fv, dest_fv);
 
     delete src_fv;
     delete dest_fv;
-    cout<< "done"<< endl;
+    dbg<< "done"<< nl;
 
     copy_data(src_data_file_name,dest_data_file_name,src_nvars,src_nobss,data_size);
-    cout<< "done"<< endl;
+    dbg<< "done"<< nl;
 }
 
 void Transposer::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
@@ -73,7 +73,7 @@ void Transposer::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
 void Transposer::copy_data(string src_data_file_name,string dest_data_file_name, unsigned long int src_nvars,
 unsigned long int src_nobss, unsigned int data_size)
 {
-  cout<< "Copying data..."<< src_nobss << "x"<< src_nvars << endl;
+  dbg<< "Copying data..."<< src_nobss << "x"<< src_nvars << nl;
 
   unsigned long int obs_pages = src_nobss / square_size;
   if(src_nobss % square_size > 0) obs_pages++;
@@ -100,7 +100,7 @@ unsigned long int src_nobss, unsigned int data_size)
           if((i + 1 )* square_size > src_nvars)
               var_length = src_nvars % square_size;
 
-//          cout << ">"<< obs_length << "x" << var_length << "^ " ;
+          dbg << ">"<< obs_length << "x" << var_length << "^ " << nl;
 
           char * data_part = new (nothrow) char[var_length*obs_length*data_size];
           if(!data_part) error("can not allocate memory for data_part");
@@ -114,7 +114,7 @@ unsigned long int src_nobss, unsigned int data_size)
           delete data_part;
           delete data_part_transposed;
       }
-      cout << endl;
+      dbg << nl;
   }
 
   src_stream->close();
@@ -122,7 +122,7 @@ unsigned long int src_nobss, unsigned int data_size)
   dest_stream->close();
   delete dest_stream;
 
-//  cout<< "data written" << endl;
+  dbg<< "data written" << nl;
 }
 
 
@@ -132,7 +132,7 @@ unsigned long int src_nobss, unsigned int data_size)
 void Transposer::read_part(ifstream * src_stream, char * data_part, unsigned long int obs_start , unsigned long int obs_length,
 unsigned long int var_start, unsigned long int var_length , unsigned int  data_size, unsigned long int src_obs_length )
 {
-//cout << "read_part"<<endl;
+    dbg << "read_part"<< nl;
 	for(unsigned long int i=0; i<var_length ;i++)
 	{
 	   //seek to the beginning of the next var

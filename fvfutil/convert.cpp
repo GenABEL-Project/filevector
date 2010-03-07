@@ -26,7 +26,7 @@ int main(int argc, char * argv[])
     string data_filename  =filename.substr(0,filename.length()-4) + FILEVECTOR_DATA_FILE_SUFFIX;
     string index_filename =filename.substr(0,filename.length()-4) + FILEVECTOR_INDEX_FILE_SUFFIX;
 
-    cout << "data:" << data_filename << ", index:" << index_filename << endl;
+    dbg << "data:" << data_filename << ", index:" << index_filename << nl;
 
     fr_type data_type;
 	struct stat filestatus;
@@ -71,7 +71,7 @@ int main(int argc, char * argv[])
      data_file.read(buffer,buf_len);
      new_index_file.write(buffer,buf_len);
 
-     cout<< "index copied, copying data..."<<endl;
+     dbg << "index copied, copying data..." << nl;
 
      //copy data
      while(!data_file.eof())
@@ -80,7 +80,7 @@ int main(int argc, char * argv[])
        new_data_file.write(buffer,data_file.gcount());
      }
 
-	 cout << "DONE" << endl;
+	 dbg << "DONE" << nl;
 
      data_file.close();
      new_data_file.close();

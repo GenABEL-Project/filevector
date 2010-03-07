@@ -7,7 +7,7 @@ using namespace std;
 #include "filevector.h"
 #include "frutil.h"
 
-void filevector::saveIndexFile(){
+void filevector::saveIndexFile() {
   index_file.seekp(0, ios::beg);
   index_file.write((char*)&data_type, sizeof(data_type));
   index_file.seekp(sizeof(data_type), ios::beg);
@@ -22,7 +22,7 @@ void filevector::saveIndexFile(){
 
 void filevector::free_resources()
 {
-  cout << "Closing filevector" << endl;
+  dbg << "Closing filevector" << nl;
   saveIndexFile();
   delete [] char_buffer;
   delete [] observation_names;
@@ -38,7 +38,7 @@ filevector::~filevector()
 
 void filevector::initialize(string filename_toload, unsigned long int cachesizeMb)
 {
-    cout << "Opening filevector " << filename_toload.c_str() << endl;
+    dbg << "Opening filevector " << filename_toload.c_str() << nl;
     if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported\n");
 
     index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;
@@ -110,7 +110,7 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 
     set_cachesizeMb(cachesizeMb);
     update_cache(0);
-    cout << "Filevector " << filename_toload << " opened." << endl;
+    dbg << "Filevector " << filename_toload << " opened." << nl;
 }
 
 unsigned long int filevector::get_cachesizeMb()
@@ -165,9 +165,9 @@ void filevector::update_cache(unsigned long int from_var)
 		current_cache_size_bytes = (in_cache_to-in_cache_from+1)*
 					   data_type.bytes_per_record*data_type.nobservations*sizeof(char);
 	}
-//	cout << "updating cache: " << in_cache_from << " - " << in_cache_to << "\n";
+//	dbg << "updating cache: " << in_cache_from << " - " << in_cache_to << "\n";
 	unsigned long int internal_from = in_cache_from*data_type.nobservations*data_type.bytes_per_record*sizeof(char);
-//	cout << "position = " << internal_from << "\n";
+//	dbg << "position = " << internal_from << "\n";
 	data_file.seekg(internal_from, ios::beg);
 	if (current_cache_size_bytes <= max_buffer_size_bytes) {
 		data_file.read((char*)char_buffer,current_cache_size_bytes);
@@ -278,7 +278,7 @@ void filevector::write_variable(unsigned long int nvar, void * datavec)
 	if (!data_file) error ("failed to write to data file\n");
 
 	//update data in cache
-//	cout << "var:"<< nvar << ",cache from :"<< in_cache_from << ", to: "<< in_cache_to  << endl;
+ 	dbg << "var:"<< nvar << ",cache from :"<< in_cache_from << ", to: "<< in_cache_to  << nl;
 
 	if (nvar >= in_cache_from && nvar <= in_cache_to)
 	{
@@ -464,8 +464,8 @@ void filevector::save(string new_file_name, unsigned long int nvars, unsigned lo
 void filevector::save_as_text(string new_file_name, unsigned long int nvars, unsigned long int nobss,
     unsigned long int * varindexes, unsigned long int * obsindexes) {
 
-    cout << "nvars = " << nvars << endl;
-    cout << "nobs = " << nobss << endl;
+    dbg << "nvars = " << nvars << nl;
+    dbg << "nobs = " << nobss << nl;
 
     ofstream textfile(new_file_name.c_str(), ios::out);
 
@@ -487,7 +487,7 @@ void filevector::save_as_text(string new_file_name, unsigned long int nvars, uns
 
 	for( unsigned long int i=0 ; i<nvars ; i++ )
     {
-        cout << "Writing var " << i << " of " << nvars <<endl; 
+        dbg << "Writing var " << i << " of " << nvars << nl;
 		unsigned long int selected_index = varindexes[i];
     	//write var names
     	fixedchar fc = read_variable_name(selected_index);

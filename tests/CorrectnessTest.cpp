@@ -26,17 +26,17 @@ void CorrectnessTest::testReadVariable() {
     string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose");
     AbstractMatrix *data =  new filevector( inputFile, 64 );
 
-    cout << "Reading file:" << inputFile << endl;
+    dbg << "Reading file:" << inputFile << nl;
 
     unsigned long numVariables = data->get_nvariables();
     unsigned long numObservations = data->get_nobservations();
 
-    cout << "Size is " << numVariables << " x " << numObservations << endl;
+    dbg << "Size is " << numVariables << " x " << numObservations << nl;
 
     float* tmpdat = new( nothrow ) float[numObservations];
     string sumFileName = inputFile + string(".fvf_varsum");
     ifstream sums(sumFileName.c_str());
-    cout << "Reading file: " << sumFileName << endl;
+    dbg << "Reading file: " << sumFileName << nl;
 
     CPPUNIT_ASSERT(sums.good());
 
@@ -45,7 +45,7 @@ void CorrectnessTest::testReadVariable() {
     for ( i = 0 ; i < numVariables ; i++ )
     {
       if (i%1000 == 0)
-        cout << i << endl;
+        dbg << i << nl;
       data->read_variable_as(i, tmpdat);
       float calcSumm, realSumm;
       sums >> realSumm;
@@ -57,7 +57,7 @@ void CorrectnessTest::testReadVariable() {
     delete[] tmpdat;
     delete data;
 
-    cout << "Finished" << endl;
+    dbg << "Finished" << nl;
 }
 
 
@@ -66,14 +66,14 @@ void CorrectnessTest::testRandomReadObservations(){
     string sumFileName = inputFile + string(".fvf_obssum");
     AbstractMatrix* data = new filevector ( inputFile, 64 );
 
-    cout << "Reading file:" << inputFile << endl;
+    dbg << "Reading file:" << inputFile << nl;
 
     unsigned long numVariables = data->get_nvariables();
     unsigned long numObservations = data->get_nobservations();
 
     float *tmpdat = new (nothrow) float[numVariables];
 
-    cout << "Size is " << numVariables << " x " << numObservations << endl;
+    dbg << "Size is " << numVariables << " x " << numObservations << nl;
 
     int numObservationsToTest = 10;
     int observationIdx[numObservationsToTest];
@@ -86,7 +86,7 @@ void CorrectnessTest::testRandomReadObservations(){
     }
 
     ifstream sums(sumFileName.c_str());
-    cout << "Reading sum file: " << sumFileName << endl;
+    dbg << "Reading sum file: " << sumFileName << nl;
 
     CPPUNIT_ASSERT(sums.good());
 
@@ -97,13 +97,13 @@ void CorrectnessTest::testRandomReadObservations(){
 
     for (i = 0 ; i < numObservationsToTest ; i++ )
 	{
-	    cout << i << "(" << observationIdx[i] << ")" << endl;
+	    dbg << i << "(" << observationIdx[i] << ")" << nl;
 	    //data.read_observation(observationIdx[i], tmpdat);
 	    float calcSumm;
 
 	    calcSumm = summData(tmpdat, numVariables);
-	    cout<<calcSumm<<endl;
-	    cout<<sumData[observationIdx[i]]<<endl;
+	    dbg<<calcSumm<<nl;
+	    dbg<<sumData[observationIdx[i]]<<nl;
 	    CPPUNIT_ASSERT(TestUtil::relativeDifference(calcSumm,sumData[observationIdx[i]]) < 1E-4);
 	}
 
@@ -112,7 +112,7 @@ void CorrectnessTest::testRandomReadObservations(){
 
     delete data;
 
-    cout << "Finished" << endl;
+    dbg << "Finished" << nl;
 }
 
 
@@ -124,7 +124,7 @@ void CorrectnessTest::testSubMatrix() {
     string obsFileName = TestUtil::get_base_dir() + fileName + string(".fvf_obsnames");
     string varFileName = TestUtil::get_base_dir() + fileName + string(".fvf_varnames");
 
-    cout << "obsFileName = " << obsFileName << endl;
+    dbg << "obsFileName = " << obsFileName << nl;
 
     AbstractMatrix *data = new filevector ( inputFile, 64 );
 
@@ -136,14 +136,14 @@ void CorrectnessTest::testSubMatrix() {
     CPPUNIT_ASSERT(obsNamesData.good());
     CPPUNIT_ASSERT(varNamesData.good());
 
-    cout << "Reading file:" << inputFile << endl;
+    dbg << "Reading file:" << inputFile << nl;
 
     unsigned long numVariables = data->get_nvariables();
     unsigned long numObservations = data->get_nobservations();
 
     unsigned long i, j;
 
-    cout << "Reading observations' names from " << obsFileName << endl;
+    dbg << "Reading observations' names from " << obsFileName << nl;
     map<string, unsigned long> obsToIdx;
     
     for (i=0; i<numObservations; i++) {
@@ -152,7 +152,7 @@ void CorrectnessTest::testSubMatrix() {
         obsToIdx[obsName] = i;
     }
 
-    cout << "Reading variables' names from " << varFileName << endl;
+    dbg << "Reading variables' names from " << varFileName << nl;
     map<string, unsigned long> varToIdx;
     for (i=0; i<numVariables; i++) {
         string varName;
@@ -163,7 +163,7 @@ void CorrectnessTest::testSubMatrix() {
     // indexes in order, specified in _submatrix file.
     vector<string> obsIdxesNames;
 
-    cout << "Matrix size is " << data->get_nobservations() << " x " << data->get_nvariables() << endl;
+    dbg << "Matrix size is " << data->get_nobservations() << " x " << data->get_nvariables() << nl;
 
     string obsNames;
 
@@ -171,7 +171,7 @@ void CorrectnessTest::testSubMatrix() {
 
     tokenize(obsNames, obsIdxesNames);
     
-    cout << "Submatrix width is:" << obsIdxesNames.size() << endl;
+    dbg << "Submatrix width is:" << obsIdxesNames.size() << nl;
 
     vector<unsigned long> obsIdexes;
 

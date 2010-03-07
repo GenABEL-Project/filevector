@@ -10,17 +10,18 @@
 #include <string>
 #include <cstring>
 
-#include<stdio.h>
+#include <stdio.h>
 
-#include "AbstractMatrix.h"
-#include "filevector.h"
-#include "Transposer.h"
+#include "../fvlib/AbstractMatrix.h"
+#include "../fvlib/filevector.h"
+#include "../fvlib/Transposer.h"
 #include "TestUtil.h"
 
 using namespace std;
 
 /*
-* This test is for correctness of filevector operations, while most of other thests are for performance testing
+* This test is for correctness of filevector operations, while most of other tests are
+ for performance testing
 */
 class TransposeTest : public CppUnit::TestFixture
 {

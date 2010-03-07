@@ -3,10 +3,10 @@
 
 using namespace std;
 
-    void TransposeTest::testTransposeSingleVar()
-    {
-       cout << "testTransposeSingleVar" << endl;
-       string src_file_name = TestUtil::get_temp_file_name();
+void TransposeTest::testTransposeSingleVar()
+{
+    dbg << "testTransposeSingleVar" << nl;
+    string src_file_name = TestUtil::get_temp_file_name();
 
 	   string dest_file_name = get_transposed_filename();
 	   remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
@@ -34,12 +34,12 @@ using namespace std;
 	   CPPUNIT_ASSERT_EQUAL(3, var_data[2]);
 
        delete fv_tr;
-	   cout << "end of Test" << endl << endl;
+	   dbg << "end of Test" << nl << nl;
     };
 
     void TransposeTest::testTransposeTwoVars()
     {
-       cout << "testTransposeTwoVars()" << endl;
+       dbg << "testTransposeTwoVars()" << nl;
        string src_file_name = TestUtil::get_temp_file_name();
 	   string dest_file_name = get_transposed_filename();
 	   remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
@@ -62,7 +62,7 @@ using namespace std;
 	   delete fv;
 	   Transposer tr;
 	   tr.process( src_file_name );
-       cout << "18" << endl;
+       dbg << "18" << nl;
 
 	   AbstractMatrix* fv_tr =  new filevector ( dest_file_name, 1 );
 	   CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->get_nvariables());

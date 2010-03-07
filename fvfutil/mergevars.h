@@ -5,10 +5,10 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "frversion.h"
-#include "frerror.h"
-#include "frutil.h"
-#include "filevector.h"
+#include "../fvlib/frversion.h"
+#include "../fvlib/frerror.h"
+#include "../fvlib/frutil.h"
+#include "../fvlib/filevector.h"
 
 #include "usage.h"
 
