@@ -36,7 +36,7 @@ unsigned long calcNumWordsInFirstLine(string fileName){
 	ifstream file(fileName.c_str());
 	vector<string> words;
 	string line;
-	unsigned long numlines = 0;
+//	unsigned long numlines = 0;
 	getline(file, line);
 	tokenize(line, words);
 	return words.size();
@@ -294,11 +294,11 @@ void text2fvf(string program_name, string infilename, string outfilename,
 
 	char * tmpstr;
 	if (!colNamesFilePresents && cnrow < 0) for (unsigned long int i=1;i<=numColumns;i++) {
-		sprintf(tmpstr,"%l",i);
+		sprintf(tmpstr,"%lu",i);
 		extColNames.push_back(tmpstr);
 	}
 	if (!rowNamesFilePresents && cnrow < 0) for (unsigned long int i=1;i<=numRows;i++) {
-		sprintf(tmpstr,"%l",i);
+		sprintf(tmpstr,"%lu",i);
 		extRowNames.push_back(tmpstr);
 	}
 	unsigned long i;
