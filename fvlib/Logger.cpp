@@ -1,6 +1,6 @@
 #include "Logger.h"
 
-Logger dbg(false);
+/*Logger dbg(true);
 Logger inf(true);
 Logger err(true);
-NewLine nl;
+NewLine nl;*/

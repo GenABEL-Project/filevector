@@ -4,7 +4,7 @@
 #include <iostream>
 
 using namespace std;
-
+/*
 class NewLine {};
 
 class Logger {
@@ -53,5 +53,10 @@ extern Logger dbg;
 extern Logger inf;
 extern Logger err;
 extern NewLine nl;
+*/
 
+#define dbg cout
+#define inf cout
+#define err cout
+#define nl endl
 #endif
