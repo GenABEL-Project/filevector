@@ -284,7 +284,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 
 			char buf[20] = "01234567";
 			parseStringToArbType(lineWords[i], type, buf);
-			out->write_element(rowCnt-1, colCnt, buf);
+			out->writeElement(rowCnt-1, colCnt, buf);
 			colCnt++;
 		}
 
@@ -303,11 +303,11 @@ void text2fvf(string program_name, string infilename, string outfilename,
 	}
 	unsigned long i;
 	for (i=0;i<extColNames.size();i++){
-		out->write_observation_name(i,extColNames[i]);
+		out->writeObservationName(i,extColNames[i]);
 	}
 
 	for (i=0;i<extRowNames.size();i++){
-		out->write_variable_name(i,extRowNames[i]);
+		out->writeVariableName(i,extRowNames[i]);
 	}
 
 	delete out;
@@ -546,7 +546,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 
             char buf[20] = "01234567";
             parseStringToArbType(lineWords[i], type, buf);
-            out->write_element(rowCnt, colCnt, buf);
+            out->writeElement(rowCnt, colCnt, buf);
             colCnt++;
         }
 
@@ -556,11 +556,11 @@ void text2fvf(string program_name, string infilename, string outfilename,
 
     unsigned long i;
     for (i=0;i<extColNames.size();i++){
-        out->write_observation_name(i,extColNames[i]);
+        out->writeObservationName(i,extColNames[i]);
     }
 
     for (i=0;i<extRowNames.size();i++){
-	out->write_variable_name(i,extRowNames[i]);
+	out->writeVariableName(i,extRowNames[i]);
     }
 
     delete out;

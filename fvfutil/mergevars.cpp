@@ -52,16 +52,16 @@ int main(int argc, char * argv[])
 	for (unsigned long int i=0;i<indata1.data_type.nvariables;i++)
 	{
 		outdata.variable_names[i] = indata1.variable_names[i];
-		indata1.read_variable(i,tmpdat);
-		outdata.write_variable(i,tmpdat);
+		indata1.readVariable(i,tmpdat);
+		outdata.writeVariable(i,tmpdat);
 	}
 	for (unsigned long int i=indata1.data_type.nvariables;
 	                  i<(indata1.data_type.nvariables+indata2.data_type.nvariables);
 		    	  i++) 
 	{
 		outdata.variable_names[i] = indata2.variable_names[i-indata1.data_type.nvariables];
-		indata2.read_variable(i-indata1.data_type.nvariables,tmpdat);
-		outdata.write_variable(i,tmpdat);
+		indata2.readVariable(i-indata1.data_type.nvariables,tmpdat);
+		outdata.writeVariable(i,tmpdat);
 	} 
 
 	return(1);

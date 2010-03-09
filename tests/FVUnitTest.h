@@ -12,7 +12,7 @@
 
 #include<stdio.h>
 
-#include "filevector.h"
+#include "../fvlib/filevector.h"
 #include "TestUtil.h"
 
 using namespace std;
@@ -25,14 +25,14 @@ class FVUnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE( FVUnitTest );
     CPPUNIT_TEST( testCacheUpdatedOnWrite );
 /*    CPPUNIT_TEST( test_write_variable_name );
-    CPPUNIT_TEST( test_write_observation_name );
+    CPPUNIT_TEST( test_writeObservationName );
     CPPUNIT_TEST( test_save );
     CPPUNIT_TEST( test_save_vars );
     CPPUNIT_TEST( test_save_obs );
     CPPUNIT_TEST( test_save_vars_obs );
-    CPPUNIT_TEST( test_set_cachesizeMb );
+    CPPUNIT_TEST( test_setCacheSizeMb );
     CPPUNIT_TEST( test_read_write_observation );
-    CPPUNIT_TEST( test_read_variable_convert_to );
+    CPPUNIT_TEST( test_readVariable_convert_to );
     CPPUNIT_TEST( test_add_variable );
     CPPUNIT_TEST( test_extract_base_file_name );*/
 
@@ -47,15 +47,15 @@ public:
         string file_name = get_file_name_to_write();
 
         AbstractMatrix *fv = new filevector( file_name, 2 );//no need in big cache
-        float * var = new float [fv->get_nobservations()];
-        fv->read_variable_as(0,var);
+        float * var = new float [fv->getNumObservations()];
+        fv->readVariableAs(0,var);
         float val = var[0];
         float newVal = val+1.;
         var[0] = newVal;
-        fv->write_variable_as(0,var);
+        fv->writeVariableAs(0,var);
 
-        float * var2 = new float [fv->get_nobservations()];
-        fv->read_variable_as(0,var2);
+        float * var2 = new float [fv->getNumObservations()];
+        fv->readVariableAs(0,var2);
 
         dbg<< "value from read():" << var2[0] << ",newVal: "<<newVal<< nl;
         CPPUNIT_ASSERT_EQUAL( var2[0] , newVal );
@@ -69,31 +69,31 @@ public:
         AbstractMatrix* fv = new filevector( file_name, 2 );//no need in big cache
         fixedchar _fc_varname_saved;
         strcpy(_fc_varname_saved.name,"testvarname");
-        fv->write_variable_name( 0, _fc_varname_saved );
+        fv->writeVariableName( 0, _fc_varname_saved );
 
-        fixedchar _fc_varname_loaded = fv->read_variable_name(0);
+        fixedchar _fc_varname_loaded = fv->readVariableName(0);
         CPPUNIT_ASSERT_EQUAL( string(_fc_varname_saved.name), string(_fc_varname_loaded.name) );
         delete fv;
 
         AbstractMatrix *fv2 = new filevector ( file_name, 2 );//reopen
-        _fc_varname_loaded = fv2->read_variable_name(0);
+        _fc_varname_loaded = fv2->readVariableName(0);
         CPPUNIT_ASSERT_EQUAL( string(_fc_varname_saved.name), string(_fc_varname_loaded.name) );
 
     }
-    void test_write_observation_name()
+    void test_writeObservationName()
     {
         string file_name = get_file_name_to_write();
         AbstractMatrix* fv = new filevector( file_name, 2 );//no need in big cache
         fixedchar _fc_obsname_saved;
         strcpy(_fc_obsname_saved.name,"testvarname");
-        fv->write_observation_name( 0, _fc_obsname_saved );
+        fv->writeObservationName( 0, _fc_obsname_saved );
 
-        fixedchar _fc_obsname_loaded = fv->read_observation_name(0);
+        fixedchar _fc_obsname_loaded = fv->readObservationName(0);
         CPPUNIT_ASSERT_EQUAL( string(_fc_obsname_saved.name), string(_fc_obsname_loaded.name) );
         delete fv;
 
         AbstractMatrix* fv2 = new filevector( file_name, 2 );//reopen
-        _fc_obsname_loaded = fv2->read_observation_name(0);
+        _fc_obsname_loaded = fv2->readObservationName(0);
         CPPUNIT_ASSERT_EQUAL( string(_fc_obsname_saved.name), string(_fc_obsname_loaded.name) );
     }
 
@@ -106,20 +106,20 @@ public:
         remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
         AbstractMatrix* fv =  new filevector ( src_file_name, 2 );//no need in big cache
-        fv->save( dest_file_name );
+        fv->saveAs( dest_file_name );
 
         AbstractMatrix* fv_copy = new filevector ( dest_file_name, 2 );
-        CPPUNIT_ASSERT_EQUAL(fv->get_nobservations(),fv_copy->get_nobservations());
-        CPPUNIT_ASSERT_EQUAL(fv->get_nvariables(),fv_copy->get_nvariables());
+        CPPUNIT_ASSERT_EQUAL(fv->getNumObservations(),fv_copy->getNumObservations());
+        CPPUNIT_ASSERT_EQUAL(fv->getNumVariables(),fv_copy->getNumVariables());
 
-        for(unsigned long int i=0;i<fv->get_nvariables();i++)
+        for(unsigned long int i=0;i<fv->getNumVariables();i++)
         {
-            CPPUNIT_ASSERT_EQUAL( string(fv->read_variable_name( i ).name),string(fv_copy->read_variable_name( i ).name));
+            CPPUNIT_ASSERT_EQUAL( string(fv->readVariableName( i ).name),string(fv_copy->readVariableName( i ).name));
         }
 
-        for(unsigned long int i=0;i<fv->get_nobservations();i++)
+        for(unsigned long int i=0;i<fv->getNumObservations();i++)
         {
-            CPPUNIT_ASSERT_EQUAL( string(fv->read_observation_name( i ).name),string(fv_copy->read_observation_name( i ).name));
+            CPPUNIT_ASSERT_EQUAL( string(fv->readObservationName( i ).name),string(fv_copy->readObservationName( i ).name));
         }
         delete fv;
     }
@@ -133,11 +133,11 @@ public:
 
         AbstractMatrix *fv = new filevector ( src_file_name, 64 );
         unsigned long int obs_indexes[2] =  {1,3};
-        fv->save_vars( dest_file_name, 2, obs_indexes );
+        fv->saveVariablesAs( dest_file_name, 2, obs_indexes );
 
         AbstractMatrix *fv_copy = new filevector( dest_file_name, 2 );
-        CPPUNIT_ASSERT_EQUAL(fv->get_nobservations(),fv_copy->get_nobservations());
-        CPPUNIT_ASSERT_EQUAL( (unsigned int )2 ,fv_copy->get_nvariables() );
+        CPPUNIT_ASSERT_EQUAL(fv->getNumObservations(),fv_copy->getNumObservations());
+        CPPUNIT_ASSERT_EQUAL( (unsigned int )2 ,fv_copy->getNumVariables() );
     }
 
     void test_save_obs()
@@ -148,19 +148,19 @@ public:
         remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
         AbstractMatrix *fv = new filevector( src_file_name, 64 );
-        unsigned int orig_nvars = fv->get_nvariables();
-        float * orig_var = new float [fv->get_nobservations()];
-        fv->read_variable_as(1, orig_var);
+        unsigned int orig_nvars = fv->getNumVariables();
+        float * orig_var = new float [fv->getNumObservations()];
+        fv->readVariableAs(1, orig_var);
 
         unsigned long int obs_indexes[2] =  {1,3};
-        fv->save_obs( dest_file_name, 2, obs_indexes );
+        fv->saveObservationsAs( dest_file_name, 2, obs_indexes );
         delete fv;
 
         AbstractMatrix* fv_copy = new filevector( dest_file_name, 2 );
-        CPPUNIT_ASSERT_EQUAL((unsigned int )2 ,fv_copy->get_nobservations());
-        CPPUNIT_ASSERT_EQUAL( orig_nvars ,fv_copy->get_nvariables() );
-        float * saved_var = new float [fv_copy->get_nobservations()];
-        fv_copy->read_variable_as(1, saved_var);
+        CPPUNIT_ASSERT_EQUAL((unsigned int )2 ,fv_copy->getNumObservations());
+        CPPUNIT_ASSERT_EQUAL( orig_nvars ,fv_copy->getNumVariables() );
+        float * saved_var = new float [fv_copy->getNumObservations()];
+        fv_copy->readVariableAs(1, saved_var);
         CPPUNIT_ASSERT_EQUAL( orig_var[1] ,saved_var[0] );
         CPPUNIT_ASSERT_EQUAL( orig_var[3] ,saved_var[1] );
 
@@ -184,19 +184,19 @@ public:
 
 		unsigned long int var_indexes[3] =  {1,7,18};
 		unsigned long int obs_indexes[2] =  {1,3};
-		fv->save( dest_file_name , 3, 2, var_indexes,obs_indexes);
+		fv->saveAs( dest_file_name , 3, 2, var_indexes,obs_indexes);
 
 		AbstractMatrix* fv_copy = new filevector( dest_file_name, 2 );
-        CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong number of variables in fv_copy", (unsigned int )3,fv_copy->get_nvariables());
-        CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong number of observations in fv_copy", (unsigned int )2 ,fv_copy->get_nobservations());
+        CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong number of variables in fv_copy", (unsigned int )3,fv_copy->getNumVariables());
+        CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong number of observations in fv_copy", (unsigned int )2 ,fv_copy->getNumObservations());
 
-        float * orig_var = new float [fv->get_nobservations()];
-        float * saved_var = new float [fv_copy->get_nobservations()];
+        float * orig_var = new float [fv->getNumObservations()];
+        float * saved_var = new float [fv_copy->getNumObservations()];
 
         for(int i = 0 ;i<3 ; i++ )
         {
-			fv->read_variable_as(var_indexes[i], orig_var);
-			fv_copy->read_variable_as(i, saved_var);
+			fv->readVariableAs(var_indexes[i], orig_var);
+			fv_copy->readVariableAs(i, saved_var);
         	for(int j = 0 ;j<2 ; j++ )
         	{
 				CPPUNIT_ASSERT_EQUAL( orig_var[obs_indexes[j]] ,saved_var[j] );
@@ -209,7 +209,7 @@ public:
         delete saved_var;
 	}
 
-    void test_set_cachesizeMb()
+    void test_setCacheSizeMb()
     {
         string src_file_name = get_file_name_to_write();
         filevector *fv = new filevector( src_file_name, 64 );
@@ -217,21 +217,21 @@ public:
         unsigned long int vars_capacity =11389 ;
         CPPUNIT_ASSERT_EQUAL( vars_capacity ,fv->cache_size_nvars );
 
-        float * var = new float [fv->get_nobservations()];
-        fv->read_variable(0,var);
+        float * var = new float [fv->getNumObservations()];
+        fv->readVariable(0,var);
         CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv->in_cache_from );
         CPPUNIT_ASSERT_EQUAL( vars_capacity-1, fv->in_cache_to );
 
 
-        fv->set_cachesizeMb(1);
+        fv->setCacheSizeInMb(1);
         CPPUNIT_ASSERT_EQUAL((unsigned long int )177 ,fv->cache_size_nvars );
         CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv->in_cache_from );
         CPPUNIT_ASSERT_EQUAL((unsigned long int )0 ,fv->in_cache_to );
 
-        fv->read_variable(fv->get_nvariables() - 1,var);
+        fv->readVariable(fv->getNumVariables() - 1,var);
 
-        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv->get_nvariables() - 1,fv->in_cache_from );
-        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv->get_nvariables() - 1,fv->in_cache_to );
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv->getNumVariables() - 1,fv->in_cache_from );
+        CPPUNIT_ASSERT_EQUAL((unsigned long int )fv->getNumVariables() - 1,fv->in_cache_to );
 
         delete var;
     }
@@ -245,23 +245,23 @@ public:
         TestUtil::create_empty_filevector(tmp_file_name.c_str(), nvariables, nobservations);
 		AbstractMatrix* fv = new filevector( tmp_file_name, 1 );
 
-        float * var1 = new float [fv->get_nvariables()];
-        float * var2 = new float [fv->get_nvariables()];
+        float * var1 = new float [fv->getNumVariables()];
+        float * var2 = new float [fv->getNumVariables()];
         int i;
-        for(i = 0; i<fv->get_nvariables(); i++)
+        for(i = 0; i<fv->getNumVariables(); i++)
         {
             var1[i] = i;
 		}
 
-        fv->write_observation(2, var1);
-        fv->read_observation(2, var2);
+        fv->writeObservation(2, var1);
+        fv->readObservation(2, var2);
 
-        CPPUNIT_ASSERT( TestUtil::compare_arrays(var1, var2, fv->get_nobservations()));
+        CPPUNIT_ASSERT( TestUtil::compare_arrays(var1, var2, fv->getNumObservations()));
         delete fv;
 
 		//reopen file and check
 		AbstractMatrix* fv2 = new filevector( tmp_file_name, 1 );
-		fv2->read_observation(2,var2);
+		fv2->readObservation(2,var2);
 		CPPUNIT_ASSERT( TestUtil::compare_arrays(var1, var2 , nvariables));
         delete fv2;
 
@@ -270,7 +270,7 @@ public:
 	}
 
 
-    void test_read_variable_convert_to()
+    void test_readVariable_convert_to()
 	{
 
 		unsigned long int nvariables =10;
@@ -280,15 +280,15 @@ public:
 
 		AbstractMatrix* fv = new filevector( tmp_file_name, 1 );
 
-		float * var = new float [fv->get_nobservations()];
-		for(int i = 0; i<fv->get_nobservations(); i++)
+		float * var = new float [fv->getNumObservations()];
+		for(int i = 0; i<fv->getNumObservations(); i++)
         {
             var[i] = i + (float)i/10;
 		}
-		fv->write_variable_as(1,var);
+		fv->writeVariableAs(1,var);
 
-		int * int_var = new int[fv->get_nobservations()];
-		fv->read_variable_as(1,int_var);
+		int * int_var = new int[fv->getNumObservations()];
+		fv->readVariableAs(1,int_var);
 
 		CPPUNIT_ASSERT_EQUAL(0, int_var[0]);
 		CPPUNIT_ASSERT_EQUAL(1, int_var[1]);
@@ -303,28 +303,28 @@ public:
 		string tempFileName = TestUtil::get_temp_file_name();
 		TestUtil::create_empty_filevector(tempFileName,10,20);
 		AbstractMatrix* fv = new filevector( tempFileName, 1 );
-		float * var = new float [fv->get_nobservations()];
-		TestUtil::create_and_fill_variable(fv->get_nobservations(),var);
+		float * var = new float [fv->getNumObservations()];
+		TestUtil::create_and_fill_variable(fv->getNumObservations(),var);
 
         string varname = "added";
         string varname2 = "added2";
-		fv->add_variable_as(var,varname);
-		fv->add_variable_as(var,varname2);
+		fv->addVariableAs(var,varname);
+		fv->addVariableAs(var,varname2);
 
-		CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv->get_nvariables());
-		fixedchar _fc_varname_loaded = fv->read_variable_name(10);
+		CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv->getNumVariables());
+		fixedchar _fc_varname_loaded = fv->readVariableName(10);
         CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
-        _fc_varname_loaded = fv->read_variable_name(11);
+        _fc_varname_loaded = fv->readVariableName(11);
         CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
         delete fv;
 
         tempFileName = TestUtil::get_temp_file_name();
         AbstractMatrix* fv2 = new filevector( tempFileName, 1 );
 
-        CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv2->get_nvariables());
-		_fc_varname_loaded = fv2->read_variable_name(10);
+        CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv2->getNumVariables());
+		_fc_varname_loaded = fv2->readVariableName(10);
         CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
-        _fc_varname_loaded = fv2->read_variable_name(11);
+        _fc_varname_loaded = fv2->readVariableName(11);
         CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
         delete fv2;
 	}

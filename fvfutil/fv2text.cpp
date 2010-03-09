@@ -84,18 +84,18 @@ int main(int argc, char* argv[])
 	    out << "X ";
     }
     
-    for (col=0; col<fv.get_nobservations(); col++){
-	    out << fv.read_observation_name(col).name << " ";
+    for (col=0; col<fv.getNumObservations(); col++){
+	    out << fv.readObservationName(col).name << " ";
     }
     
     out << endl;
 	
-    for (row=0; row<fv.get_nvariables(); row++){
-	    out << fv.read_variable_name(row).name << " ";
-        for (col=0; col<fv.get_nobservations(); col++){
+    for (row=0; row<fv.getNumVariables(); row++){
+	    out << fv.readVariableName(row).name << " ";
+        for (col=0; col<fv.getNumObservations(); col++){
     	    char data[200];
-    	    fv.read_element(row, col, data);
-    	    string elem = bufToString(fv.getDataType(), data);    	        	    
+    	    fv.readElement(row, col, data);
+    	    string elem = bufToString(fv.getElementType(), data);
 	        out << elem << " ";
 	    }
 	    out << endl;

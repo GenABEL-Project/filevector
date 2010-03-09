@@ -21,14 +21,14 @@ void TransposeTest::testTransposeSingleVar()
 	   var_data[0] = 1;
 	   var_data[1] = 2;
 	   var_data[2] = 3;
-	   fv->write_variable_as(0,var_data);
+	   fv->writeVariableAs(0,var_data);
 	   delete fv;
 
 	   Transposer tr;
 	   tr.process( src_file_name );
 
 	   AbstractMatrix* fv_tr =  new filevector ( dest_file_name, 1 );
-       fv_tr->read_observation(0,var_data);
+       fv_tr->readObservation(0,var_data);
 	   CPPUNIT_ASSERT_EQUAL(1, var_data[0]);
 	   CPPUNIT_ASSERT_EQUAL(2, var_data[1]);
 	   CPPUNIT_ASSERT_EQUAL(3, var_data[2]);
@@ -54,30 +54,30 @@ void TransposeTest::testTransposeSingleVar()
 	   var_data[0] = 1;
 	   var_data[1] = 2;
 	   var_data[2] = 3;
-	   fv->write_variable_as(0,var_data);
+	   fv->writeVariableAs(0,var_data);
 	   var_data[0] = 4;
 	   var_data[1] = 5;
 	   var_data[2] = 6;
-	   fv->write_variable_as(1,var_data);
+	   fv->writeVariableAs(1,var_data);
 	   delete fv;
 	   Transposer tr;
 	   tr.process( src_file_name );
        dbg << "18" << nl;
 
 	   AbstractMatrix* fv_tr =  new filevector ( dest_file_name, 1 );
-	   CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->get_nvariables());
-	   CPPUNIT_ASSERT_EQUAL((unsigned int)2, fv_tr->get_nobservations());
+	   CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->getNumVariables());
+	   CPPUNIT_ASSERT_EQUAL((unsigned int)2, fv_tr->getNumObservations());
 
        int var[2];
-       fv_tr->read_variable_as(0,var);
+       fv_tr->readVariableAs(0,var);
 	   CPPUNIT_ASSERT_EQUAL(1, var[0]);
 	   CPPUNIT_ASSERT_EQUAL(4, var[1]);
 
-	   fv_tr->read_variable_as(1,var);
+	   fv_tr->readVariableAs(1,var);
 	   CPPUNIT_ASSERT_EQUAL(2, var[0]);
 	   CPPUNIT_ASSERT_EQUAL(5, var[1]);
 
-	   fv_tr->read_variable_as(2,var);
+	   fv_tr->readVariableAs(2,var);
 	   CPPUNIT_ASSERT_EQUAL(3, var[0]);
 	   CPPUNIT_ASSERT_EQUAL(6, var[1]);
 

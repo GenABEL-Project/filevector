@@ -12,15 +12,13 @@ string TestUtil::base_dir;
 
 void TestUtil::detect_base_dir(string binpath)
 {
-    //dbg << "binary path:" << binpath <<endl;
     size_t slashpos;
-    slashpos =  binpath.find_last_of("/");
-    dbg << "slashpos:" << slashpos << nl;
-    if (slashpos == string::npos)
+    slashpos = binpath.find_last_of("/");
+    if (slashpos == string::npos) {
         error("cannot find slash in path to binary file");
+    }
 
-    string basedir = binpath.substr(0,slashpos);
-    dbg << "basedir :" << basedir << nl;
+    string basedir = binpath.substr(0, slashpos);
 
     TestUtil::base_dir = basedir;
 }

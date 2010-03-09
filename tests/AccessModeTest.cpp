@@ -25,7 +25,7 @@ void AccessModeTest::testReadOnly() {
 
     AbstractMatrix * f = new filevector(fileName, 1);
     int p = 0;
-    f->write_element_as(1, 1, p);
+    f->writeElementAs(1, 1, p);
 
     delete f;
 }

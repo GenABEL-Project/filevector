@@ -29,29 +29,29 @@ public:
         string file_name = get_file_name_to_write();
         dbg << "full path:" << get_file_name_to_write() << nl;
         AbstractMatrix* fv = new filevector ( file_name, 64 );
-        dbg << "fv.get_nvariables():" << fv->get_nvariables() << "\n";
-        CPPUNIT_ASSERT(fv->get_nvariables() == 33815 );
+        dbg << "fv.getNumVariables():" << fv->getNumVariables() << "\n";
+        CPPUNIT_ASSERT(fv->getNumVariables() == 33815 );
 
-        int var_write_count = fv->get_nvariables() / 1000;
-        int el_write_count = fv->get_nobservations() / 10;
+        int var_write_count = fv->getNumVariables() / 1000;
+        int el_write_count = fv->getNumObservations() / 10;
 
         dbg << "writing random data to variables\n";
         for (int i=0;i<var_write_count;i++)
         {
-            int var_num = (rand()%fv->get_nvariables())+1; //random number of variable in the file
-            float * tmpdat = new (std::nothrow) float [fv->get_nobservations()];
-            fv->write_variable_as( var_num, tmpdat);
+            int var_num = (rand()%fv->getNumVariables())+1; //random number of variable in the file
+            float * tmpdat = new (std::nothrow) float [fv->getNumObservations()];
+            fv->writeVariableAs( var_num, tmpdat);
             delete tmpdat;
         }
         dbg << "wrote "<< var_write_count <<" variables\n";
 
-        dbg << "writing random data using write_element()\n";
+        dbg << "writing random data using writeElement()\n";
         for (int i=0;i<el_write_count;i++)
         {
-            int var_num = (rand()%fv->get_nvariables())+1;
-            int obs_num = (rand()%fv->get_nobservations())+1;
+            int var_num = (rand()%fv->getNumVariables())+1;
+            int obs_num = (rand()%fv->getNumObservations())+1;
             float tmp_elem = TestUtil::random_float();
-            fv->write_element_as( var_num, obs_num, tmp_elem);
+            fv->writeElementAs( var_num, obs_num, tmp_elem);
         }
         dbg << "wrote "<< el_write_count <<" elements\n";
 

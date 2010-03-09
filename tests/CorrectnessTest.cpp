@@ -9,7 +9,7 @@
 #include "CorrectnessTest.h"
 #include "TestUtil.h"
 
-#include "filevector.h"
+#include "../fvlib/filevector.h"
 
 using namespace std;
 
@@ -28,8 +28,8 @@ void CorrectnessTest::testReadVariable() {
 
     dbg << "Reading file:" << inputFile << nl;
 
-    unsigned long numVariables = data->get_nvariables();
-    unsigned long numObservations = data->get_nobservations();
+    unsigned long numVariables = data->getNumVariables();
+    unsigned long numObservations = data->getNumObservations();
 
     dbg << "Size is " << numVariables << " x " << numObservations << nl;
 
@@ -46,7 +46,7 @@ void CorrectnessTest::testReadVariable() {
     {
       if (i%1000 == 0)
         dbg << i << nl;
-      data->read_variable_as(i, tmpdat);
+      data->readVariableAs(i, tmpdat);
       float calcSumm, realSumm;
       sums >> realSumm;
 	    
@@ -68,8 +68,8 @@ void CorrectnessTest::testRandomReadObservations(){
 
     dbg << "Reading file:" << inputFile << nl;
 
-    unsigned long numVariables = data->get_nvariables();
-    unsigned long numObservations = data->get_nobservations();
+    unsigned long numVariables = data->getNumVariables();
+    unsigned long numObservations = data->getNumObservations();
 
     float *tmpdat = new (nothrow) float[numVariables];
 
@@ -98,7 +98,7 @@ void CorrectnessTest::testRandomReadObservations(){
     for (i = 0 ; i < numObservationsToTest ; i++ )
 	{
 	    dbg << i << "(" << observationIdx[i] << ")" << nl;
-	    //data.read_observation(observationIdx[i], tmpdat);
+	    //data.readObservation(observationIdx[i], tmpdat);
 	    float calcSumm;
 
 	    calcSumm = summData(tmpdat, numVariables);
@@ -138,8 +138,8 @@ void CorrectnessTest::testSubMatrix() {
 
     dbg << "Reading file:" << inputFile << nl;
 
-    unsigned long numVariables = data->get_nvariables();
-    unsigned long numObservations = data->get_nobservations();
+    unsigned long numVariables = data->getNumVariables();
+    unsigned long numObservations = data->getNumObservations();
 
     unsigned long i, j;
 
@@ -163,7 +163,7 @@ void CorrectnessTest::testSubMatrix() {
     // indexes in order, specified in _submatrix file.
     vector<string> obsIdxesNames;
 
-    dbg << "Matrix size is " << data->get_nobservations() << " x " << data->get_nvariables() << nl;
+    dbg << "Matrix size is " << data->getNumObservations() << " x " << data->getNumVariables() << nl;
 
     string obsNames;
 
@@ -192,7 +192,7 @@ void CorrectnessTest::testSubMatrix() {
 	        float matrixElem;
 	        float submatrixElem;
 	        submatrixElem = atof(subMatrixElements[i+1].c_str());
-	        data->read_element_as(varIdx, obsIdexes[i], matrixElem);
+	        data->readElementAs(varIdx, obsIdexes[i], matrixElem);
 	        float relDiff = TestUtil::relativeDifference(matrixElem, submatrixElem);
 	        CPPUNIT_ASSERT( relDiff = 0./0. || relDiff < 1E-4 );
 	    }

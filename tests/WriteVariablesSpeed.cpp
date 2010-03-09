@@ -1,5 +1,5 @@
 /* Generate 2,500,000 variables of length 10,000 (random), assign names (vars: rs1-rs2500000, obs: id1-id10000),
-Use initialize_empty_file()/write_variable() for 2,000,000 and top up with add_variable() to 2,500,000.
+Use initialize_empty_file()/writeVariable() for 2,000,000 and top up with addVariable() to 2,500,000.
 Select 2,500 random variables,  */
 #include <sstream>
 
@@ -37,14 +37,14 @@ int main(int argc, char * argv[])
 	initialize_empty_file( (char *)filename.c_str(), nvars, nobs, FLOAT, true);
 	filevector fv(filename,cache_size);
 
-    float * tmp = new float[fv.get_nobservations()];
-	for(int i=0;i<fv.get_nvariables();i++)
+    float * tmp = new float[fv.getNumObservations()];
+	for(int i=0;i<fv.getNumVariables();i++)
 	{
-	    fv.write_variable(i, tmp);
-	    fv.write_variable_name(i,fixedchar("original"));
+	    fv.writeVariable(i, tmp);
+	    fv.writeVariableName(i,fixedchar("original"));
 	    if( i % 10000 == 0 )
 		{
-			dbg << "Wrote:"<< i << "/" << fv.get_nvariables() << " variables " << nl;
+			dbg << "Wrote:"<< i << "/" << fv.getNumVariables() << " variables " << nl;
 		}
 	}
 
@@ -54,7 +54,7 @@ int main(int argc, char * argv[])
 		stringstream ss (stringstream::in | stringstream::out);
 		ss << "added"<<i;
 
-	    fv.add_variable( tmp, ss.str() );
+	    fv.addVariable( tmp, ss.str() );
 	    if( i % 10000 == 0 )
 		{
 			dbg << "Added:"<< i << "/" << to_add << " variables " << nl;

@@ -14,115 +14,97 @@ public:
     virtual ~AbstractMatrix(){};
 
     template <class DT>
-    void write_variable_as(unsigned long int nvar, DT * outvec)
+    void writeVariableAs(unsigned long int nvar, DT * outvec)
     {
-        char* tmp = new (nothrow) char [get_nobservations()*getDataSize()];
+        char* tmp = new (nothrow) char [getNumObservations()*getElementSize()];
         if(!tmp)
-            error("write_variable_as allocation error");
-        for(int i = 0; i< get_nobservations();i++){
-            performCast(&tmp[i*getDataSize()],outvec[i],getDataType());
+            error("writeVariableAs allocation error");
+        for(int i = 0; i< getNumObservations();i++){
+            performCast(&tmp[i*getElementSize()],outvec[i],getElementType());
         }
-        write_variable(nvar, tmp);
+        writeVariable(nvar, tmp);
         delete[] tmp;
     }
 
     template <class DT>
-    void add_variable_as(DT * outvec, string varname)
+    void addVariableAs(DT * outvec, string varname)
     {
-        char* tmp = new (nothrow) char [get_nobservations()*getDataSize()];
+        char* tmp = new (nothrow) char [getNumObservations()*getElementSize()];
         if(!tmp)
             error("add_variable_as allocation error");
-        for(int i = 0; i< get_nobservations();i++){
-            performCast(&tmp[i*getDataSize()],outvec[i],getDataType());
+        for(int i = 0; i< getNumObservations();i++){
+            performCast(&tmp[i*getElementSize()],outvec[i],getElementType());
         }
-        add_variable (tmp, varname);
+        addVariable (tmp, varname);
         delete[] tmp;
     }
 
     template<class DT>
-    void read_variable_as(unsigned long int nvar, DT * outvec)
+    void readVariableAs(unsigned long int nvar, DT * outvec)
     {
-       char * tmp = new (nothrow) char[get_nobservations()*getDataSize()];
-       read_variable(nvar, tmp);
-       for(int i = 0; i< get_nobservations();i++) {
-            performCast(outvec[i],&tmp[i*getDataSize()],getDataType());
+       char * tmp = new (nothrow) char[getNumObservations()*getElementSize()];
+       readVariable(nvar, tmp);
+       for(int i = 0; i< getNumObservations();i++) {
+            performCast(outvec[i],&tmp[i*getElementSize()],getElementType());
        }
        delete[] tmp;
     }
 
-    void read_element_as(unsigned long varNumber, unsigned long obsNumber, float& element){
-        char *ret= new char [getDataSize()];
-        read_element(varNumber, obsNumber, ret);
-        performCast(element, ret, getDataType());
+    void readElementAs(unsigned long varNumber, unsigned long obsNumber, float& element){
+        char *ret= new char [getElementSize()];
+        readElement(varNumber, obsNumber, ret);
+        performCast(element, ret, getElementType());
         delete [] ret;
     }
 
     template <class DT>
-    void write_element_as(unsigned long varNumber, unsigned long obsNumber, DT& element){
-       char *ret= new char [getDataSize()];
-       performCast(ret, element, getDataType());
-       write_element(varNumber, obsNumber, ret);
+    void writeElementAs(unsigned long varNumber, unsigned long obsNumber, DT& element){
+       char *ret= new char [getElementSize()];
+       performCast(ret, element, getElementType());
+       writeElement(varNumber, obsNumber, ret);
        delete [] ret;
     }
 
-    virtual unsigned int get_nvariables() = 0;
-    virtual unsigned int get_nobservations() = 0;
+    virtual unsigned int getNumVariables() = 0;
+    virtual unsigned int getNumObservations() = 0;
 
-	virtual void save( string new_file_name ) = 0;
-  	/*
-    * Save specified vars to new file
-	*/
-	virtual void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes) = 0;
-	/*
-    * Save specified observations to new file
-  	*/
-   	virtual void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes) = 0;
+	virtual void saveAs( string newFilename ) = 0;
+	virtual void saveVariablesAs( string newFilename, unsigned long int nvars, unsigned long int * varindexes) = 0;
+   	virtual void saveObservationsAs( string newFilename, unsigned long int nobss, unsigned long int * obsindexes) = 0;
 
-    virtual void save(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes) = 0;
-    virtual void save_as_text(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes) = 0;
+    virtual void saveAs(string newFilename, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes) = 0;
+    virtual void saveAsText(string newFilename, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes) = 0;
 
-    //virtual void add_variable(void * invec, fixedchar varname) = 0; // adds variable at the end = write_variable with nvar=NVARS?
-    // loooong future -- control that name is unique!
-    virtual void read_observation(unsigned long int nobs, void * outvec) = 0;
-    virtual void write_observation(unsigned long int nobs, void * invec) = 0;
+    virtual void readObservation(unsigned long int nobs, void * outvec) = 0;
+    virtual void writeObservation(unsigned long int nobs, void * invec) = 0;
 
-    virtual void write_variable_name(unsigned long int nvar, fixedchar newname) = 0;  // todo loooong future -- control that name is unique
-    virtual void write_observation_name(unsigned long int nobs, fixedchar newname)= 0;  //todo loooong future -- control that name is unique!
+    virtual void writeVariableName(unsigned long int nvar, fixedchar newname) = 0;  // todo loooong future -- control that name is unique
+    virtual void writeObservationName(unsigned long int nobs, fixedchar newname)= 0;  //todo loooong future -- control that name is unique!
 
-// HIGH -- here I see the possibility to make these functions faster then "random" access functions
+    virtual unsigned long int getCacheSizeInMb() = 0;
+    virtual void setCacheSizeInMb( unsigned long int cachesizeMb ) = 0;
 
-    // changing cache size on the fly
-    virtual unsigned long int get_cachesizeMb() = 0;
-    virtual void set_cachesizeMb( unsigned long int cachesizeMb ) = 0;
-
-    virtual fixedchar read_observation_name(unsigned long int nobs) = 0;
-    virtual fixedchar read_variable_name(unsigned long int nvar) = 0;
+    virtual fixedchar readObservationName(unsigned long int nobs) = 0;
+    virtual fixedchar readVariableName(unsigned long int nvar) = 0;
 
     virtual void setUpdateNamesOnWrite(bool bUpdate) = 0;
 
 private:
-    // can read single variable
-	virtual void read_variable(unsigned long int nvar, void * outvec) = 0;
-
-    // should only be used for reading single random elements!
-	virtual void read_element(unsigned long int nvar, unsigned long int nobs, void * elem) = 0;
-
-	// write single variable
-	virtual void write_variable(unsigned long int nvar, void * datavec) = 0;
+	virtual void readVariable(unsigned long int nvar, void * outvec) = 0;
+	virtual void readElement(unsigned long int nvar, unsigned long int nobs, void * elem) = 0;
+	virtual void writeVariable(unsigned long int nvar, void * datavec) = 0;
 
     // HIGH -- here I see the possibility to make these functions faster then "random" access functions
-    // adds variable at the end = write_variable with nvar=NVARS?
+    // adds variable at the end = writeVariable with nvar=NVARS?
 	// todo loooong future -- control that name is unique!
-    virtual void add_variable(void * invec, string varname) = 0;
-    // todo later
+    virtual void addVariable(void * invec, string varname) = 0;
     //    virtual void add_observation(void * invec, string obsname) = 0;
-
     // write single element
     // CURRENTLY CACHE IS NOT UPDATED!
-	virtual void write_element(unsigned long int nvar, unsigned long int nobs, void * data) = 0;
+	virtual void writeElement(unsigned long int nvar, unsigned long int nobs, void * data) = 0;
 
-	virtual short unsigned getDataSize() = 0;
-	virtual short unsigned getDataType() = 0;
+	virtual short unsigned getElementSize() = 0;
+	virtual short unsigned getElementType() = 0;
 };
 
 #endif

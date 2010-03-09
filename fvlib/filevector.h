@@ -99,55 +99,52 @@ public:
 	unsigned long int nrnc_to_nelem(unsigned long int nvar, unsigned long int nobs);
 
 	// getting and setting var/col names
-	void write_variable_name(unsigned long int nvar, fixedchar name);
-	void write_observation_name(unsigned long int nobs, fixedchar name);
+	void writeVariableName(unsigned long int nvar, fixedchar name);
+	void writeObservationName(unsigned long int nobs, fixedchar name);
 
-	virtual unsigned int get_nvariables();
-	virtual unsigned int get_nobservations();
+	virtual unsigned int getNumVariables();
+	virtual unsigned int getNumObservations();
 
-	fixedchar read_variable_name(unsigned long int nvar);
-	fixedchar read_observation_name(unsigned long int nobs);
+	fixedchar readVariableName(unsigned long int nvar);
+	fixedchar readObservationName(unsigned long int nobs);
 
 	// USER FUNCTIONS
 	// can read single variable
-	void read_variable(unsigned long int nvar, void * outvec);
+	void readVariable(unsigned long int nvar, void * outvec);
 
-	void add_variable(void * invec, string varname);
+	void addVariable(void * invec, string varname);
 
 	// should only be used for reading single random elements!
-	void read_element(unsigned long int nvar, unsigned long int nobs, void * data);
-	// write single variable
-	void write_variable(unsigned long int nvar, void * datavec);
-	//	void add_variable(DT * invec, fixedchar varname);
-	// write single element
-	void write_element(unsigned long int nvar, unsigned long int nobs, void * data);
+	void readElement(unsigned long int nvar, unsigned long int nobs, void * data);
+	void writeVariable(unsigned long int nvar, void * datavec);
+	void writeElement(unsigned long int nvar, unsigned long int nobs, void * data);
 
-	void read_observation(unsigned long int nobs, void * outvec);
-	void write_observation(unsigned long int nobs, void * outvec);
+	void readObservation(unsigned long int nobs, void * outvec);
+	void writeObservation(unsigned long int nobs, void * outvec);
 
-	void save( string new_file_name );
-	void save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes);
-	void save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes);
-	void save(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes);
-	void save_as_text(string new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes);
+	void saveAs( string newFilename );
+	void saveVariablesAs( string newFilename, unsigned long int nvars, unsigned long int * varindexes);
+	void saveObservationsAs( string newFilename, unsigned long int nobss, unsigned long int * obsindexes);
+	void saveAs(string newFilename, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes);
+	void saveAsText(string newFilename, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes);
 
-	unsigned long int get_cachesizeMb();
-	void set_cachesizeMb( unsigned long int cachesizeMb );
+	unsigned long int getCacheSizeInMb();
+	void setCacheSizeInMb( unsigned long int cachesizeMb );
 
-	virtual short unsigned getDataSize();
-	virtual short unsigned getDataType();
+	virtual short unsigned getElementSize();
+	virtual short unsigned getElementType();
 	void saveIndexFile();
 
 	virtual void setUpdateNamesOnWrite(bool bUpdate);
 
 	// FOR FUTURE:
 	// very slow one!
-	//	DT * read_observation(unsigned long int nobs);
+	//	DT * readObservation(unsigned long int nobs);
 	// should only be used for reading single random elements!
-	//	DT read_element(unsigned long int nelment);
+	//	DT readElement(unsigned long int nelment);
 private :
-	void copy_variable(char * to, char * from, int n, unsigned long int * indexes );
-	void free_resources();
+	void copyVariable(char * to, char * from, int n, unsigned long int * indexes );
+	void freeResources();
 
 };
 

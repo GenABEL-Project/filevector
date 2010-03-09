@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <vector>
+
 #include "frerror.h"
 #include "const.h"
 
@@ -38,6 +39,7 @@ public:
 		for (int i=0;i<RESERVEDSPACE;i++) reserved[i]=0;
 	}
 	~fr_type() {}
+
 	void print() {
 		std::cout << "type = " << type << "; nelements = " << nelements << "; nobservations = " 
 		          << nobservations << "; nvariables = " << nvariables << "; bits_per_record = " 

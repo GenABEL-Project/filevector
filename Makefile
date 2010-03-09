@@ -21,7 +21,6 @@ TRANSPOSE = $(BINDIR)/transpose
 UNITTEST = $(BINDIR)/fvunittest
 TRANSPOSETEST = $(BINDIR)/transposetest
 
-
 # GNU compiler
 CPP = g++
 # use for Solaris
@@ -48,9 +47,6 @@ $(FV2TEXT): $(LIBFILES) $(REGFILES) $(SRCDIR)/fv2text.cpp
 
 $(MERGEVARS): $(LIBFILES) $(REGFILES) $(SRCDIR)/mergevars.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/usage.cpp $(SRCDIR)/text2fvf.cpp $(SRCDIR)/mergevars.cpp -o $(MERGEVARS)
-
-#$(RSHLIB): $(LIBFILES) $(SRCDIR)/Rstaff.cpp $(SRCDIR)/Rstaff.h
-#	R CMD SHLIB $(SRCDIR)/Rstaff.cpp $(LIBDIR)/*.cpp $(CFLAGS) -o $(RSHLIB)
 
 fvfutildis: clean
 	cd ..; tar cvf filevector_$(VERSION).tar filevector_$(VERSION); gzip filevector_$(VERSION).tar

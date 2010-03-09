@@ -11,16 +11,14 @@ void filevector::saveIndexFile() {
   index_file.seekp(0, ios::beg);
   index_file.write((char*)&data_type, sizeof(data_type));
   index_file.seekp(sizeof(data_type), ios::beg);
-// may be have to fix: is the buffer always enough???
   if (sizeof(fixedchar)*data_type.nobservations > INT_MAX) error("sizeof(fixedchar)*data_type.nobservations > INT_MAX\n\n");
   index_file.write((char*)observation_names, sizeof(fixedchar)*data_type.nobservations);
   index_file.seekp(sizeof(data_type)+sizeof(fixedchar)*data_type.nobservations, ios::beg);
-// may be have to fix: is the buffer always enough???
   if (sizeof(fixedchar)*data_type.nvariables > INT_MAX) error("sizeof(fixedchar)*data_type.nvariables > INT_MAX\n\n");
   index_file.write((char*)variable_names,sizeof(fixedchar)*data_type.nvariables);
 }
 
-void filevector::free_resources()
+void filevector::freeResources()
 {
   dbg << "Closing filevector" << nl;
   saveIndexFile();
@@ -33,29 +31,30 @@ void filevector::free_resources()
 
 filevector::~filevector()
 {
-    free_resources();
+    freeResources();
 }
 
 void filevector::initialize(string filename_toload, unsigned long int cachesizeMb)
 {
-    dbg << "Opening filevector " << filename_toload.c_str() << nl;
+    dbg << "Opening filevector '" << filename_toload.c_str() <<"'."<< nl;
+
     if (sizeof(unsigned long int) != 8) warning("you appear to work on 32-bit system... large files not supported\n");
 
     index_filename = extract_base_file_name(filename_toload) + FILEVECTOR_INDEX_FILE_SUFFIX;
-    data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
+    data_filename = extract_base_file_name(filename_toload) + FILEVECTOR_DATA_FILE_SUFFIX;
 
     if(!file_exists(index_filename))
-        error("index file not exists: %s",index_filename.c_str());
+        error("index file not exists: %s", index_filename.c_str());
 
-    data_filename = extract_base_file_name(filename_toload)+ FILEVECTOR_DATA_FILE_SUFFIX;
+    data_filename = extract_base_file_name(filename_toload) + FILEVECTOR_DATA_FILE_SUFFIX;
     if(!file_exists(data_filename))
-        error("data file not exists: %s",data_filename.c_str());
+        error("data file not exists: %s", data_filename.c_str());
 
     struct stat data_filestatus;
-    stat( data_filename.c_str() , &data_filestatus);
+    stat(data_filename.c_str(), &data_filestatus);
 
     struct stat index_filestatus;
-    stat( index_filename.c_str() , &index_filestatus);
+    stat(index_filename.c_str(), &index_filestatus);
 
     index_file.open(index_filename.c_str(), ios::out | ios::in | ios::binary);
     if (!index_file)
@@ -65,14 +64,14 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
     if (!data_file)
       error("opening file %s for write & read failed\n",data_filename.c_str());
 
-	index_file.read((char*)&data_type,sizeof(data_type));
+	index_file.read((char*)&data_type, sizeof(data_type));
 	if (!index_file)
         error("failed to read datainfo from file '%s'\n",index_filename.c_str());
 
     // some integrity checks
-	if (getDataSize() != data_type.bytes_per_record)
+	if (getElementSize() != data_type.bytes_per_record)
 		error("system data type size (%d) and file data type size (%d) do not match\n",
-			getDataSize(),data_type.bytes_per_record);
+		    getElementSize(),data_type.bytes_per_record);
 
 	//!!! nelements should actually be long to ensure !!!
 	if (data_type.nelements != (data_type.nobservations*data_type.nvariables))
@@ -108,18 +107,16 @@ void filevector::initialize(string filename_toload, unsigned long int cachesizeM
 	for (unsigned long int i=0;i<data_type.nvariables;i++)
 		index_file.read((char*)(variable_names+i),sizeof(fixedchar));
 
-    set_cachesizeMb(cachesizeMb);
+    setCacheSizeInMb(cachesizeMb);
     update_cache(0);
     dbg << "Filevector " << filename_toload << " opened." << nl;
 }
 
-unsigned long int filevector::get_cachesizeMb()
-{
-	return(cache_size_Mb);
+unsigned long int filevector::getCacheSizeInMb() {
+	return cache_size_Mb;
 }
 
-void filevector::set_cachesizeMb( unsigned long int cachesizeMb )
-{
+void filevector::setCacheSizeInMb( unsigned long int cachesizeMb ) {
 // figure out cache size
 	cache_size_Mb = cachesizeMb;
 	cache_size_nvars = (unsigned long int) 1024*1024*cache_size_Mb/(data_type.nobservations*data_type.bytes_per_record);
@@ -196,7 +193,7 @@ void filevector::setUpdateNamesOnWrite(bool bUpdate) {
     updateNamesOnWrite = bUpdate;
 }
 
-void filevector::write_variable_name(unsigned long int nvar, fixedchar name)
+void filevector::writeVariableName(unsigned long int nvar, fixedchar name)
 {
 	if (nvar>=data_type.nvariables) error("trying to set name of obs out of range (%lu)\n\n",nvar);
 	if (updateNamesOnWrite){
@@ -206,7 +203,7 @@ void filevector::write_variable_name(unsigned long int nvar, fixedchar name)
 	variable_names[nvar] = name;
 }
 
-void filevector::write_observation_name(unsigned long int nobs, fixedchar name)
+void filevector::writeObservationName(unsigned long int nobs, fixedchar name)
 {
 	if (nobs>=data_type.nobservations) error("trying to set name of vars out of range (%lu)\n\n",nobs);
 	if (updateNamesOnWrite){
@@ -216,65 +213,65 @@ void filevector::write_observation_name(unsigned long int nobs, fixedchar name)
     observation_names[nobs] = name;
 }
 
-fixedchar filevector::read_variable_name(unsigned long int nvar)
+fixedchar filevector::readVariableName(unsigned long int nvar)
 {
 	if (nvar>=data_type.nvariables) error("trying to get name of var out of range");
 	return(variable_names[nvar]);
 }
 
-fixedchar filevector::read_observation_name(unsigned long int nobs)
+fixedchar filevector::readObservationName(unsigned long int nobs)
 {
 	if (nobs>=data_type.nobservations) error("trying to get name of obs out of range");
 	return(observation_names[nobs]);
 }
 
 // can read single variable
-void filevector::read_variable(unsigned long int nvar, void * outvec)
+void filevector::readVariable(unsigned long int nvar, void * outvec)
 {
 	if (nvar>=data_type.nvariables) error("nvar out of range (%lu >= %lu)",nvar,data_type.nvariables);
 	if (in_cache_to > 0 && nvar >= in_cache_from && nvar <= in_cache_to) {
-		unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getDataSize();
-		memcpy(outvec,cached_data+offset,getDataSize()*(data_type.nobservations));
+		unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getElementSize();
+		memcpy(outvec,cached_data+offset,getElementSize()*(data_type.nobservations));
     } else {
 		update_cache(nvar);
-        memcpy(outvec,cached_data,getDataSize()*data_type.nobservations);
+        memcpy(outvec,cached_data,getElementSize()*data_type.nobservations);
 	}
 }
 
-void filevector::read_observation(unsigned long int nobs, void * outvec)
+void filevector::readObservation(unsigned long int nobs, void *outvec)
 {
-	char * tmpdata = new (nothrow) char [get_nobservations()*getDataSize()];
+	char * tmpdata = new (nothrow) char [getNumObservations()*getElementSize()];
 	if(!tmpdata)
-		error("read_observation: cannot allocate tmpdata");
+		error("readObservation: cannot allocate tmpdata");
 
-	for( int i = 0; i< get_nvariables(); i++)
+	for( int i = 0; i< getNumVariables(); i++)
 	{
-		read_variable(i, tmpdata);
-		memcpy((char*)outvec+i*getDataSize(),tmpdata+getDataSize()*nobs,getDataSize());
+		readVariable(i, tmpdata);
+		memcpy((char*)outvec+i*getElementSize(),tmpdata+getElementSize()*nobs,getElementSize());
 	}
 	delete[] tmpdata;
 }
 
-void filevector::write_observation(unsigned long int nobs, void * invec)
+void filevector::writeObservation(unsigned long int nobs, void * invec)
 {
     if (readOnly) {
         error("Trying to write to the readonly file.");
     }
-	for( int i = 0; i< get_nvariables(); i++)
+	for( int i = 0; i< getNumVariables(); i++)
 	{
-		write_element( i, nobs, (char*)invec+ i*getDataSize() );
+		writeElement( i, nobs, (char*)invec+ i*getElementSize() );
 	}
 }
 
 // can write single variable
-void filevector::write_variable(unsigned long int nvar, void * datavec)
+void filevector::writeVariable(unsigned long int nvar, void * datavec)
 {
     if (readOnly) {
         error("Trying to write to the readonly file.");
     }
 	unsigned long int pos = nrnc_to_nelem(nvar, 0);
-	data_file.seekp(pos*getDataSize(), ios::beg);
-	data_file.write((char*)datavec,getDataSize()*data_type.nobservations);
+	data_file.seekp(pos*getElementSize(), ios::beg);
+	data_file.write((char*)datavec,getElementSize()*data_type.nobservations);
 	if (!data_file) error ("failed to write to data file\n");
 
 	//update data in cache
@@ -282,8 +279,8 @@ void filevector::write_variable(unsigned long int nvar, void * datavec)
 
 	if (nvar >= in_cache_from && nvar <= in_cache_to)
 	{
-	    unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getDataSize();
- 	    memcpy(cached_data + offset,datavec,getDataSize()*data_type.nobservations);
+	    unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getElementSize();
+ 	    memcpy(cached_data + offset,datavec,getElementSize()*data_type.nobservations);
 	}
 }
 
@@ -296,116 +293,115 @@ unsigned long int filevector::nrnc_to_nelem(unsigned long int nvar, unsigned lon
 
 // should only be used for reading single random elements!
 
-void filevector::read_element(unsigned long int nvar, unsigned long int nobs, void * out)
+void filevector::readElement(unsigned long int nvar, unsigned long int nobs, void * out)
 {
     //todo use cache
     unsigned long int pos = nrnc_to_nelem(nvar, nobs);
-    data_file.seekg(pos*getDataSize(), ios::beg);
-    data_file.read((char*)out,getDataSize());
+    data_file.seekg(pos*getElementSize(), ios::beg);
+    data_file.read((char*)out,getElementSize());
 }
 
-void filevector::write_element(unsigned long int nvar, unsigned long int nobs, void* data)
+void filevector::writeElement(unsigned long int nvar, unsigned long int nobs, void* data)
 {
     if (readOnly) {
         error("Trying to write to the readonly file.");
     }
     unsigned long int pos = nrnc_to_nelem(nvar, nobs);
-    data_file.seekp(pos*getDataSize(), ios::beg);
-    data_file.write((char*)data,getDataSize());
+    data_file.seekp(pos*getElementSize(), ios::beg);
+    data_file.write((char*)data,getElementSize());
     data_file.flush();
 
     if (nvar >= in_cache_from && nvar <= in_cache_to)
     {
-	unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getDataSize() + nobs *getDataSize();
-	memcpy(cached_data+offset,data,getDataSize() );
+	unsigned long int offset = (nvar - in_cache_from)*data_type.nobservations*getElementSize() + nobs *getElementSize();
+	memcpy(cached_data+offset,data,getElementSize() );
     }
 }
 
-unsigned int filevector::get_nvariables()
+unsigned int filevector::getNumVariables()
 {
    return data_type.nvariables;
 }
 
-unsigned int filevector::get_nobservations()
+unsigned int filevector::getNumObservations()
 {
    return data_type.nobservations;
 }
 
-void filevector::save( string new_file_name )
+void filevector::saveAs( string newFilename )
 {
-    initialize_empty_file( (char *)new_file_name.c_str(), get_nvariables(), get_nobservations(), data_type.type, true);
-    filevector *outdata = new filevector( new_file_name, 64 );//todo which size for cache to use?
+    initialize_empty_file( (char *)newFilename.c_str(), getNumVariables(), getNumObservations(), data_type.type, true);
+    filevector *outdata = new filevector( newFilename, 64 );//todo which size for cache to use?
 
     // copy observation names from the first object
-  	for (unsigned long int i=0;i<get_nobservations();i++)
-  	    outdata->write_observation_name( i, read_observation_name( i ) );
+  	for (unsigned long int i=0;i<getNumObservations();i++)
+  	    outdata->writeObservationName( i, readObservationName( i ) );
 
-    char * tmpvariable = new (nothrow) char[get_nobservations()*getDataSize()];
+    char * tmpvariable = new (nothrow) char[getNumObservations()*getElementSize()];
     if (!tmpvariable) error("can not allocate memory for tmpvariable\n\n");
 
-    for (unsigned long int i=0 ; i<get_nvariables();i++)
+    for (unsigned long int i=0 ; i<getNumVariables();i++)
     {
         //write var names
-        outdata->write_variable_name( i, read_variable_name(i));
+        outdata->writeVariableName( i, readVariableName(i));
         //write variables
-        read_variable(i,tmpvariable);
-        outdata->write_variable(i,tmpvariable);
+        readVariable(i,tmpvariable);
+        outdata->writeVariable(i,tmpvariable);
     }
     delete outdata;
     delete [] tmpvariable;
 }
 
-void filevector::save_vars( string new_file_name, unsigned long int nvars, unsigned long int * varindexes)
-{
-    initialize_empty_file( (char *)new_file_name.c_str(), nvars, get_nobservations(), data_type.type, true);
-    filevector outdata( new_file_name, 64 );//todo which size for cache to use?
+void filevector::saveVariablesAs( string newFilename, unsigned long int nvars, unsigned long int *varindexes) {
+    initialize_empty_file( (char *)newFilename.c_str(), nvars, getNumObservations(), data_type.type, true);
+    filevector outdata( newFilename, 64 );//todo which size for cache to use?
 
     // copy observation names from the first object
-  	for (unsigned long int i=0;i<get_nobservations();i++)
-  	    outdata.write_observation_name( i, read_observation_name( i ) );
+  	for (unsigned long int i=0;i<getNumObservations();i++)
+  	    outdata.writeObservationName( i, readObservationName( i ) );
 
-    char * tmpvariable = new (nothrow) char[get_nobservations()*getDataSize()];
+    char * tmpvariable = new (nothrow) char[getNumObservations()*getElementSize()];
     if (!tmpvariable) error("can not allocate memory for tmpvariable\n\n");
 
     for ( unsigned long int i=0 ; i<nvars ; i++ )
     {
         unsigned long int selected_index =  varindexes[i];
         //write var names
-        outdata.write_variable_name( i, read_variable_name(selected_index ));
+        outdata.writeVariableName( i, readVariableName(selected_index ));
         //write variables
-        read_variable(selected_index,tmpvariable);
-        outdata.write_variable(i,tmpvariable);
+        readVariable(selected_index,tmpvariable);
+        outdata.writeVariable(i,tmpvariable);
     }
 
     delete [] tmpvariable;
 }
 
-void filevector::save_obs( string new_file_name, unsigned long int nobss, unsigned long int * obsindexes)
+void filevector::saveObservationsAs( string newFilename, unsigned long int nobss, unsigned long int * obsindexes)
 {
-    if (headerOrDataExists(new_file_name))
+    if (headerOrDataExists(newFilename))
     {
-        error("File %s already exists", new_file_name.c_str());
+        error("File %s already exists", newFilename.c_str());
     }
-    initialize_empty_file( (char *)new_file_name.c_str(), get_nvariables(), nobss, data_type.type,true);
-    filevector outdata( new_file_name, 64 );//todo which size for cache to use?
+    initialize_empty_file( (char *)newFilename.c_str(), getNumVariables(), nobss, data_type.type,true);
+    filevector outdata( newFilename, 64 );//todo which size for cache to use?
 
     // copy observation names from the first object
   	for( unsigned long int i=0 ; i < nobss ; i++ )
-  	    outdata.write_observation_name( i, read_observation_name( obsindexes[i] ) );
+  	    outdata.writeObservationName( i, readObservationName( obsindexes[i] ) );
 
-    char * in_variable = new (nothrow) char[get_nobservations()*getDataSize()];
+    char * in_variable = new (nothrow) char[getNumObservations()*getElementSize()];
     if (!in_variable) error("can not allocate memory for tmpvariable\n\n");
 
-    char * out_variable = new (nothrow) char[nobss*getDataSize()];
+    char * out_variable = new (nothrow) char[nobss*getElementSize()];
     if (!out_variable) error("can not allocate memory for tmpvariable\n\n");
-    for ( unsigned long int i=0 ; i<get_nvariables() ; i++ )
+    for ( unsigned long int i=0 ; i<getNumVariables() ; i++ )
     {
         //write var names
-        outdata.write_variable_name( i, read_variable_name(i));
+        outdata.writeVariableName( i, readVariableName(i));
         //write variables
-        read_variable(i, in_variable);
-        copy_variable(out_variable,in_variable, nobss, obsindexes);
-        outdata.write_variable(i,out_variable);
+        readVariable(i, in_variable);
+        copyVariable(out_variable, in_variable, nobss, obsindexes);
+        outdata.writeVariable(i,out_variable);
     }
 
     delete [] in_variable;
@@ -415,34 +411,34 @@ void filevector::save_obs( string new_file_name, unsigned long int nobss, unsign
 /*
 * copy elements from "from" array to "to" array, according to "n" and "indexes" parameters
 */
-void filevector::copy_variable(char* to, char* from, int n, unsigned long int * indexes )
+void filevector::copyVariable(char* to, char* from, int n, unsigned long int * indexes )
 {
 	for ( int j=0 ; j<n ; j++ )
 	{
 		//copy only selected observations to out_variable  from in_variable
-		int read_offset = indexes[j]*getDataSize();
-		if(read_offset + getDataSize() > get_nobservations() * getDataSize())
-		  error( "when saving selected observations: index in obsindexes(%d) is out of range, source nobs is %d",indexes[j],get_nobservations());
-		memcpy(to + j*getDataSize(),from + read_offset,getDataSize());
+		int read_offset = indexes[j]*getElementSize();
+		if(read_offset + getElementSize() > getNumObservations() * getElementSize())
+		  error( "when saving selected observations: index in obsindexes(%d) is out of range, source nobs is %d",indexes[j],getNumObservations());
+		memcpy(to + j*getElementSize(),from + read_offset,getElementSize());
 	}
 }
 
-void filevector::save(string new_file_name, unsigned long int nvars, unsigned long int nobss,
+void filevector::saveAs(string newFilename, unsigned long int nvars, unsigned long int nobss,
     unsigned long int * varindexes, unsigned long int * obsindexes) {
-    if (headerOrDataExists(new_file_name)) {
-        error("File %s already exists.", new_file_name.c_str());
+    if (headerOrDataExists(newFilename)) {
+        error("File %s already exists.", newFilename.c_str());
     }
-    initialize_empty_file( (char *)new_file_name.c_str(), nvars, nobss, data_type.type, true);
-    filevector outdata( new_file_name, 64 );//todo which size for cache to use?
+    initialize_empty_file( (char *)newFilename.c_str(), nvars, nobss, data_type.type, true);
+    filevector outdata( newFilename, 64 );//todo which size for cache to use?
 
     // copy observation names from the first object
 	for( unsigned long int i=0 ; i < nobss ; i++ )
-		outdata.write_observation_name( i, read_observation_name( obsindexes[i] ) );
+		outdata.writeObservationName( i, readObservationName( obsindexes[i] ) );
 
-    char * out_variable = new (nothrow) char[nobss*getDataSize()];
+    char * out_variable = new (nothrow) char[nobss*getElementSize()];
     if (!out_variable) error("can not allocate memory for out_variable");
 
-	char * in_variable = new (nothrow) char[get_nobservations()*getDataSize()];
+	char * in_variable = new (nothrow) char[getNumObservations()*getElementSize()];
 	if (!in_variable) error("can not allocate memory for in_variable\n\n");
 
 
@@ -450,38 +446,38 @@ void filevector::save(string new_file_name, unsigned long int nvars, unsigned lo
 	{
 		unsigned long int selected_index =  varindexes[i];
 		//write var names
-		outdata.write_variable_name( i, read_variable_name(selected_index ));
+		outdata.writeVariableName( i, readVariableName(selected_index ));
 		//write variables
-		read_variable(selected_index,in_variable);
-		copy_variable(out_variable, in_variable, nobss, obsindexes);
-		outdata.write_variable(i,out_variable );
+		readVariable(selected_index,in_variable);
+		copyVariable(out_variable, in_variable, nobss, obsindexes);
+		outdata.writeVariable(i,out_variable );
 	}
 
 	delete[] in_variable;
 	delete[] out_variable;
 }
 
-void filevector::save_as_text(string new_file_name, unsigned long int nvars, unsigned long int nobss,
+void filevector::saveAsText(string newFilename, unsigned long int nvars, unsigned long int nobss,
     unsigned long int * varindexes, unsigned long int * obsindexes) {
 
     dbg << "nvars = " << nvars << nl;
     dbg << "nobs = " << nobss << nl;
 
-    ofstream textfile(new_file_name.c_str(), ios::out);
+    ofstream textfile(newFilename.c_str(), ios::out);
 
     // copy observation names from the first object
 	for( unsigned long int i=0 ; i < nobss ; i++ ){
-	    fixedchar fc = read_observation_name( obsindexes[i] ) ;
+	    fixedchar fc = readObservationName( obsindexes[i] ) ;
         textfile << fc.name << " ";
     }
 
     textfile << endl;
 
-    char * out_variable = new (nothrow) char[nobss*getDataSize()];
+    char * out_variable = new (nothrow) char[nobss*getElementSize()];
     if (!out_variable)
             error("can not allocate memory for out_variable");
 
-	char * in_variable = new (nothrow) char[get_nobservations()*getDataSize()];
+	char * in_variable = new (nothrow) char[getNumObservations()*getElementSize()];
 		if (!in_variable)
 		    error("can not allocate memory for in_variable\n\n");
 
@@ -490,16 +486,16 @@ void filevector::save_as_text(string new_file_name, unsigned long int nvars, uns
         dbg << "Writing var " << i << " of " << nvars << nl;
 		unsigned long int selected_index = varindexes[i];
     	//write var names
-    	fixedchar fc = read_variable_name(selected_index);
+    	fixedchar fc = readVariableName(selected_index);
 		textfile << fc.name << " ";
 		//write variables
-		read_variable(selected_index, in_variable);
-		copy_variable(out_variable, in_variable, nobss, obsindexes);
+		readVariable(selected_index, in_variable);
+		copyVariable(out_variable, in_variable, nobss, obsindexes);
 
 	    for( unsigned long int j=0 ; j<nobss ; j++ )
 	    {
 	        double x;
-	        performCast(x, &out_variable[j*getDataSize()],getDataType());
+	        performCast(x, &out_variable[j*getElementSize()],getElementType());
 		    textfile << x << " ";
 		}
 		textfile << endl;
@@ -509,15 +505,15 @@ void filevector::save_as_text(string new_file_name, unsigned long int nvars, uns
 	delete[] out_variable;
 }
 
-short unsigned filevector::getDataSize(){
+short unsigned filevector::getElementSize(){
     return calcDataSize(data_type.type);
 }
 
-short unsigned filevector::getDataType(){
+short unsigned filevector::getElementType(){
     return data_type.type;
 }
 
-void filevector::add_variable(void * invec, string varname)
+void filevector::addVariable(void * invec, string varname)
 {
     if (readOnly) {
         error("Trying to write to the readonly file.");
@@ -527,7 +523,7 @@ void filevector::add_variable(void * invec, string varname)
 
       fixedchar * new_variable_names = new (nothrow)fixedchar[data_type.nvariables];
       if (!new_variable_names)
-          error("can not allocate memory in add_variable()");
+          error("can not allocate memory in addVariable()");
 
       //reallocate greater array for var names
       memcpy(new_variable_names,variable_names,sizeof(fixedchar)*(data_type.nvariables-1));
@@ -537,7 +533,7 @@ void filevector::add_variable(void * invec, string varname)
       variable_names = new_variable_names;
       delete[] oldvar_names;
 
-      write_variable(data_type.nvariables - 1,invec);
+      writeVariable(data_type.nvariables - 1,invec);
 }
 
 

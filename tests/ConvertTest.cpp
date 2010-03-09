@@ -23,22 +23,22 @@ void ConvertTest::test() {
     initialize_empty_file(tmp_file_name, nvariables, nobservations, FLOAT, true);
     AbstractMatrix* fv = new filevector( tmp_file_name, 1);
 
-    float * var = new float [fv->get_nobservations()];
+    float * var = new float [fv->getNumObservations()];
 	
-    for(int i = 0; i< fv->get_nobservations(); i++) {
+    for(int i = 0; i< fv->getNumObservations(); i++) {
         var[i] = i + 1.1;
     }
 
-    fv->write_variable_as(0, var);
-    fv->write_variable_as(1, var);
-    fv->write_variable_as(2, var);
+    fv->writeVariableAs(0, var);
+    fv->writeVariableAs(1, var);
+    fv->writeVariableAs(2, var);
 
     delete[] var;
 
     unsigned long varMask[] = {0, 2};
     unsigned long obsMask[] = {1, 2};
 
-    fv->save_as_text(textFileName, 2, 2, varMask, obsMask);
+    fv->saveAsText(textFileName, 2, 2, varMask, obsMask);
 
     delete fv;
 

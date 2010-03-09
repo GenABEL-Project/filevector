@@ -21,22 +21,22 @@ int main ( int argc, char * argv[] )
 
 	dbg << "Reading file:"<< ifname1 << "\n";
 	dbg << "Using cache size:"<< cachesize<< "\n";
-	dbg << "Variables:"<< indata1->get_nvariables() << "\n";
-	dbg << "Observations:"<< indata1->get_nobservations() << "\n";
+	dbg << "Variables:"<< indata1->getNumVariables() << "\n";
+	dbg << "Observations:"<< indata1->getNumObservations() << "\n";
 
-	float * tmpdat = new ( std::nothrow ) float [indata1->get_nobservations()];
+	float * tmpdat = new ( std::nothrow ) float [indata1->getNumObservations()];
 	if(!tmpdat )
 	{
 		dbg << "Cannot allocate buffer" << "\n";
 		exit(1);
 	}
 
-        for ( unsigned long int i=0 ; i < indata1->get_nvariables() ; i++ )
+        for ( unsigned long int i=0 ; i < indata1->getNumVariables() ; i++ )
         {
-            indata1->read_variable_as( i, tmpdat );
+            indata1->readVariableAs( i, tmpdat );
             if( i % 10000 == 0 )
             {
-                dbg << "Read:"<< i << "/" << indata1->get_nvariables() << " variables \n";
+                dbg << "Read:"<< i << "/" << indata1->getNumVariables() << " variables \n";
             }
         }
 

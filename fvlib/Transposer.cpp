@@ -21,9 +21,9 @@ void Transposer::process(string filename){
 void Transposer::process(string filename, string destFileName, bool forceOverwrite)
 {
     filevector* src_fv = new filevector(filename,1);
-    unsigned long int src_nvars = src_fv->get_nvariables();
-    unsigned long int src_nobss = src_fv->get_nobservations();
-    unsigned int data_size = src_fv->getDataSize();
+    unsigned long int src_nvars = src_fv->getNumVariables();
+    unsigned long int src_nobss = src_fv->getNumObservations();
+    unsigned int data_size = src_fv->getElementSize();
 
     string dest_file_name;
     string src_data_file_name; 
@@ -45,28 +45,28 @@ void Transposer::process(string filename, string destFileName, bool forceOverwri
         error("File %s already exists.", dest_file_name.c_str());
     }
 
-    initialize_empty_file(dest_file_name, src_fv->get_nobservations(), src_fv->get_nvariables(), src_fv->getDataType(),true);
+    initialize_empty_file(dest_file_name, src_fv->getNumObservations(), src_fv->getNumVariables(), src_fv->getElementType(),true);
 
     filevector* dest_fv = new filevector(dest_file_name,1);
-    dbg<< "Copying var/obs names...";
+    dbg << "Copying var/obs names...";
     write_var_obs_names(src_fv, dest_fv);
 
     delete src_fv;
     delete dest_fv;
-    dbg<< "done"<< nl;
+    dbg << "done"<< nl;
 
     copy_data(src_data_file_name,dest_data_file_name,src_nvars,src_nobss,data_size);
-    dbg<< "done"<< nl;
+    dbg << "done"<< nl;
 }
 
 void Transposer::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
 {
    // copy observations and variables names
-   for( unsigned long int i=0 ; i < src_fv->get_nvariables(); i++ )
-     dest_fv->write_observation_name( i, src_fv->read_variable_name(i) );
+   for( unsigned long int i=0 ; i < src_fv->getNumVariables(); i++ )
+     dest_fv->writeObservationName( i, src_fv->readVariableName(i) );
 
-   for( unsigned long int i=0 ; i < src_fv->get_nobservations(); i++ )
-     dest_fv->write_variable_name( i, src_fv->read_observation_name(i) );
+   for( unsigned long int i=0 ; i < src_fv->getNumObservations(); i++ )
+     dest_fv->writeVariableName( i, src_fv->readObservationName(i) );
 }
 
 
