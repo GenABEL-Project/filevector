@@ -27,8 +27,8 @@ int main(int argc, char * argv[])
     char *program_name = argv[0];
     char *infilename = NULL;
     char *outfilename = NULL;
-    char *colnamesfilename = NULL;
-    char *rownamesfilename = NULL;
+    string colnamesfilename = "";
+    string rownamesfilename = "";
 
     unsigned long rownames = 0, colnames = 0, transpose = 0, skipcols = 0, skiprows = 0, Rmatrix = 0;
     unsigned short dataType = 0;
@@ -62,7 +62,7 @@ int main(int argc, char * argv[])
 	    	break;
 	    case '4':
 	    	colnames = 1;
-	    	colnamesfilename = optarg;
+	    	colnamesfilename = string(optarg);
 	    	break;
 	    case 't':
 	    	transpose=1;
@@ -84,7 +84,7 @@ int main(int argc, char * argv[])
 
     if (dataType == 0) {
         dataType = DOUBLE;
-        message ("No output data type specified. Using DOUBLE.\n");
+        msg <<"No output data type specified. Using DOUBLE.\n";
     }
 
     // check that in- and out-filenames are supplied
@@ -92,9 +92,6 @@ int main(int argc, char * argv[])
     {
     	print_text2fvf_usage(program_name);
     }
-
-    if (colnamesfilename==NULL) colnamesfilename="";
-    if (rownamesfilename==NULL) rownamesfilename="";
 
     string Pname = program_name, Iname = infilename, Oname = outfilename, RFname = rownamesfilename, CFname = colnamesfilename;
 

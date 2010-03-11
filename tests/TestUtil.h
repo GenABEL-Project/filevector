@@ -35,8 +35,8 @@ public :
     }
 
     static void create_and_fill_variable(unsigned int  nobs, float * in );
-    static void create_empty_filevector(string tmp_file_name,unsigned int  nvars, unsigned int  nobs);
-    static void create_empty_filevector(string tmp_file_name ,unsigned int  nvars, unsigned int  nobs, unsigned short int type);
+    static void create_empty_filevector(string tmp_file_name,unsigned long nvars, unsigned long nobs);
+    static void create_empty_filevector(string tmp_file_name,unsigned long nvars, unsigned long nobs, unsigned short int type);
     static bool compare_arrays(float * a1,float * a2, int size);
 };
 

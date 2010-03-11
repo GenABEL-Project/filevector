@@ -14,12 +14,11 @@ advanced text tools behaviour.
 
 using namespace std;
 
-void Transposer::process(string filename){
+void Transposer::process(string filename) {
     process(filename, string(""), false );
 }
 
-void Transposer::process(string filename, string destFileName, bool forceOverwrite)
-{
+void Transposer::process(string filename, string destFileName, bool forceOverwrite) {
     filevector* src_fv = new filevector(filename,1);
     unsigned long int src_nvars = src_fv->getNumVariables();
     unsigned long int src_nobss = src_fv->getNumObservations();
@@ -42,7 +41,7 @@ void Transposer::process(string filename, string destFileName, bool forceOverwri
 
 
     if (!forceOverwrite && headerOrDataExists(dest_file_name)) {
-        error("File %s already exists.", dest_file_name.c_str());
+        err << "File already exists: " << dest_file_name << endl << errorExit;
     }
 
     initialize_empty_file(dest_file_name, src_fv->getNumObservations(), src_fv->getNumVariables(), src_fv->getElementType(),true);
@@ -53,14 +52,13 @@ void Transposer::process(string filename, string destFileName, bool forceOverwri
 
     delete src_fv;
     delete dest_fv;
-    dbg << "done"<< nl;
+    dbg << "done"<< endl;
 
     copy_data(src_data_file_name,dest_data_file_name,src_nvars,src_nobss,data_size);
-    dbg << "done"<< nl;
+    dbg << "done"<< endl;
 }
 
-void Transposer::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
-{
+void Transposer::write_var_obs_names(filevector *src_fv, filevector *dest_fv) {
    // copy observations and variables names
    for( unsigned long int i=0 ; i < src_fv->getNumVariables(); i++ )
      dest_fv->writeObservationName( i, src_fv->readVariableName(i) );
@@ -71,9 +69,8 @@ void Transposer::write_var_obs_names(filevector *src_fv, filevector *dest_fv)
 
 
 void Transposer::copy_data(string src_data_file_name,string dest_data_file_name, unsigned long int src_nvars,
-unsigned long int src_nobss, unsigned int data_size)
-{
-  dbg<< "Copying data..."<< src_nobss << "x"<< src_nvars << nl;
+unsigned long int src_nobss, unsigned int data_size) {
+  dbg<< "Copying data..."<< src_nobss << "x"<< src_nvars << endl;
 
   unsigned long int obs_pages = src_nobss / square_size;
   if(src_nobss % square_size > 0) obs_pages++;
@@ -100,12 +97,10 @@ unsigned long int src_nobss, unsigned int data_size)
           if((i + 1 )* square_size > src_nvars)
               var_length = src_nvars % square_size;
 
-          dbg << ">"<< obs_length << "x" << var_length << "^ " << nl;
-
           char * data_part = new (nothrow) char[var_length*obs_length*data_size];
-          if(!data_part) error("can not allocate memory for data_part");
+          if(!data_part) err << "can not allocate memory for data_part" << errorExit;
           char * data_part_transposed = new (nothrow) char[var_length*obs_length*data_size];
-          if(!data_part_transposed) error("can not allocate memory for data_part_transposed");
+          if(!data_part_transposed) err << "can not allocate memory for data_part_transposed" << errorExit;
 
           read_part(src_stream, data_part, j * square_size , obs_length, i * square_size , var_length,  data_size, src_nobss );
           transpose_part(data_part,data_part_transposed,obs_length,var_length, data_size);
@@ -114,7 +109,7 @@ unsigned long int src_nobss, unsigned int data_size)
           delete data_part;
           delete data_part_transposed;
       }
-      dbg << nl;
+      dbg << endl;
   }
 
   src_stream->close();
@@ -122,7 +117,7 @@ unsigned long int src_nobss, unsigned int data_size)
   dest_stream->close();
   delete dest_stream;
 
-  dbg<< "data written" << nl;
+  dbg<< "data written" << endl;
 }
 
 
@@ -130,9 +125,7 @@ unsigned long int src_nobss, unsigned int data_size)
 * read next piece of data with size = obs_length x var_length, starting from var_start, obs_start coordinates
 */
 void Transposer::read_part(ifstream * src_stream, char * data_part, unsigned long int obs_start , unsigned long int obs_length,
-unsigned long int var_start, unsigned long int var_length , unsigned int  data_size, unsigned long int src_obs_length )
-{
-    dbg << "read_part"<< nl;
+unsigned long int var_start, unsigned long int var_length , unsigned int  data_size, unsigned long int src_obs_length ) {
 	for(unsigned long int i=0; i<var_length ;i++)
 	{
 	   //seek to the beginning of the next var
@@ -147,10 +140,8 @@ unsigned long int var_start, unsigned long int var_length , unsigned int  data_s
 * write next piece of transposed data with size = obs_length' x var_length'
 */
 void Transposer::write_part(ofstream * dest_stream, char * data_part_transposed, unsigned long int obs_start , unsigned long int obs_length,
-unsigned long int var_start, unsigned long int var_length , unsigned int  data_size, unsigned long int dest_obs_length )
-{
-	for(unsigned long int i=0; i<var_length ;i++)
-	{
+unsigned long int var_start, unsigned long int var_length , unsigned int  data_size, unsigned long int dest_obs_length ) {
+	for(unsigned long int i=0; i<var_length ;i++) {
 	   //seek to the beginning of the next var
 	   unsigned long int write_pos =   (var_start + i )* dest_obs_length  + obs_start ;
 	   dest_stream->seekp( write_pos * data_size );
@@ -164,8 +155,7 @@ unsigned long int var_start, unsigned long int var_length , unsigned int  data_s
 * original axb matrix flipped to bxa matrix.
 */
 void Transposer::transpose_part(void * data_part, void * data_part_transposed,
-unsigned long int obs_length,unsigned long int var_length, unsigned int data_size )
-{
+unsigned long int obs_length,unsigned long int var_length, unsigned int data_size ) {
 	for(unsigned long int i=0; i<var_length ;i++)
 	{
 		for(unsigned long int j=0; j<obs_length ;j++)

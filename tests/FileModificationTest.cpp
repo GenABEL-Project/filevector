@@ -16,7 +16,7 @@ string FileModificationTest::get_file_name_to_write()
 int main( int argc, char **argv)
 {
     TestUtil::detect_base_dir(string(argv[0]));
-    dbg << "base_dir :" << TestUtil::get_base_dir() << nl;
+    testDbg << "base_dir :" << TestUtil::get_base_dir() << endl;
 
     CppUnit::TextUi::TestRunner runner;
     runner.addTest( FileModificationTest::suite() );

@@ -32,8 +32,8 @@ class filevector: public AbstractMatrix
 public:
 	string data_filename;
 	string index_filename;
-	fstream data_file;
-	fstream index_file;
+	fstream dataFile;
+	fstream indexFile;
 	fr_type data_type;
 	// row and column names
 	fixedchar * variable_names;

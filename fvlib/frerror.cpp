@@ -48,7 +48,3 @@ void message (const char * format, ... )
 #endif
 }
 
-void messageOnOff(int bit)
-{
-    message(bit?"ON":"OFF");
-}

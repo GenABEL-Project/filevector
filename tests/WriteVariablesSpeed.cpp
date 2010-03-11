@@ -3,9 +3,9 @@ Use initialize_empty_file()/writeVariable() for 2,000,000 and top up with addVar
 Select 2,500 random variables,  */
 #include <sstream>
 
-#include "frerror.h"
-#include "frutil.h"
-#include "filevector.h"
+#include "../fvlib/frerror.h"
+#include "../fvlib/frutil.h"
+#include "../fvlib/filevector.h"
 
 int main(int argc, char * argv[])
 {
@@ -30,10 +30,10 @@ int main(int argc, char * argv[])
         filename = string(argv[5]);
 
 
-  	dbg << "Generating data to file ";
-  	dbg <<filename;
-  	dbg <<",vars*obs: "<< nvars<< "*"<<nobs;
-  	dbg <<" , cache:"<< cache_size << nl;
+  	testDbg << "Generating data to file ";
+  	testDbg <<filename;
+  	testDbg <<",vars*obs: "<< nvars<< "*"<<nobs;
+  	testDbg <<" , cache:"<< cache_size << endl;
 	initialize_empty_file( (char *)filename.c_str(), nvars, nobs, FLOAT, true);
 	filevector fv(filename,cache_size);
 
@@ -44,7 +44,7 @@ int main(int argc, char * argv[])
 	    fv.writeVariableName(i,fixedchar("original"));
 	    if( i % 10000 == 0 )
 		{
-			dbg << "Wrote:"<< i << "/" << fv.getNumVariables() << " variables " << nl;
+			testDbg << "Wrote:"<< i << "/" << fv.getNumVariables() << " variables " << endl;
 		}
 	}
 
@@ -57,7 +57,7 @@ int main(int argc, char * argv[])
 	    fv.addVariable( tmp, ss.str() );
 	    if( i % 10000 == 0 )
 		{
-			dbg << "Added:"<< i << "/" << to_add << " variables " << nl;
+			testDbg << "Added:"<< i << "/" << to_add << " variables " << endl;
 		}
 	}
 

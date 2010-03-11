@@ -1,62 +1,30 @@
 #ifndef __LOGGER__
 #define __LOGGER__
 
+#include <ostream>
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
-/*
-class NewLine {};
 
-class Logger {
-    bool isEnabled;
+class ErrorExit {};
 
+extern "C" ErrorExit errorExit;
+
+class NullStream : public ostream {
 public:
-    Logger(bool enabled): isEnabled(enabled) {}
-
-    Logger& operator << (const char * s) {
-        if (isEnabled) cout << s;
-        return *this;
-    }
-
-    Logger& operator << (string s) {
-        if (isEnabled) cout << s.c_str();
-        return *this;
-    }
-
-    Logger& operator << (unsigned long x) {
-        if (isEnabled) cout << x;
-        return *this;
-    }
-
-    Logger& operator << (unsigned int x) {
-        if (isEnabled) cout << x;
-        return *this;
-    }
-
-    Logger& operator << (int x) {
-        if (isEnabled) cout << x;
-        return *this;
-    }
-
-    Logger& operator << (float x) {
-        if (isEnabled) cout << x;
-        return *this;
-    }
-
-    Logger& operator << (NewLine){
-        if (isEnabled) cout << endl;
-        return *this;
-    }
+  NullStream() : ostream(0) { }
 };
 
-extern Logger dbg;
-extern Logger inf;
-extern Logger err;
-extern NewLine nl;
-*/
+extern "C" NullStream nullStream;
 
-#define dbg cout
+void operator << (void*, ErrorExit&);
+
 #define inf cout
-#define err cout
-#define nl endl
+#define dbg cout
+#define err cerr
+#define msg cout
+#define testDbg cout
+#define deepDbg nullStream
+
 #endif

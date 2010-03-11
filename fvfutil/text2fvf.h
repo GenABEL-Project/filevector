@@ -17,9 +17,9 @@ void text2fvf(
 
 
 void text2fvf_246(
-		std::string program_name,
-		std::string infilename, std::string outfilename,
-		std::string rownamesfilename, std::string colnamesfilename,
+		string program_name,
+		string infilename, string outfilename,
+		string rownamesfilename, string colnamesfilename,
 		int rownames, int colnames,
 		int skiprows, int skipcols,
 		int transpose, int Rmatrix,

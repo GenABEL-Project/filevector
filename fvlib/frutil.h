@@ -9,6 +9,7 @@
 
 #include "frerror.h"
 #include "const.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -41,7 +42,7 @@ public:
 	~fr_type() {}
 
 	void print() {
-		std::cout << "type = " << type << "; nelements = " << nelements << "; nobservations = " 
+		cout << "type = " << type << "; nelements = " << nelements << "; nobservations = "
 		          << nobservations << "; nvariables = " << nvariables << "; bits_per_record = " 
 		          << bits_per_record << "; bytes_per_record = " << bytes_per_record << "\n";
 	}
@@ -50,9 +51,9 @@ public:
 template <class DT>
 void make_fake_file(char * fake_filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int cast_type, DT start = 0, DT increment = 0)
 {
-	std::ofstream fake_file(fake_filename, std::ios::binary | std::ios::out);
+	ofstream fake_file(fake_filename, ios::binary | ios::out);
 	if (!fake_file) {
-		error("can not create fake file %s \n",fake_filename);
+		err << "can not create fake file %s " << endl << fake_filename << errorExit;
 	}
 	DT out = start;
 	fr_type tmp;
