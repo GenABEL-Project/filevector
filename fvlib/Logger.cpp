@@ -6,7 +6,11 @@ ErrorExit errorExit;
 NullStream nullStream;
 
 void operator << (void*, ErrorExit&) {
-   exit(EXIT_FAILURE);
-} 
+#ifdef R_R_H
+   throw 1;
+#else
+	exit(EXIT_FAILURE);
+#endif
+}
 
 

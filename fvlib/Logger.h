@@ -4,6 +4,8 @@
 #include <ostream>
 #include <iostream>
 #include <cstdlib>
+#include <sstream>
+#include <string.h>
 
 using namespace std;
 
@@ -22,8 +24,8 @@ void operator << (void*, ErrorExit&);
 
 #define inf cout
 #define dbg cout
-#define err cerr
 #define msg cout
+#define err cerr
 #define testDbg cout
 #define deepDbg nullStream
 
