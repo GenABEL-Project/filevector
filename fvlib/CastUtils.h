@@ -22,7 +22,7 @@ template <class DT> void performCast(DT &dest, void*src, int srcType) {
     		dest = (DT)*((double*) src);
     		break;
     	default:
-    		err << "file contains data of unknown type" << endl << errorExit;
+    		errorLog << "file contains data of unknown type" << endl << errorExit;
    	}
 }
 
@@ -47,8 +47,8 @@ template <class DT> void performCast(void*dest, DT&src, int destType) {
         	*((double*)dest) = src;
         	break;
     	default:
-    	    err << "file contains data of unknown type" << endl << errorExit;
-    	    err << "file contains data of unknown type" << endl << errorExit;
+    	    errorLog << "file contains data of unknown type" << endl << errorExit;
+    	    errorLog << "file contains data of unknown type" << endl << errorExit;
     }
 }
 

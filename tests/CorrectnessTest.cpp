@@ -62,8 +62,9 @@ void CorrectnessTest::testReadVariable() {
 
 
 void CorrectnessTest::testRandomReadObservations(){
+    testDbg << "testRandomReadObservations" << endl;
     string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose");
-    string sumFileName = inputFile + string(".fvf_obssum");
+    string sumFileName = inputFile + string(".fvf_varsum");
     AbstractMatrix* data = new filevector ( inputFile, 64 );
 
     testDbg << "Reading file:" << inputFile << endl;
@@ -78,7 +79,7 @@ void CorrectnessTest::testRandomReadObservations(){
     int numObservationsToTest = 10;
     int observationIdx[numObservationsToTest];
 
-    unsigned long i,j;
+    unsigned long i;
 
     TestUtil::initRandomGenerator();
     for (int i=0; i<numObservationsToTest; i++) {
@@ -98,12 +99,13 @@ void CorrectnessTest::testRandomReadObservations(){
     for (i = 0 ; i < numObservationsToTest ; i++ )
 	{
 	    testDbg << i << "(" << observationIdx[i] << ")" << endl;
-	    //data.readObservation(observationIdx[i], tmpdat);
+	    data->readObservation(observationIdx[i], tmpdat);
 	    float calcSumm;
 
 	    calcSumm = summData(tmpdat, numVariables);
-	    testDbg<<calcSumm<<endl;
-	    testDbg<<sumData[observationIdx[i]]<<endl;
+	    testDbg << calcSumm << endl;
+	    testDbg << sumData[observationIdx[i]] << endl;
+
 	    CPPUNIT_ASSERT(TestUtil::relativeDifference(calcSumm,sumData[observationIdx[i]]) < 1E-4);
 	}
 

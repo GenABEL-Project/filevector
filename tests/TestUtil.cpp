@@ -15,7 +15,7 @@ void TestUtil::detect_base_dir(string binpath)
     size_t slashpos;
     slashpos = binpath.find_last_of("/");
     if (slashpos == string::npos) {
-        err << "cannot find slash in path to binary file" << errorExit;
+        errorLog << "cannot find slash in path to binary file" << errorExit;
     }
 
     string basedir = binpath.substr(0, slashpos);

@@ -9,7 +9,7 @@ int main(int argc, char * argv[])
 	char * ifname1 = argv[1], * ifname2 = argv[2], * ofname = argv[3];
 	unsigned long int cachesize = 64;
 	if (argc>4) cachesize = atoi(argv[4]);
-	if (cachesize < 0) err << "cache size must be positive long integer" << endl << endl << errorExit;
+	if (cachesize < 0) errorLog << "cache size must be positive long integer" << endl << endl << errorExit;
 	dbg << "Options in effect:\n";
 	dbg << "\tINFILE1   = " << ifname1 << "\n";
 	dbg << "\tINFILE2   = " << ifname2 << "\n";
@@ -22,9 +22,9 @@ int main(int argc, char * argv[])
 // sanity checks: can we merge these files?
 // are dimensions compatible?
 	if (indata1.data_type.nobservations != indata2.data_type.nobservations)
-		err << "can not merge files with different number of observations" << endl << endl << errorExit;
+		errorLog << "can not merge files with different number of observations" << endl << endl << errorExit;
 	else
-		err << "file dimensions are compatible\n";
+		errorLog << "file dimensions are compatible\n";
 // are observation names the same?
 	unsigned long int cmpfail = 0, i = 0;
 	while (!cmpfail && i<indata1.data_type.nobservations) {
@@ -54,7 +54,7 @@ int main(int argc, char * argv[])
 
 // copy var names and data
 	float * tmpdat = new (nothrow) float [outdata.data_type.nobservations];
-	if (!tmpdat) err << "can not allocate memory for tmpdat" << endl << endl << errorExit;
+	if (!tmpdat) errorLog << "can not allocate memory for tmpdat" << endl << endl << errorExit;
 	for (unsigned long int i=0;i<indata1.data_type.nvariables;i++)
 	{
 		outdata.variable_names[i] = indata1.variable_names[i];

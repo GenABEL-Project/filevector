@@ -16,7 +16,7 @@ int main ( int argc, char * argv[] )
 	unsigned long int cachesize = 64;
 	if (argc>2) cachesize = atoi(argv[2]);
 	if (cachesize < 0) {
-	    err <<"cache size must be positive long integer\n\n" << errorExit;
+	    errorLog <<"cache size must be positive long integer\n\n" << errorExit;
 	}
 
 	AbstractMatrix *indata1 = new filevector( ifname1, cachesize );

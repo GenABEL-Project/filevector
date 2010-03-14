@@ -41,7 +41,7 @@ void Transposer::process(string filename, string destFileName, bool forceOverwri
 
 
     if (!forceOverwrite && headerOrDataExists(dest_file_name)) {
-        err << "File already exists: " << dest_file_name << endl << errorExit;
+        errorLog << "File already exists: " << dest_file_name << endl << errorExit;
     }
 
     initialize_empty_file(dest_file_name, src_fv->getNumObservations(), src_fv->getNumVariables(), src_fv->getElementType(),true);
@@ -98,9 +98,9 @@ unsigned long int src_nobss, unsigned int data_size) {
               var_length = src_nvars % square_size;
 
           char * data_part = new (nothrow) char[var_length*obs_length*data_size];
-          if(!data_part) err << "can not allocate memory for data_part" << errorExit;
+          if(!data_part) errorLog << "can not allocate memory for data_part" << errorExit;
           char * data_part_transposed = new (nothrow) char[var_length*obs_length*data_size];
-          if(!data_part_transposed) err << "can not allocate memory for data_part_transposed" << errorExit;
+          if(!data_part_transposed) errorLog << "can not allocate memory for data_part_transposed" << errorExit;
 
           read_part(src_stream, data_part, j * square_size , obs_length, i * square_size , var_length,  data_size, src_nobss );
           transpose_part(data_part,data_part_transposed,obs_length,var_length, data_size);

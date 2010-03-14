@@ -10,7 +10,7 @@ fr_type get_file_type(char * filename) {
 	fr_type out;
 	ifstream myfile(filename, ios::binary | ios::in);
 	if (!myfile) {
-		err << "can not open file for reading" << endl << errorExit;
+		errorLog << "can not open file for reading" << endl << errorExit;
 	}
 	myfile.read((char*)&out,sizeof(out));
 	return(out);
@@ -56,7 +56,7 @@ unsigned short calcDataSize(unsigned short int type){
 		desize = sizeof(double);
 		break;
 	  default:
-		err << "file contains data of unknown type" << endl << errorExit;
+		errorLog << "file contains data of unknown type" << endl << errorExit;
 	}
 	return desize;
 }
@@ -84,7 +84,7 @@ void initialize_empty_file(string filename, unsigned long nvariables, unsigned l
 	}
 
 	if (!override && bHeaderOrDataExists) {
-	    err << "File '" << filename << "' already exists." << endl << errorExit;
+	    errorLog << "File '" << filename << "' already exists." << endl << errorExit;
 	}
 
 	ofstream idx_file(index_filename.c_str(), ios::binary | ios::out);

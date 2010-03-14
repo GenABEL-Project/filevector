@@ -53,7 +53,7 @@ void make_fake_file(char * fake_filename, unsigned long int nvariables, unsigned
 {
 	ofstream fake_file(fake_filename, ios::binary | ios::out);
 	if (!fake_file) {
-		err << "can not create fake file %s " << endl << fake_filename << errorExit;
+		errorLog << "can not create fake file %s " << endl << fake_filename << errorExit;
 	}
 	DT out = start;
 	fr_type tmp;

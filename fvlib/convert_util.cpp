@@ -108,21 +108,21 @@ void text2fvf(string program_name, string infilename, string outfilename,
 
 	// check that it is mentioned how many columns to skip when reading row names
 	if (rownamesfilename=="" && (rncol>0) && !skipcols) {
-		err << "\n\nPlease tell how many columns to skip when you provide the column containing row names!" << endl << endl << errorExit;
+		errorLog << "\n\nPlease tell how many columns to skip when you provide the column containing row names!" << endl << endl << errorExit;
 	}
 	if (skipcols && (rncol > skipcols)) {
-		err << "rncol > skipcols" << errorExit;
+		errorLog << "rncol > skipcols" << errorExit;
 	}
 	if (colnamesfilename=="" && (cnrow>0) && !skiprows) {
-		err << "\n\nPlease tell how many rows to skip when you provide the row containing column names!" << endl << endl << errorExit;
+		errorLog << "\n\nPlease tell how many rows to skip when you provide the row containing column names!" << endl << endl << errorExit;
 	}
 	if (skiprows && (cnrow > skiprows)) {
-		err << "cnrow > skiprows" << errorExit;
+		errorLog << "cnrow > skiprows" << errorExit;
 	}
 
 	ifstream infile(infilename.c_str());
 	if (!infile) {
-	    err << "Can not open file '" << infilename << "' for reading\n\n";
+	    errorLog << "Can not open file '" << infilename << "' for reading\n\n";
 	}
 
 	vector<string> extColNames;
@@ -137,7 +137,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 		ifstream colnamesfile(colnamesfilename.c_str());
 		string tmpstr;
 		if (!colnamesfile) {
-			err << "Can not open column names file '" << colnamesfilename << "'\n\n" << errorExit;
+			errorLog << "Can not open column names file '" << colnamesfilename << "'\n\n" << errorExit;
 		}
 		while (colnamesfile >> tmpstr) {
 			words_in_colnamesfile++;
@@ -160,7 +160,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 		ifstream rownamesfile(rownamesfilename.c_str());
 		string tmpstr;
 		if (!rownamesfile) {
-			err<< "Can not open row names file '"<<rownamesfilename<<"'\n\n";
+			errorLog<< "Can not open row names file '"<<rownamesfilename<<"'\n\n";
 		}
 		while (rownamesfile >> tmpstr) {
 			words_in_rownamesfile++;

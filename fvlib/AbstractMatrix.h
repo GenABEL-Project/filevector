@@ -18,7 +18,7 @@ public:
     {
         char* tmp = new (nothrow) char [getNumObservations()*getElementSize()];
         if(!tmp)
-            err << "writeVariableAs allocation error" << errorExit;
+            errorLog << "writeVariableAs allocation error" << errorExit;
         for(int i = 0; i< getNumObservations();i++){
             performCast(&tmp[i*getElementSize()],outvec[i],getElementType());
         }
@@ -31,7 +31,7 @@ public:
     {
         char* tmp = new (nothrow) char [getNumObservations()*getElementSize()];
         if(!tmp)
-            err << "add_variable_as allocation error" << errorExit;
+            errorLog << "add_variable_as allocation error" << errorExit;
         for(int i = 0; i< getNumObservations();i++){
             performCast(&tmp[i*getElementSize()],outvec[i],getElementType());
         }

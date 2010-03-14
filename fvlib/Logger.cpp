@@ -1,16 +1,21 @@
 #include "Logger.h"
 
-using namespace std;
+Logger::Logger(int iErrorLevel)
+{
+           errorLevel = iErrorLevel;
+           enabled = true;
+}
+                     
 
 ErrorExit errorExit;
-NullStream nullStream;
+Logger inf(MESSAGE_LEVEL);
+Logger dbg(DEBUG_LEVEL);
+Logger msg(MESSAGE_LEVEL);
+Logger testDbg(DEBUG_LEVEL);
+Logger deepDbg(DEBUG_LEVEL);
+Logger errorLog(ERROR_LEVEL);
 
-void operator << (void*, ErrorExit&) {
-#ifdef R_R_H
-   throw 1;
-#else
-	exit(EXIT_FAILURE);
-#endif
-}
+
+
 
 
