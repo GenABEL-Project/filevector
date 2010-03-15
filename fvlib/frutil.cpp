@@ -90,6 +90,8 @@ void initialize_empty_file(string filename, unsigned long nvariables, unsigned l
 	ofstream idx_file(index_filename.c_str(), ios::binary | ios::out);
 	ofstream dataFile(data_filename.c_str(), ios::binary | ios::out);
 
+	deepDbg << "Writing filevector header" << endl; 
+
 	idx_file.write((char*)&metadata, sizeof(metadata));
 
 	fixedchar obsname;

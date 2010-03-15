@@ -145,7 +145,6 @@ public:
 private :
 	void copyVariable(char * to, char * from, int n, unsigned long int * indexes );
 	void freeResources();
-
 };
 
 //global variables

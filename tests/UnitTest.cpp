@@ -4,17 +4,18 @@
 
 #include "FileModificationTest.h"
 #include "TestUtil.h"
-#include "FVUnitTest.h"
+#include "UnitTest.h"
+#include "../fvlib/FilteredMatrix.h"
 
 using namespace std;
 
-string FVUnitTest::get_file_name_to_write() {
+string UnitTest::get_file_name_to_write() {
     string ret = TestUtil::get_base_dir() + string("/../tests/data/2write/modify_me");
 
     return ret;
 }
 
-void FVUnitTest::testCacheUpdatedOnWrite() {
+void UnitTest::testCacheUpdatedOnWrite() {
     testDbg << "testCacheUpdatedOnWrite" << endl;
     string file_name = get_file_name_to_write();
 
@@ -35,7 +36,7 @@ void FVUnitTest::testCacheUpdatedOnWrite() {
     delete var2;
 };
 
-void FVUnitTest::test_write_variable_name() {
+void UnitTest::test_write_variable_name() {
     string file_name = get_file_name_to_write();
     AbstractMatrix* fv = new filevector( file_name, 2 );//no need in big cache
     fixedchar _fc_varname_saved;
@@ -51,7 +52,7 @@ void FVUnitTest::test_write_variable_name() {
     CPPUNIT_ASSERT_EQUAL( string(_fc_varname_saved.name), string(_fc_varname_loaded.name) );
 }
 
-void FVUnitTest::test_writeObservationName() {
+void UnitTest::test_writeObservationName() {
     string file_name = get_file_name_to_write();
     AbstractMatrix* fv = new filevector( file_name, 2 );//no need in big cache
     fixedchar _fc_obsname_saved;
@@ -67,7 +68,7 @@ void FVUnitTest::test_writeObservationName() {
     CPPUNIT_ASSERT_EQUAL( string(_fc_obsname_saved.name), string(_fc_obsname_loaded.name) );
 }
 
-void FVUnitTest::test_save() {
+void UnitTest::test_save() {
     string src_file_name = get_file_name_to_write();
 
     string dest_file_name = TestUtil::get_dir_name_to_write()+"/save_test";
@@ -93,7 +94,7 @@ void FVUnitTest::test_save() {
     delete fv;
 }
 
-void FVUnitTest::test_save_vars() {
+void UnitTest::test_save_vars() {
     string src_file_name = get_file_name_to_write();
     string dest_file_name = TestUtil::get_dir_name_to_write()+"/save_vars_test";
     remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
@@ -108,7 +109,7 @@ void FVUnitTest::test_save_vars() {
     CPPUNIT_ASSERT_EQUAL( (unsigned int )2 ,fv_copy->getNumVariables() );
 }
 
-void FVUnitTest::test_save_obs() {
+void UnitTest::test_save_obs() {
     string src_file_name = get_file_name_to_write();
     string dest_file_name = TestUtil::get_dir_name_to_write()+"/save_obs_test";
     remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
@@ -137,7 +138,7 @@ void FVUnitTest::test_save_obs() {
 }
 
 /*test saving vars/obs window*/
-void FVUnitTest::test_save_vars_obs() {
+void UnitTest::test_save_vars_obs() {
 	string src_file_name = get_file_name_to_write();
 
 	string dest_file_name = TestUtil::get_dir_name_to_write()+"/save_test";
@@ -173,7 +174,7 @@ void FVUnitTest::test_save_vars_obs() {
     delete saved_var;
 }
 
-void FVUnitTest::test_setCacheSizeMb() {
+void UnitTest::test_setCacheSizeMb() {
     string src_file_name = get_file_name_to_write();
     filevector *fv = new filevector( src_file_name, 64 );
 
@@ -199,7 +200,7 @@ void FVUnitTest::test_setCacheSizeMb() {
     delete var;
 }
 
-void FVUnitTest::test_read_write_observation() {
+void UnitTest::test_read_write_observation() {
     unsigned long nvariables = 5;
 	unsigned long nobservations = 3;
 
@@ -232,7 +233,7 @@ void FVUnitTest::test_read_write_observation() {
 }
 
 
-void FVUnitTest::test_readVariable_convert_to() {
+void UnitTest::test_readVariable_convert_to() {
 	unsigned long int nvariables =10;
 	unsigned long int nobservations =3;
 	string tmp_file_name = TestUtil::get_temp_file_name();
@@ -258,7 +259,7 @@ void FVUnitTest::test_readVariable_convert_to() {
 	delete[] int_var;
 }
 
-void FVUnitTest::test_add_variable() {
+void UnitTest::test_add_variable() {
 	string tempFileName = TestUtil::get_temp_file_name();
 	TestUtil::create_empty_filevector(tempFileName,10,20);
 	AbstractMatrix* fv = new filevector( tempFileName, 1 );
@@ -288,7 +289,7 @@ void FVUnitTest::test_add_variable() {
     delete fv2;
 }
 
-void FVUnitTest::test_extract_base_file_name()  {
+void UnitTest::test_extract_base_file_name()  {
     string fn = "//...///dd/d///filename.fvi";
     string base = extract_base_file_name(fn);
     CPPUNIT_ASSERT_EQUAL( fn , base + ".fvi" );
@@ -302,12 +303,52 @@ void FVUnitTest::test_extract_base_file_name()  {
     CPPUNIT_ASSERT_EQUAL( fn , base );
 }
 
+void UnitTest::testFilteredMatrix() {
+    cout << "testFilteredMatrix()" << endl;
+	string filename = TestUtil::get_temp_file_name();
+	TestUtil::create_empty_filevector(filename, 5, 4);
+	filevector fv(filename,1);
+
+	unsigned long i,j;
+	float f = 0;
+
+	for (i=0;i<5;i++){
+	    for (j=0;j<4;j++){
+        	fv.writeElementAs(i,j,f);
+	        f++;
+	    }
+	}
+
+	vector<unsigned long> rFilter,cFilter;
+	rFilter.push_back(0);
+	rFilter.push_back(2);
+	rFilter.push_back(3);
+	cFilter.push_back(1);
+	cFilter.push_back(3);
+
+	FilteredMatrix fm(fv,rFilter,cFilter);
+
+    fm.readElementAs(0,0,f); CPPUNIT_ASSERT_EQUAL(f,(float)1);
+    fm.readElementAs(0,1,f); CPPUNIT_ASSERT_EQUAL(f,(float)3);
+    fm.readElementAs(1,0,f); CPPUNIT_ASSERT_EQUAL(f,(float)9);
+    fm.readElementAs(1,1,f); CPPUNIT_ASSERT_EQUAL(f,(float)11);
+    fm.readElementAs(2,0,f); CPPUNIT_ASSERT_EQUAL(f,(float)13);
+    fm.readElementAs(2,1,f); CPPUNIT_ASSERT_EQUAL(f,(float)15);
+
+    float var[2] = {12,34};
+
+    fv.w
+
+    testDbg << "End of FilteredMatrix test" << endl;
+}
+
+
 
 int main( int argc, char **argv)
 {
     TestUtil::detect_base_dir(string(argv[0]));
     CppUnit::TextUi::TestRunner runner;
-    runner.addTest( FVUnitTest::suite() );
+    runner.addTest( UnitTest::suite() );
     runner.run();
     return 0;
 }

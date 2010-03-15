@@ -16,11 +16,11 @@ using namespace std;
 class ErrorExit {};
 class Logger {
 public:
-
 //    enum ErrorLevel {Message, Debug, Error};
-    bool enabled;
     int errorLevel;
-    Logger(int iErrorLevel);
+    bool enabled;
+
+    Logger(int iErrorLevel) : errorLevel(iErrorLevel), enabled(true) {}
     Logger(int iErrorLevel, bool iEnabled) : errorLevel(iErrorLevel), enabled(iEnabled) {}
     Logger &operator << (const char* s){
         sendString(s);
@@ -33,7 +33,7 @@ public:
     Logger &operator << (float x) { stringstream ss; string s; ss << x; ss >> s; sendString(s); return *this; }
     Logger &operator << (double x) { stringstream ss; string s; ss << x; ss >> s; sendString(s); return *this; }
     Logger &operator << (string x) { stringstream ss; string s; ss << x; ss >> s; sendString(s); return *this; }
-    Logger &operator <<(ostream&(*f)(ostream&)){ // endl support
+    Logger &operator << (ostream&(*f)(ostream&)){ // endl support
         sendString("\n");
         return *this;
     }

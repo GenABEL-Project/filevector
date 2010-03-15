@@ -176,7 +176,7 @@ void filevector::update_cache(unsigned long int from_var)
 		current_cache_size_bytes = (in_cache_to-in_cache_from+1)*
 					   data_type.bytes_per_record*data_type.nobservations*sizeof(char);
 	}
-	dbg << "Updating cache: " << in_cache_from << " - " << in_cache_to << "\n";
+	deepDbg << "Updating cache: " << in_cache_from << " - " << in_cache_to << "\n";
 	unsigned long int internal_from = in_cache_from*data_type.nobservations*data_type.bytes_per_record*sizeof(char);
 	dataFile.seekg(internal_from, ios::beg);
 	if (current_cache_size_bytes <= max_buffer_size_bytes) {
@@ -330,7 +330,7 @@ unsigned long int filevector::nrnc_to_nelem(unsigned long int nvar, unsigned lon
 
 void filevector::readElement(unsigned long int nvar, unsigned long int nobs, void * out)
 {
-    //todo use cache
+    deepDbg << "filevector.readElement(" << nvar << "," << nobs << ");" << endl;
     unsigned long int pos = nrnc_to_nelem(nvar, nobs);
     dataFile.seekg(pos*getElementSize(), ios::beg);
     dataFile.read((char*)out,getElementSize());
@@ -341,6 +341,7 @@ void filevector::writeElement(unsigned long int nvar, unsigned long int nobs, vo
     if (readOnly) {
         errorLog << "Trying to write to the readonly file." << errorExit;
     }
+    deepDbg << "filevector.writeElement(" << nvar << "," << nobs << ");" << endl;
     unsigned long int pos = nrnc_to_nelem(nvar, nobs);
     dataFile.seekp(pos*getElementSize(), ios::beg);
     dataFile.write((char*)data,getElementSize());

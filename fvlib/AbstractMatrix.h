@@ -59,7 +59,10 @@ public:
 
     template <class DT>
     void writeElementAs(unsigned long varNumber, unsigned long obsNumber, DT& element){
-       char *ret= new char [getElementSize()];
+       deepDbg << "AbstractMatrix.writeElementAs(" << varNumber << "," << obsNumber << "," << element <<")";
+       deepDbg << "Alloc getElementSize() = " << getElementSize() << endl;
+       char *ret = new char [getElementSize()];
+       deepDbg << "Perform cast" << endl;
        performCast(ret, element, getElementType());
        writeElement(varNumber, obsNumber, ret);
        delete [] ret;
@@ -88,11 +91,13 @@ public:
     virtual fixedchar readVariableName(unsigned long int nvar) = 0;
 
     virtual void setUpdateNamesOnWrite(bool bUpdate) = 0;
-
-private:
+	virtual short unsigned getElementSize() = 0;
+	virtual short unsigned getElementType() = 0;
 	virtual void readVariable(unsigned long int nvar, void * outvec) = 0;
 	virtual void readElement(unsigned long int nvar, unsigned long int nobs, void * elem) = 0;
 	virtual void writeVariable(unsigned long int nvar, void * datavec) = 0;
+	virtual void writeElement(unsigned long int nvar, unsigned long int nobs, void * data) = 0;
+private:
 
     // HIGH -- here I see the possibility to make these functions faster then "random" access functions
     // adds variable at the end = writeVariable with nvar=NVARS?
@@ -101,10 +106,6 @@ private:
     //    virtual void add_observation(void * invec, string obsname) = 0;
     // write single element
     // CURRENTLY CACHE IS NOT UPDATED!
-	virtual void writeElement(unsigned long int nvar, unsigned long int nobs, void * data) = 0;
-
-	virtual short unsigned getElementSize() = 0;
-	virtual short unsigned getElementType() = 0;
 };
 
 #endif

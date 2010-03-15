@@ -18,7 +18,7 @@ CONVERT = $(BINDIR)/convert
 WRITE_VAR_SPEED = $(BINDIR)/writevarspeed
 TRANSPOSE = $(BINDIR)/transpose
 
-UNITTEST = $(BINDIR)/fvunittest
+UNITTEST = $(BINDIR)/unittest
 TRANSPOSETEST = $(BINDIR)/transposetest
 
 # GNU compiler
@@ -70,9 +70,9 @@ modificationtest : $(MODIFTEST)
 $(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FileModificationTest.cpp  -o $(MODIFTEST)
 
-unittest : $(UNITTEST) $(TRANSPOSETEST)
-$(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FVUnitTest.cpp
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FVUnitTest.cpp  -o $(UNITTEST)
+unittest : $(UNITTEST)
+$(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TestUtil.* $(TESTSDIR)/UnitTest.*
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/UnitTest.cpp  -o $(UNITTEST)
 
 transposetest: $(TRANSPOSETEST)
 $(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp $(TESTSDIR)/*.h

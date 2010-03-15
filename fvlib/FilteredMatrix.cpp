@@ -44,14 +44,19 @@ void FilteredMatrix::readObservation(unsigned long nobs, void * outvec) {
 }
 
 void FilteredMatrix::writeObservation(unsigned long nobs, void * invec) {
-    return nestedMatrix.writeObservation(filteredToRealColIdx[nobs], invec);
+    nestedMatrix.writeObservation(filteredToRealColIdx[nobs], invec);
 }
 
 void FilteredMatrix::writeVariable(unsigned long nvar, void * datavec) {}
 
-void FilteredMatrix::readElement(unsigned long nvar, unsigned long nobs, void * out) {}
+void FilteredMatrix::readElement(unsigned long nvar, unsigned long nobs, void * out) {
+    nestedMatrix.readElement(filteredToRealRowIdx[nvar], filteredToRealColIdx[nobs], out);
+}
 
-void FilteredMatrix::writeElement(unsigned long nvar, unsigned long nobs, void* data) {}
+void FilteredMatrix::writeElement(unsigned long nvar, unsigned long nobs, void* data) {
+    deepDbg << "FilteredMatrix.writeElement (" << nvar << "," << nobs << ")" << endl;
+    nestedMatrix.writeElement(filteredToRealRowIdx[nvar], filteredToRealColIdx[nobs], data);
+}
 
 unsigned int FilteredMatrix::getNumVariables() {
    return filteredToRealRowIdx.size();
@@ -104,14 +109,16 @@ void FilteredMatrix::saveAsText(string newFilename, unsigned long nvars, unsigne
 }
 
 short unsigned FilteredMatrix::getElementSize() {
-    return getElementSize();
+    return nestedMatrix.getElementSize();
 }
 
-short unsigned FilteredMatrix::getDataType() {
-    return getDataType();
+short unsigned FilteredMatrix::getElementType() {
+    return nestedMatrix.getElementType();
 }
 
-void FilteredMatrix::addVariable(void * invec, string varname) {}
+void FilteredMatrix::addVariable(void * invec, string varname) {
+    errorLog << "FilteredMatrix doesn't support addVariable." << endl << errorExit;
+}
 
 
 
