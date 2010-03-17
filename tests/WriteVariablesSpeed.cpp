@@ -1,15 +1,13 @@
 /* Generate 2,500,000 variables of length 10,000 (random), assign names (vars: rs1-rs2500000, obs: id1-id10000),
-Use initialize_empty_file()/writeVariable() for 2,000,000 and top up with addVariable() to 2,500,000.
+Use initializeEmptyFile()/writeVariable() for 2,000,000 and top up with addVariable() to 2,500,000.
 Select 2,500 random variables,  */
 #include <sstream>
 
 #include "../fvlib/frerror.h"
 #include "../fvlib/frutil.h"
-#include "../fvlib/filevector.h"
+#include "../fvlib/FileVector.h"
 
-int main(int argc, char * argv[])
-{
-
+int main(int argc, char * argv[]) {
 	int nvars = 100000;
 	int nobs = 1000;
 	int to_add = 20000;
@@ -34,8 +32,8 @@ int main(int argc, char * argv[])
   	testDbg <<filename;
   	testDbg <<",vars*obs: "<< nvars<< "*"<<nobs;
   	testDbg <<" , cache:"<< cache_size << endl;
-	initialize_empty_file( (char *)filename.c_str(), nvars, nobs, FLOAT, true);
-	filevector fv(filename,cache_size);
+	initializeEmptyFile( (char *)filename.c_str(), nvars, nobs, FLOAT, true);
+	FileVector fv(filename,cache_size);
 
     float * tmp = new float[fv.getNumObservations()];
 	for(int i=0;i<fv.getNumVariables();i++)

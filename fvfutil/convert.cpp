@@ -8,7 +8,7 @@
 
 #include "../fvlib/frerror.h"
 #include "../fvlib/frutil.h"
-#include "../fvlib/filevector.h"
+#include "../fvlib/FileVector.h"
 
 using namespace std;
 
@@ -24,11 +24,11 @@ int main(int argc, char * argv[])
        errorLog << "filename should have .fvf extention" << errorExit;
 
     string data_filename  =filename.substr(0,filename.length()-4) + FILEVECTOR_DATA_FILE_SUFFIX;
-    string index_filename =filename.substr(0,filename.length()-4) + FILEVECTOR_INDEX_FILE_SUFFIX;
+    string indexFilename =filename.substr(0,filename.length()-4) + FILEVECTOR_INDEX_FILE_SUFFIX;
 
-    dbg << "data:" << data_filename << ", index:" << index_filename << endl;
+    dbg << "data:" << data_filename << ", index:" << indexFilename << endl;
 
-    fr_type data_type;
+    FileHeader data_type;
 	struct stat filestatus;
 
 	stat( filename.c_str() , &filestatus);
@@ -51,18 +51,18 @@ int main(int argc, char * argv[])
 		errorLog << "Failed to read datainfo from file " << filename << errorExit;
 	}
 
-	unsigned long int header_size = sizeof(data_type) + sizeof(fixedchar)*(data_type.nvariables+data_type.nobservations);
+	unsigned long headerSize = sizeof(data_type) + sizeof(fixedchar)*(data_type.numVariables+data_type.numObservations);
 
     new_data_file.open(data_filename.c_str(), ios::out | ios::binary);
     if (new_data_file.fail())
     	errorLog << "Creating new data file " << data_filename << " for write failed" << endl << errorExit;
 
-    new_index_file.open(index_filename.c_str(), ios::out | ios::binary);
+    new_index_file.open(indexFilename.c_str(), ios::out | ios::binary);
     if (new_index_file.fail())
-    	errorLog << "Creating new index file "<<index_filename<<" for write failed"<< endl<< errorExit;
+    	errorLog << "Creating new index file "<<indexFilename<<" for write failed"<< endl<< errorExit;
 
      //copy header
-    int buf_len = header_size;
+    int buf_len = headerSize;
     char * buffer = new (nothrow) char [buf_len];
     if (!buffer)
 		errorLog << "failed to get memory for buffer " << endl << errorExit;

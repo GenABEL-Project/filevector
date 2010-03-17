@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../fvlib/filevector.h"
+#include "../fvlib/FileVector.h"
 
 #include "CorrectnessTest.h"
 #include "TestUtil.h"
@@ -24,7 +24,7 @@ float summData(float *data, int length){
 
 void CorrectnessTest::testReadVariable() {
     string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose");
-    AbstractMatrix *data =  new filevector( inputFile, 64 );
+    AbstractMatrix *data =  new FileVector( inputFile, 64 );
 
     testDbg << "Reading file:" << inputFile << endl;
 
@@ -65,7 +65,7 @@ void CorrectnessTest::testRandomReadObservations(){
     testDbg << "testRandomReadObservations" << endl;
     string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose");
     string sumFileName = inputFile + string(".fvf_varsum");
-    AbstractMatrix* data = new filevector ( inputFile, 64 );
+    AbstractMatrix* data = new FileVector ( inputFile, 64 );
 
     testDbg << "Reading file:" << inputFile << endl;
 
@@ -128,7 +128,7 @@ void CorrectnessTest::testSubMatrix() {
 
     testDbg << "obsFileName = " << obsFileName << endl;
 
-    AbstractMatrix *data = new filevector ( inputFile, 64 );
+    AbstractMatrix *data = new FileVector ( inputFile, 64 );
 
     ifstream subMatrixData(subMatrixFileName.c_str());
     ifstream obsNamesData(obsFileName.c_str());

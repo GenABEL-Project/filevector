@@ -4,7 +4,7 @@
 #include <getopt.h>
 
 #include "usage.h"
-#include "convert_util.h"
+#include "../fvlib/convert_util.h"
 
 #define T2F_VERSION "0.0-2"
 #define T2F_RELEASEDATE "July 28, 2009"

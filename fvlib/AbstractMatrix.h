@@ -14,7 +14,7 @@ public:
     virtual ~AbstractMatrix(){};
 
     template <class DT>
-    void writeVariableAs(unsigned long int nvar, DT * outvec)
+    void writeVariableAs(unsigned long nvar, DT * outvec)
     {
         char* tmp = new (nothrow) char [getNumObservations()*getElementSize()];
         if(!tmp)
@@ -40,7 +40,7 @@ public:
     }
 
     template<class DT>
-    void readVariableAs(unsigned long int nvar, DT * outvec)
+    void readVariableAs(unsigned long nvar, DT * outvec)
     {
        char * tmp = new (nothrow) char[getNumObservations()*getElementSize()];
        readVariable(nvar, tmp);
@@ -72,31 +72,32 @@ public:
     virtual unsigned int getNumObservations() = 0;
 
 	virtual void saveAs( string newFilename ) = 0;
-	virtual void saveVariablesAs( string newFilename, unsigned long int nvars, unsigned long int * varindexes) = 0;
-   	virtual void saveObservationsAs( string newFilename, unsigned long int nobss, unsigned long int * obsindexes) = 0;
+	virtual void saveVariablesAs( string newFilename, unsigned long nvars, unsigned long * varindexes) = 0;
+   	virtual void saveObservationsAs( string newFilename, unsigned long nobss, unsigned long * obsindexes) = 0;
 
-    virtual void saveAs(string newFilename, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes) = 0;
-    virtual void saveAsText(string newFilename, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes) = 0;
+    virtual void saveAs(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long * varindexes, unsigned long * obsindexes) = 0;
+    virtual void saveAsText(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long * varindexes, unsigned long * obsindexes) = 0;
 
-    virtual void readObservation(unsigned long int nobs, void * outvec) = 0;
-    virtual void writeObservation(unsigned long int nobs, void * invec) = 0;
+    virtual void readObservation(unsigned long obsIdx, void * outvec) = 0;
+    virtual void writeObservation(unsigned long obsIdx, void * invec) = 0;
 
-    virtual void writeVariableName(unsigned long int nvar, fixedchar newname) = 0;  // todo loooong future -- control that name is unique
-    virtual void writeObservationName(unsigned long int nobs, fixedchar newname)= 0;  //todo loooong future -- control that name is unique!
+    virtual void writeVariableName(unsigned long nvar, fixedchar newname) = 0;  // todo loooong future -- control that name is unique
+    virtual void writeObservationName(unsigned long obsIdx, fixedchar newname)= 0;  //todo loooong future -- control that name is unique!
 
-    virtual unsigned long int getCacheSizeInMb() = 0;
-    virtual void setCacheSizeInMb( unsigned long int cachesizeMb ) = 0;
+    virtual unsigned long getCacheSizeInMb() = 0;
+    virtual void setCacheSizeInMb( unsigned long cachesizeMb ) = 0;
 
-    virtual fixedchar readObservationName(unsigned long int nobs) = 0;
-    virtual fixedchar readVariableName(unsigned long int nvar) = 0;
+    virtual fixedchar readObservationName(unsigned long obsIdx) = 0;
+    virtual fixedchar readVariableName(unsigned long nvar) = 0;
+    virtual void cacheAllNames(bool) = 0;
 
     virtual void setUpdateNamesOnWrite(bool bUpdate) = 0;
 	virtual short unsigned getElementSize() = 0;
 	virtual short unsigned getElementType() = 0;
-	virtual void readVariable(unsigned long int nvar, void * outvec) = 0;
-	virtual void readElement(unsigned long int nvar, unsigned long int nobs, void * elem) = 0;
-	virtual void writeVariable(unsigned long int nvar, void * datavec) = 0;
-	virtual void writeElement(unsigned long int nvar, unsigned long int nobs, void * data) = 0;
+	virtual void readVariable(unsigned long nvar, void * outvec) = 0;
+	virtual void readElement(unsigned long nvar, unsigned long obsIdx, void * elem) = 0;
+	virtual void writeVariable(unsigned long nvar, void * datavec) = 0;
+	virtual void writeElement(unsigned long nvar, unsigned long obsIdx, void * data) = 0;
 private:
 
     // HIGH -- here I see the possibility to make these functions faster then "random" access functions

@@ -8,7 +8,7 @@
 #include "../fvlib/frversion.h"
 #include "../fvlib/frerror.h"
 #include "../fvlib/frutil.h"
-#include "../fvlib/filevector.h"
+#include "../fvlib/FileVector.h"
 
 #include "usage.h"
 

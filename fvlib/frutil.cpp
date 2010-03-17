@@ -4,10 +4,10 @@
 
 #include "frutil.h"
 #include "const.h"
-#include "filevector.h"
+#include "FileVector.h"
 
-fr_type get_file_type(char * filename) {
-	fr_type out;
+FileHeader get_file_type(char * filename) {
+	FileHeader out;
 	ifstream myfile(filename, ios::binary | ios::in);
 	if (!myfile) {
 		errorLog << "can not open file for reading" << endl << errorExit;
@@ -61,25 +61,26 @@ unsigned short calcDataSize(unsigned short int type){
 	return desize;
 }
 
-void initialize_empty_file(string filename, unsigned long nvariables, unsigned long nobservations, unsigned short type, bool override)
+void initializeEmptyFile(string filename, unsigned long numVariables, unsigned long nobservations, unsigned short type, bool override)
 {
-    dbg << "Initizlizing empty file '" << filename << "', type " << type << "." << endl;
-    string index_filename = filename + FILEVECTOR_INDEX_FILE_SUFFIX;
+    dbg << "Initializing empty file '" << filename << "', type " << type << "." << endl;
+    string indexFilename = filename + FILEVECTOR_INDEX_FILE_SUFFIX;
     string data_filename = filename + FILEVECTOR_DATA_FILE_SUFFIX;
 
-	fr_type metadata;
-	unsigned long int desize = calcDataSize(type);
-	metadata.type = type;
-	metadata.nvariables = nvariables;
-	metadata.nobservations = nobservations;
-	metadata.nelements = nvariables*nobservations;
-	metadata.bytes_per_record = desize;
-	metadata.bits_per_record = desize*8;
+	FileHeader fileHeader;
+	unsigned long desize = calcDataSize(type);
+	fileHeader.type = type;
+	fileHeader.numVariables = numVariables;
+	fileHeader.numObservations = nobservations;
+	fileHeader.nelements = numVariables*nobservations;
+	fileHeader.bytesPerRecord = desize;
+	fileHeader.bitsPerRecord = desize*8;
 
 	bool bHeaderOrDataExists = headerOrDataExists( filename );
 
 	if (override && bHeaderOrDataExists) {
-	    unlink(index_filename.c_str());
+	    dbg << "Deleting existing file" << indexFilename << endl;
+	    unlink(indexFilename.c_str());
 	    unlink(data_filename.c_str());
 	}
 
@@ -87,31 +88,43 @@ void initialize_empty_file(string filename, unsigned long nvariables, unsigned l
 	    errorLog << "File '" << filename << "' already exists." << endl << errorExit;
 	}
 
-	ofstream idx_file(index_filename.c_str(), ios::binary | ios::out);
+	ofstream indexFile(indexFilename.c_str(), ios::binary | ios::out);
 	ofstream dataFile(data_filename.c_str(), ios::binary | ios::out);
 
-	deepDbg << "Writing filevector header" << endl; 
+	deepDbg << "Writing FileVector header." << endl;
+    fileHeader.print();
 
-	idx_file.write((char*)&metadata, sizeof(metadata));
+    indexFile.seekp(0,ios::beg);
+	indexFile.write((char*)&fileHeader, sizeof(fileHeader));
 
-	fixedchar obsname;
-	for (unsigned long int i=0;i<nobservations;i++) {
-		sprintf(obsname.name,"%lu",i+1);
-		idx_file.write((char*)&obsname.name,sizeof(obsname.name));
+    deepDbg << "Writing "<<nobservations<<" observations." << endl;
+	fixedchar name;
+	for (unsigned long i=0;i<nobservations;i++) {
+		sprintf(name.name, "%lu", i+1);
+        indexFile.seekp(sizeof(FileHeader) + i * sizeof(fixedchar), ios::beg);
+		indexFile.write((char*)&name.name,sizeof(name.name));
 	}
-	for (unsigned long int i=0;i<nvariables;i++) {
-		sprintf(obsname.name,"%lu",i+1);
-		idx_file.write((char*)&obsname.name,sizeof(obsname.name));
+
+    deepDbg << "Writing "<< numVariables <<" variables." << endl;
+
+    for (unsigned long j=0;j<numVariables;j++) {
+		sprintf(name.name, "%lu", j+1);
+        indexFile.seekp(sizeof(FileHeader) + (j + fileHeader.numObservations) * sizeof(fixedchar), ios::beg);
+		indexFile.write((char*)&name.name,sizeof(name.name));
 	}
+	indexFile.close();
 
-	unsigned long int estimated_data_size = (unsigned long int) metadata.bytes_per_record *
-										(unsigned long int) metadata.nvariables *
-										(unsigned long int) metadata.nobservations;
+	deepDbg << "Writing data file." << endl;
 
-	dataFile.seekp(estimated_data_size -1);
-	dataFile.put('E');
+	unsigned long estimated_data_size = (unsigned long) fileHeader.bytesPerRecord *
+										(unsigned long) fileHeader.numVariables *
+										(unsigned long) fileHeader.numObservations;
+    unsigned long i;
+    dataFile.seekp(estimated_data_size-1,ios::beg);
+    char c = 0;
+  	dataFile.write(&c,1);
+    deepDbg <<"Closing data file"<<endl;
 	dataFile.close();
-	idx_file.close();
     dbg << "File '" << filename << "' initialized."<< endl;
 }
 

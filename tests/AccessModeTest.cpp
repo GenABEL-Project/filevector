@@ -10,20 +10,19 @@
 #include "AccessModeTest.h"
 #include "TestUtil.h"
 
-#include "filevector.h"
+#include "../fvlib/FileVector.h"
 
 using namespace std;
 
-string getDirName()
-{
+string getDirName() {
     return TestUtil::get_base_dir() + string("/../tests/data/modetests");
 }
 
 void AccessModeTest::testReadOnly() {
     string fileName = getDirName() + string("/db_create");
-    initialize_empty_file(fileName, 3,5, DOUBLE, true );
+    initializeEmptyFile(fileName, 3,5, DOUBLE, true );
 
-    AbstractMatrix * f = new filevector(fileName, 1);
+    AbstractMatrix * f = new FileVector(fileName, 1);
     int p = 0;
     f->writeElementAs(1, 1, p);
 

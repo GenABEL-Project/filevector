@@ -25,37 +25,37 @@ void FilteredMatrix::writeVariableName(unsigned long nvar, fixedchar name) {
     nestedMatrix.writeVariableName(filteredToRealRowIdx[nvar], name);
 }
 
-void FilteredMatrix::writeObservationName(unsigned long nobs, fixedchar name) {
-    nestedMatrix.writeObservationName(filteredToRealColIdx[nobs], name);
+void FilteredMatrix::writeObservationName(unsigned long obsIdx, fixedchar name) {
+    nestedMatrix.writeObservationName(filteredToRealColIdx[obsIdx], name);
 }
 
 fixedchar FilteredMatrix::readVariableName(unsigned long nvar) {
     return nestedMatrix.readVariableName(filteredToRealRowIdx[nvar]);
 }
 
-fixedchar FilteredMatrix::readObservationName(unsigned long nobs) {
-    return nestedMatrix.readObservationName(filteredToRealColIdx[nobs]);
+fixedchar FilteredMatrix::readObservationName(unsigned long obsIdx) {
+    return nestedMatrix.readObservationName(filteredToRealColIdx[obsIdx]);
 }
 
 void FilteredMatrix::readVariable(unsigned long nvar, void * outvec) { }
 
-void FilteredMatrix::readObservation(unsigned long nobs, void * outvec) {
-    nestedMatrix.readObservation(filteredToRealColIdx[nobs], outvec);
+void FilteredMatrix::readObservation(unsigned long obsIdx, void * outvec) {
+    nestedMatrix.readObservation(filteredToRealColIdx[obsIdx], outvec);
 }
 
-void FilteredMatrix::writeObservation(unsigned long nobs, void * invec) {
-    nestedMatrix.writeObservation(filteredToRealColIdx[nobs], invec);
+void FilteredMatrix::writeObservation(unsigned long obsIdx, void * invec) {
+    nestedMatrix.writeObservation(filteredToRealColIdx[obsIdx], invec);
 }
 
 void FilteredMatrix::writeVariable(unsigned long nvar, void * datavec) {}
 
-void FilteredMatrix::readElement(unsigned long nvar, unsigned long nobs, void * out) {
-    nestedMatrix.readElement(filteredToRealRowIdx[nvar], filteredToRealColIdx[nobs], out);
+void FilteredMatrix::readElement(unsigned long nvar, unsigned long obsIdx, void * out) {
+    nestedMatrix.readElement(filteredToRealRowIdx[nvar], filteredToRealColIdx[obsIdx], out);
 }
 
-void FilteredMatrix::writeElement(unsigned long nvar, unsigned long nobs, void* data) {
-    deepDbg << "FilteredMatrix.writeElement (" << nvar << "," << nobs << ")" << endl;
-    nestedMatrix.writeElement(filteredToRealRowIdx[nvar], filteredToRealColIdx[nobs], data);
+void FilteredMatrix::writeElement(unsigned long nvar, unsigned long obsIdx, void* data) {
+    deepDbg << "FilteredMatrix.writeElement (" << nvar << "," << obsIdx << ")" << endl;
+    nestedMatrix.writeElement(filteredToRealRowIdx[nvar], filteredToRealColIdx[obsIdx], data);
 }
 
 unsigned int FilteredMatrix::getNumVariables() {
@@ -118,6 +118,10 @@ short unsigned FilteredMatrix::getElementType() {
 
 void FilteredMatrix::addVariable(void * invec, string varname) {
     errorLog << "FilteredMatrix doesn't support addVariable." << endl << errorExit;
+}
+
+void FilteredMatrix::cacheAllNames(bool doCache) {
+    nestedMatrix.cacheAllNames(doCache);
 }
 
 

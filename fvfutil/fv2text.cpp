@@ -7,7 +7,7 @@
 using namespace std;
 
 #include "../fvlib/Logger.h"
-#include "../fvlib/filevector.h"
+#include "../fvlib/FileVector.h"
 
 void info() 
 {
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
     cout << "Output file is '" << outputFileName << "'." << endl;
     cout << "isRMatrix = " << isRMatrix << endl;
     
-    filevector fv(inputFileName, 1);
+    FileVector fv(inputFileName, 1);
     ofstream out(outputFileName.c_str());
     
     unsigned long row, col;

@@ -17,7 +17,7 @@ void print_text2fvf_usage(char * progname)
 	cout << "\t--datatype=TYPE    : specify destination data type, default is DOUBLE" << endl;
 	
 	cout << endl;
-	cout << "The program will convert text matrix to filevector (FVF) format."<< endl;
+	cout << "The program will convert text matrix to FileVector (FVF) format."<< endl;
 	cout << "By default, the columns of the text matrix are considered as 'variables'"<< endl;
 	cout << "for which FVF will provide fast access. If you want it other way around,"<< endl;
 	cout << "please specify '-t' option."<< endl;
@@ -44,7 +44,7 @@ void print_text2fvf_welcome()
 {
 	cout << "\ntext2fvf v. " << T2F_VERSION << " (" << T2F_RELEASEDATE << ")"<< endl; 
 	cout << "(C) " << T2F_AUTHORS << endl;
-	cout << "based on filevector v. " << FV_VERSION << " (" << FV_RELEASEDATE << ")"<< endl;
+	cout << "based on FileVector v. " << FV_VERSION << " (" << FV_RELEASEDATE << ")"<< endl;
 	cout << "(C) " << FV_AUTHORS << endl;
 }
 
@@ -63,6 +63,6 @@ void print_mergevars_welcome()
 {
 	cout << "\nmergevars v. " << MERGEVARS_VERSION << " (" << MERGEVARS_RELEASEDATE << ")"<< endl; 
 	cout << "(C) " << MERGEVARS_AUTHORS << "\n"<< endl;
-	cout << "based on filevector v. " << FV_VERSION << " (" << FV_RELEASEDATE << ")"<< endl;
+	cout << "based on FileVector v. " << FV_VERSION << " (" << FV_RELEASEDATE << ")"<< endl;
 	cout << "(C) " << FV_AUTHORS << "\n"<< endl;
 }

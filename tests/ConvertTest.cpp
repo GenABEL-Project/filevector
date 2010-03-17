@@ -9,19 +9,19 @@
 #include "ConvertTest.h"
 #include "TestUtil.h"
 #include "UnitTest.h"
-#include "filevector.h"
+#include "FileVector.h"
 #include "frutil.h"
 #include "AbstractMatrix.h"
 
 void ConvertTest::test() {
-    unsigned long int nvariables = 3;
-    unsigned long int nobservations = 3;
+    unsigned long numVariables = 3;
+    unsigned long nobservations = 3;
     string tmp_file_name = TestUtil::get_base_dir() + string("/../tests/data/2write/txttest");
     string textFileName = TestUtil::get_base_dir() + string("/../tests/data/2write/test.txt");
 
-  //string filename, unsigned long int nvariables, unsigned long int nobservations, unsigned short int type, bool override
-    initialize_empty_file(tmp_file_name, nvariables, nobservations, FLOAT, true);
-    AbstractMatrix* fv = new filevector( tmp_file_name, 1);
+  //string filename, unsigned long numVariables, unsigned long numObservations, unsigned short int type, bool override
+    initializeEmptyFile(tmp_file_name, numVariables, nobservations, FLOAT, true);
+    AbstractMatrix* fv = new FileVector( tmp_file_name, 1);
 
     float * var = new float [fv->getNumObservations()];
 	

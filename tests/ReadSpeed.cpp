@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "../fvlib/filevector.h"
+#include "../fvlib/FileVector.h"
 
 int main ( int argc, char * argv[] )
 {
@@ -13,13 +13,13 @@ int main ( int argc, char * argv[] )
 	}
     char * ifname1 = argv[1];
 
-	unsigned long int cachesize = 64;
+	unsigned long cachesize = 64;
 	if (argc>2) cachesize = atoi(argv[2]);
 	if (cachesize < 0) {
 	    errorLog <<"cache size must be positive long integer\n\n" << errorExit;
 	}
 
-	AbstractMatrix *indata1 = new filevector( ifname1, cachesize );
+	AbstractMatrix *indata1 = new FileVector( ifname1, cachesize );
 
 	testDbg << "Reading file:"<< ifname1 << "\n";
 	testDbg << "Using cache size:"<< cachesize<< "\n";
@@ -33,7 +33,7 @@ int main ( int argc, char * argv[] )
 		exit(1);
 	}
 
-        for ( unsigned long int i=0 ; i < indata1->getNumVariables() ; i++ )
+        for ( unsigned long i=0 ; i < indata1->getNumVariables() ; i++ )
         {
             indata1->readVariableAs( i, tmpdat );
             if( i % 10000 == 0 )

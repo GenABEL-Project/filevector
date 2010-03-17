@@ -13,14 +13,14 @@
 #include <stdio.h>
 
 #include "../fvlib/AbstractMatrix.h"
-#include "../fvlib/filevector.h"
+#include "../fvlib/FileVector.h"
 #include "../fvlib/Transposer.h"
 #include "TestUtil.h"
 
 using namespace std;
 
 /*
-* This test is for correctness of filevector operations, while most of other tests are
+* This test is for correctness of FileVector operations, while most of other tests are
  for performance testing
 */
 class TransposeTest : public CppUnit::TestFixture
@@ -34,117 +34,16 @@ class TransposeTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
 public:
-
     string get_transposed_filename()
     {
         return TestUtil::get_dir_name_to_write()+"/tmp_transposed";
     }
 
     void testTransposeSingleVar();
-
+    void testTranspose3x3_matrix();
     void testTransposeTwoVars();
-
-
-    void testTranspose3x3_matrix()
-    {
-       string src_file_name = TestUtil::get_temp_file_name();
-
-	   string dest_file_name = get_transposed_filename();
-	   remove((dest_file_name+FILEVECTOR_DATA_FILE_SUFFIX).c_str( ));
-	   remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
-
-	   unsigned int  nvars = 3;
-	   unsigned int  nobs =3;
-	   TestUtil::create_empty_filevector(src_file_name,nvars, nobs, INT);
-
-	   AbstractMatrix* fv =  new filevector ( src_file_name, 1 );
-	   int var_data[nobs];
-	   var_data[0] = 1;
-	   var_data[1] = 2;
-	   var_data[2] = 3;
-	   fv->writeVariableAs(0,var_data);
-	   var_data[0] = 4;
-	   var_data[1] = 5;
-	   var_data[2] = 6;
-	   fv->writeVariableAs(1,var_data);
-	   var_data[0] = 7;
-	   var_data[1] = 8;
-	   var_data[2] = 9;
-	   fv->writeVariableAs(2,var_data);
-	   delete fv;
-
-	   Transposer tr(2);
-	   tr.process( src_file_name );
-
-	   AbstractMatrix* fv_tr =  new filevector ( dest_file_name, 1 );
-	   CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->getNumVariables());
-	   CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->getNumObservations());
-
-       int var[3];
-       fv_tr->readVariableAs(0,var);
-	   CPPUNIT_ASSERT_EQUAL(1, var[0]);
-	   CPPUNIT_ASSERT_EQUAL(4, var[1]);
-	   CPPUNIT_ASSERT_EQUAL(7, var[2]);
-
-	   fv_tr->readVariableAs(1,var);
-	   CPPUNIT_ASSERT_EQUAL(2, var[0]);
-	   CPPUNIT_ASSERT_EQUAL(5, var[1]);
-	   CPPUNIT_ASSERT_EQUAL(8, var[2]);
-
-	   fv_tr->readVariableAs(2,var);
-	   CPPUNIT_ASSERT_EQUAL(3, var[0]);
-	   CPPUNIT_ASSERT_EQUAL(6, var[1]);
-	   CPPUNIT_ASSERT_EQUAL(9, var[2]);
-
-       delete fv_tr;
-
-    };
-
-    void testTransposeFlatArray()
-    {
-       int  var_data [3][1];
-       int  out_data [3][1];
-	   var_data[0][0] = 1;
-	   var_data[0][1] = 2;
-	   var_data[0][2] = 3;
-
-	   Transposer tr;
-	   tr.transpose_part(var_data,out_data,3,1,sizeof(int));
-	   CPPUNIT_ASSERT_EQUAL(1, out_data[0][0]);
-	   CPPUNIT_ASSERT_EQUAL(2, out_data[1][0]);
-	   CPPUNIT_ASSERT_EQUAL(3, out_data[2][0]);
-
-	   
-    }
-
-    void testTransposeArrayWith2Vars()
-    {
-       int var_data[6] ;
-       int  out_data[6];
-       //1 2 3
-       //4 5 6
-	   var_data[0] = 1;
-	   var_data[1] = 2;
-	   var_data[2] = 3;
-
-       var_data[3] = 4;
-	   var_data[4] = 5;
-	   var_data[5] = 6;
-
-	   Transposer tr;
-	   tr.transpose_part(var_data,out_data,3,2,sizeof(int));
-	   //1 4
-	   //2 5
-	   //3 6
-	   CPPUNIT_ASSERT_EQUAL(1, out_data[0]);
-	   CPPUNIT_ASSERT_EQUAL(4, out_data[1]);
-
-	   CPPUNIT_ASSERT_EQUAL(2, out_data[2]);
-	   CPPUNIT_ASSERT_EQUAL(5, out_data[3]);
-
-	   CPPUNIT_ASSERT_EQUAL(3, out_data[4]);
-	   CPPUNIT_ASSERT_EQUAL(6, out_data[5]);
-    }
+    void testTransposeFlatArray();
+    void testTransposeArrayWith2Vars(); 
 
 };
 

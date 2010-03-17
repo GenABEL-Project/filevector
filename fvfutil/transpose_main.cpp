@@ -1,5 +1,5 @@
 /*
-* This is utility to transpose filevector files in binary format, so there will not be need in
+* This is utility to transpose FileVector files in binary format, so there will not be need in
 advanced text tools behaviour.
 */
 
@@ -9,7 +9,7 @@ advanced text tools behaviour.
 
 #include "frerror.h"
 #include "frutil.h"
-#include "filevector.h"
+#include "FileVector.h"
 #include "Transposer.h"
 
 using namespace std;

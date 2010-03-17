@@ -35,7 +35,7 @@ REGFILES = $(SRCDIR)/usage.cpp $(SRCDIR)/usage.h
 
 TESTSFILES = $(TESTSDIR)/*.cpp $(TESTSDIR)/*.h
 
-all: converter text2fvf fv2text transpose writespeed # $(RSHLIB)
+all: converter text2fvf fv2text transpose writespeed tests# $(RSHLIB)
 
 text2fvf: $(TEXT2FVF)
 $(TEXT2FVF): $(LIBFILES) $(REGFILES) $(SRCDIR)/text2fvf.cpp $(SRCDIR)/text2fvf_main.cpp
@@ -72,10 +72,10 @@ $(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.cpp
 
 unittest : $(UNITTEST)
 $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TestUtil.* $(TESTSDIR)/UnitTest.*
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/UnitTest.cpp  -o $(UNITTEST)
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/UnitTest.cpp  -o $(UNITTEST); $(UNITTEST)
 
 transposetest: $(TRANSPOSETEST)
-$(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp $(TESTSDIR)/*.h
+$(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/TransposeTest.cpp  -o $(TRANSPOSETEST)
 
 converter : $(CONVERT)
@@ -99,7 +99,7 @@ converttest : $(CONVERTTEST)
 $(CONVERTTEST):$(LIBFILES) $(TESTFILES) $(TESTSDIR)/ConvertTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/ConvertTest.cpp -o $(CONVERTTEST)
 
-tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest converttest
+tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest converttest transposetest
 runtests : tests
 	echo correctnesstest; ${CORRECTNESSTEST}; echo transposetest; ${TRANSPOSETEST}; echo unittest; ${UNITTEST}; echo converttests; ${CONVERTTEST}; echo transposetest; ${TRANSPOSETEST}; echo accessmodetest; ${ACCESSMODETEST};
 

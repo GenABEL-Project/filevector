@@ -5,7 +5,7 @@
 #include <cppunit/Asserter.h>
 
 
-#include "../fvlib/filevector.h"
+#include "../fvlib/FileVector.h"
 #include "TestUtil.h"
 
 using namespace std;

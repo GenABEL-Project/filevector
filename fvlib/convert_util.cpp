@@ -7,7 +7,7 @@
 
 using namespace std;
 
-#include "filevector.h"
+#include "FileVector.h"
 #include "Transposer.h"
 #include "frerror.h"
 
@@ -128,7 +128,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 	vector<string> extColNames;
 
 	// column names specified in a separate file; check the number of columns
-	unsigned long int words_in_colnamesfile = 0;
+	unsigned long words_in_colnamesfile = 0;
 
 	// reading column names from file
 	if (colnamesfilename != "")
@@ -153,7 +153,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 	vector<string> extRowNames;
 
 	// row names specified in a separate file; check the number of columns
-	unsigned long int words_in_rownamesfile = 0;
+	unsigned long words_in_rownamesfile = 0;
 
 	// reading row names from file
 	if (rownamesfilename != "") {
@@ -209,8 +209,8 @@ void text2fvf(string program_name, string infilename, string outfilename,
 	msg << "Creating file with numRows = " << numRows << endl;
 	msg << "Creating file with numColumns = " << numColumns << endl;
 
-	initialize_empty_file(outfilename, numRows, numColumns, type, true );
-	filevector *out = new filevector(outfilename, 1);
+	initializeEmptyFile(outfilename, numRows, numColumns, type, true );
+	FileVector *out = new FileVector(outfilename, 1);
 
 	string line;
 	unsigned long rowCnt = 1;
@@ -261,11 +261,11 @@ void text2fvf(string program_name, string infilename, string outfilename,
 	}
 
 	char * tmpstr;
-	if (!colNamesFilePresents && cnrow < 0) for (unsigned long int i=1;i<=numColumns;i++) {
+	if (!colNamesFilePresents && cnrow < 0) for (unsigned long i=1;i<=numColumns;i++) {
 		sprintf(tmpstr,"%lu",i);
 		extColNames.push_back(tmpstr);
 	}
-	if (!rowNamesFilePresents && cnrow < 0) for (unsigned long int i=1;i<=numRows;i++) {
+	if (!rowNamesFilePresents && cnrow < 0) for (unsigned long i=1;i<=numRows;i++) {
 		sprintf(tmpstr,"%lu",i);
 		extRowNames.push_back(tmpstr);
 	}
