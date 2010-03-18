@@ -90,7 +90,7 @@ void FileVector::initialize(string filename, unsigned long cachesizeMb) {
 
   	unsigned long indexSize = sizeof(fileHeader) + sizeof(fixedchar)*(fileHeader.numVariables+fileHeader.numObservations);
     if(indexSize != index_filestatus.st_size) {
-        errorLog << "Index file "<<indexFilename<<" size(" << index_filestatus.st_size << ") differs from the expected(";
+        errorLog << "Index file "<<indexFilename<<" size(" << (int) index_filestatus.st_size << ") differs from the expected(";
         errorLog << indexSize <<")" << endl << errorExit;
     }
 
@@ -102,7 +102,7 @@ void FileVector::initialize(string filename, unsigned long cachesizeMb) {
 			(unsigned long) fileHeader.numObservations;
 
 	if (estimated_size != data_filestatus.st_size) {
-        errorLog << "Data file size (" << data_filestatus.st_size;
+        errorLog << "Data file size (" << (int) data_filestatus.st_size;
         errorLog << ") differs from the expected ("<<estimated_size<<")"<<endl<<" [";
         errorLog << fileHeader.numVariables<<","<<fileHeader.numObservations<<"]" << endl;
         errorLog << errorExit;
