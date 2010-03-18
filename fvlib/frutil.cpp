@@ -98,10 +98,10 @@ void initializeEmptyFile(string filename, unsigned long numVariables, unsigned l
 	indexFile.write((char*)&fileHeader, sizeof(fileHeader));
 
     deepDbg << "Writing "<<nobservations<<" observations." << endl;
-	fixedchar name;
+	FixedChar name;
 	for (unsigned long i=0;i<nobservations;i++) {
 		sprintf(name.name, "%lu", i+1);
-        indexFile.seekp(sizeof(FileHeader) + i * sizeof(fixedchar), ios::beg);
+        indexFile.seekp(sizeof(FileHeader) + i * sizeof(FixedChar), ios::beg);
 		indexFile.write((char*)&name.name,sizeof(name.name));
 	}
 
@@ -109,7 +109,7 @@ void initializeEmptyFile(string filename, unsigned long numVariables, unsigned l
 
     for (unsigned long j=0;j<numVariables;j++) {
 		sprintf(name.name, "%lu", j+1);
-        indexFile.seekp(sizeof(FileHeader) + (j + fileHeader.numObservations) * sizeof(fixedchar), ios::beg);
+        indexFile.seekp(sizeof(FileHeader) + (j + fileHeader.numObservations) * sizeof(FixedChar), ios::beg);
 		indexFile.write((char*)&name.name,sizeof(name.name));
 	}
 	indexFile.close();

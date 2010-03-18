@@ -60,7 +60,7 @@ clean:
 
 correctnesstest : $(CORRECTNESSTEST)
 $(CORRECTNESSTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/CorrectnessTest.cpp
-	$(CPP) $(CFLAGS) ${CPPUNITFLAGS} $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/CorrectnessTest.cpp ${TESTSDIR}/TestUtil.cpp -o $(CORRECTNESSTEST)
+	$(CPP) $(CFLAGS) ${CPPUNITFLAGS} $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/CorrectnessTest.cpp ${TESTSDIR}/TestUtil.cpp -o $(CORRECTNESSTEST); $(CORRECTNESSTEST)
 
 readspeed : $(READSPEED)
 $(READSPEED): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadSpeed.cpp
@@ -68,7 +68,7 @@ $(READSPEED): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadSpeed.cpp
 
 modificationtest : $(MODIFTEST)
 $(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.cpp
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FileModificationTest.cpp  -o $(MODIFTEST)
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FileModificationTest.cpp  -o $(MODIFTEST); $(MODIFTEST)
 
 unittest : $(UNITTEST)
 $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TestUtil.* $(TESTSDIR)/UnitTest.*
@@ -76,7 +76,7 @@ $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TestUtil.* $(TESTSDIR)/UnitTes
 
 transposetest: $(TRANSPOSETEST)
 $(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/TransposeTest.cpp  -o $(TRANSPOSETEST)
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/TransposeTest.cpp  -o $(TRANSPOSETEST); $(TRANSPOSETEST)
 
 converter : $(CONVERT)
 $(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
@@ -93,14 +93,13 @@ $(WRITE_VAR_SPEED): $(LIBFILES) $(SRCDIR)/convert.cpp
 
 accessmodetest : $(ACCESSMODETEST)
 $(ACCESSMODETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/AccessModeTest.cpp
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/AccessModeTest.cpp -o $(ACCESSMODETEST)
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/AccessModeTest.cpp -o $(ACCESSMODETEST); $(ACCESSMODETEST)
 
 converttest : $(CONVERTTEST)
 $(CONVERTTEST):$(LIBFILES) $(TESTFILES) $(TESTSDIR)/ConvertTest.cpp
-	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/ConvertTest.cpp -o $(CONVERTTEST)
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/ConvertTest.cpp -o $(CONVERTTEST); $(CONVERTTEST)
 
 tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest converttest transposetest
 runtests : tests
-	echo correctnesstest; ${CORRECTNESSTEST}; echo transposetest; ${TRANSPOSETEST}; echo unittest; ${UNITTEST}; echo converttests; ${CONVERTTEST}; echo transposetest; ${TRANSPOSETEST}; echo accessmodetest; ${ACCESSMODETEST};
 
 

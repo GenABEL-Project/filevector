@@ -39,11 +39,11 @@ void UnitTest::testCacheUpdatedOnWrite() {
 void UnitTest::test_write_variable_name() {
     string file_name = get_file_name_to_write();
     AbstractMatrix* fv = new FileVector( file_name, 2 );//no need in big cache
-    fixedchar _fc_varname_saved;
+    FixedChar _fc_varname_saved;
     strcpy(_fc_varname_saved.name,"testvarname");
     fv->writeVariableName( 0, _fc_varname_saved );
 
-    fixedchar _fc_varname_loaded = fv->readVariableName(0);
+    FixedChar _fc_varname_loaded = fv->readVariableName(0);
     CPPUNIT_ASSERT_EQUAL( string(_fc_varname_saved.name), string(_fc_varname_loaded.name) );
     delete fv;
 
@@ -56,11 +56,11 @@ void UnitTest::test_writeObservationName() {
     testDbg << "test_writeObservationName" << endl;
     string file_name = get_file_name_to_write();
     AbstractMatrix* fv = new FileVector( file_name, 2 );//no need in big cache
-    fixedchar _fc_obsname_saved;
+    FixedChar _fc_obsname_saved;
     strcpy(_fc_obsname_saved.name,"testvarname");
     fv->writeObservationName( 0, _fc_obsname_saved );
 
-    fixedchar _fc_obsname_loaded = fv->readObservationName(0);
+    FixedChar _fc_obsname_loaded = fv->readObservationName(0);
     CPPUNIT_ASSERT_EQUAL( string(_fc_obsname_saved.name), string(_fc_obsname_loaded.name) );
     delete fv;
 
@@ -281,7 +281,7 @@ void UnitTest::test_add_variable() {
 	fv->addVariableAs(var,varname2);
 
 	CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv->getNumVariables());
-	fixedchar _fc_varname_loaded = fv->readVariableName(10);
+	FixedChar _fc_varname_loaded = fv->readVariableName(10);
     CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
     _fc_varname_loaded = fv->readVariableName(11);
     CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
@@ -348,7 +348,17 @@ void UnitTest::testFilteredMatrix() {
 
     float var[2] = {12,34};
 
-    //fv.w
+    fm.writeVariableAs(2,var);
+
+    fv.readElementAs(3,1,f); CPPUNIT_ASSERT_EQUAL(f,(float)12);
+    fv.readElementAs(3,3,f); CPPUNIT_ASSERT_EQUAL(f,(float)34);
+
+    float obs[3];
+
+    fm.readObservation(0,obs);
+    CPPUNIT_ASSERT_EQUAL((float)1,obs[0]);
+    CPPUNIT_ASSERT_EQUAL((float)9,obs[1]);
+    CPPUNIT_ASSERT_EQUAL((float)12,obs[2]);
 
     testDbg << "End of FilteredMatrix test" << endl;
 }

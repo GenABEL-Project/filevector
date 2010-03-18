@@ -51,7 +51,7 @@ int main(int argc, char * argv[])
 		errorLog << "Failed to read datainfo from file " << filename << errorExit;
 	}
 
-	unsigned long headerSize = sizeof(data_type) + sizeof(fixedchar)*(data_type.numVariables+data_type.numObservations);
+	unsigned long headerSize = sizeof(data_type) + sizeof(FixedChar)*(data_type.numVariables+data_type.numObservations);
 
     new_data_file.open(data_filename.c_str(), ios::out | ios::binary);
     if (new_data_file.fail())

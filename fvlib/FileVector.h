@@ -35,8 +35,8 @@ public:
 	fstream indexFile;
 	FileHeader fileHeader;
 	// row and column names
-	fixedchar * variableNames;
-	fixedchar * observationNames;
+	FixedChar * variableNames;
+	FixedChar * observationNames;
 	// size of header (descriptives + var/obs names)
 	unsigned long headerSize;
 	// cache size (Mb) requested by user
@@ -90,29 +90,29 @@ public:
 	void initialize(string filename, unsigned long cachesizeMb);
 	// this one updates cache
 	void update_cache(unsigned long from_var);
-	// gives element number from nvar & obsIdx
-	unsigned long nrnc_to_nelem(unsigned long nvar, unsigned long obsIdx);
+	// gives element number from varIdx & obsIdx
+	unsigned long nrnc_to_nelem(unsigned long varIdx, unsigned long obsIdx);
 
 	// getting and setting var/col names
-	void writeVariableName(unsigned long varIdx, fixedchar name);
-	void writeObservationName(unsigned long obsIdx, fixedchar name);
+	void writeVariableName(unsigned long varIdx, FixedChar name);
+	void writeObservationName(unsigned long obsIdx, FixedChar name);
 
 	virtual unsigned int getNumVariables();
 	virtual unsigned int getNumObservations();
 
-	fixedchar readVariableName(unsigned long nvar);
-	fixedchar readObservationName(unsigned long obsIdx);
+	FixedChar readVariableName(unsigned long varIdx);
+	FixedChar readObservationName(unsigned long obsIdx);
 
 	// USER FUNCTIONS
 	// can read single variable
-	void readVariable(unsigned long nvar, void * outvec);
+	void readVariable(unsigned long varIdx, void * outvec);
 
 	void addVariable(void * invec, string varname);
 
 	// should only be used for reading single random elements!
-	void readElement(unsigned long nvar, unsigned long obsIdx, void * data);
-	void writeVariable(unsigned long nvar, void * datavec);
-	void writeElement(unsigned long nvar, unsigned long obsIdx, void * data);
+	void readElement(unsigned long varIdx, unsigned long obsIdx, void * data);
+	void writeVariable(unsigned long varIdx, void * datavec);
+	void writeElement(unsigned long varIdx, unsigned long obsIdx, void * data);
 
 	void readObservation(unsigned long obsIdx, void * outvec);
 	void writeObservation(unsigned long obsIdx, void * outvec);

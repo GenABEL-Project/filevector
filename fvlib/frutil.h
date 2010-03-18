@@ -14,13 +14,13 @@
 
 using namespace std;
 
-class fixedchar
+class FixedChar
 {
 public:
-    fixedchar(){
+    FixedChar(){
         memset(name,0xab,NAMELENGTH);
     };
-    fixedchar(string s){strcpy(name,s.c_str());};
+    FixedChar(string s){strcpy(name,s.c_str());};
 	char name[NAMELENGTH];
 };
 
@@ -75,7 +75,7 @@ void make_fake_file(char * fake_filename, unsigned long numVariables, unsigned l
 	tmp.bitsPerRecord = sizeof(DT)*8;
 	tmp.bytesPerRecord = sizeof(DT);
 	fake_file.write((char*)&tmp,sizeof(tmp));
-	fixedchar obsname;
+	FixedChar obsname;
 	for (unsigned long i=0;i<nobservations;i++) {
 		sprintf(obsname.name,"%lu",i+1);
 		fake_file.write((char*)&obsname.name,sizeof(obsname.name));

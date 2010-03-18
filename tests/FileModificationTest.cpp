@@ -4,7 +4,7 @@
 
 #include "FileModificationTest.h"
 #include "TestUtil.h"
-#include "Logger.h"
+#include "../fvlib/Logger.h"
 
 using namespace std;
 

@@ -14,7 +14,6 @@ using namespace std;
 class FileModificationTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE( FileModificationTest );
-//    CPPUNIT_TEST( testRandomWrite );
     CPPUNIT_TEST_SUITE_END();
 
 public:

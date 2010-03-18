@@ -14,7 +14,7 @@ public:
     virtual ~AbstractMatrix(){};
 
     template <class DT>
-    void writeVariableAs(unsigned long nvar, DT * outvec)
+    void writeVariableAs(unsigned long varIdx, DT * outvec)
     {
         char* tmp = new (nothrow) char [getNumObservations()*getElementSize()];
         if(!tmp)
@@ -22,7 +22,7 @@ public:
         for(int i = 0; i< getNumObservations();i++){
             performCast(&tmp[i*getElementSize()],outvec[i],getElementType());
         }
-        writeVariable(nvar, tmp);
+        writeVariable(varIdx, tmp);
         delete[] tmp;
     }
 
@@ -40,10 +40,10 @@ public:
     }
 
     template<class DT>
-    void readVariableAs(unsigned long nvar, DT * outvec)
+    void readVariableAs(unsigned long varIdx, DT * outvec)
     {
        char * tmp = new (nothrow) char[getNumObservations()*getElementSize()];
-       readVariable(nvar, tmp);
+       readVariable(varIdx, tmp);
        for(int i = 0; i< getNumObservations();i++) {
             performCast(outvec[i],&tmp[i*getElementSize()],getElementType());
        }
@@ -81,27 +81,27 @@ public:
     virtual void readObservation(unsigned long obsIdx, void * outvec) = 0;
     virtual void writeObservation(unsigned long obsIdx, void * invec) = 0;
 
-    virtual void writeVariableName(unsigned long nvar, fixedchar newname) = 0;  // todo loooong future -- control that name is unique
-    virtual void writeObservationName(unsigned long obsIdx, fixedchar newname)= 0;  //todo loooong future -- control that name is unique!
+    virtual void writeVariableName(unsigned long varIdx, FixedChar newname) = 0;  // todo loooong future -- control that name is unique
+    virtual void writeObservationName(unsigned long obsIdx, FixedChar newname)= 0;  //todo loooong future -- control that name is unique!
 
     virtual unsigned long getCacheSizeInMb() = 0;
     virtual void setCacheSizeInMb( unsigned long cachesizeMb ) = 0;
 
-    virtual fixedchar readObservationName(unsigned long obsIdx) = 0;
-    virtual fixedchar readVariableName(unsigned long nvar) = 0;
+    virtual FixedChar readObservationName(unsigned long obsIdx) = 0;
+    virtual FixedChar readVariableName(unsigned long varIdx) = 0;
     virtual void cacheAllNames(bool) = 0;
 
     virtual void setUpdateNamesOnWrite(bool bUpdate) = 0;
 	virtual short unsigned getElementSize() = 0;
 	virtual short unsigned getElementType() = 0;
-	virtual void readVariable(unsigned long nvar, void * outvec) = 0;
-	virtual void readElement(unsigned long nvar, unsigned long obsIdx, void * elem) = 0;
-	virtual void writeVariable(unsigned long nvar, void * datavec) = 0;
-	virtual void writeElement(unsigned long nvar, unsigned long obsIdx, void * data) = 0;
+	virtual void readVariable(unsigned long varIdx, void * outvec) = 0;
+	virtual void readElement(unsigned long varIdx, unsigned long obsIdx, void * elem) = 0;
+	virtual void writeVariable(unsigned long varIdx, void * datavec) = 0;
+	virtual void writeElement(unsigned long varIdx, unsigned long obsIdx, void * data) = 0;
 private:
 
     // HIGH -- here I see the possibility to make these functions faster then "random" access functions
-    // adds variable at the end = writeVariable with nvar=NVARS?
+    // adds variable at the end = writeVariable with varIdx=NVARS?
 	// todo loooong future -- control that name is unique!
     virtual void addVariable(void * invec, string varname) = 0;
     //    virtual void add_observation(void * invec, string obsname) = 0;

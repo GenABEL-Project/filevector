@@ -39,7 +39,7 @@ int main(int argc, char * argv[]) {
 	for(int i=0;i<fv.getNumVariables();i++)
 	{
 	    fv.writeVariable(i, tmp);
-	    fv.writeVariableName(i,fixedchar("original"));
+	    fv.writeVariableName(i,FixedChar("original"));
 	    if( i % 10000 == 0 )
 		{
 			testDbg << "Wrote:"<< i << "/" << fv.getNumVariables() << " variables " << endl;

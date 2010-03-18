@@ -13,9 +13,9 @@ void FileVector::saveIndexFile() {
     indexFile.seekp(sizeof(fileHeader), ios::beg);
 
     if (observationNames && variableNames) {
-        indexFile.write((char*)observationNames, sizeof(fixedchar)*fileHeader.numObservations);
-        indexFile.seekp(sizeof(fileHeader)+sizeof(fixedchar)*fileHeader.numObservations, ios::beg);
-        indexFile.write((char*)variableNames,sizeof(fixedchar)*fileHeader.numVariables);
+        indexFile.write((char*)observationNames, sizeof(FixedChar)*fileHeader.numObservations);
+        indexFile.seekp(sizeof(fileHeader)+sizeof(FixedChar)*fileHeader.numObservations, ios::beg);
+        indexFile.write((char*)variableNames,sizeof(FixedChar)*fileHeader.numVariables);
     }
 }
 
@@ -88,7 +88,7 @@ void FileVector::initialize(string filename, unsigned long cachesizeMb) {
 		errorLog << "non-byte recods (file integrity issue?)" << errorExit;
 	}
 
-  	unsigned long indexSize = sizeof(fileHeader) + sizeof(fixedchar)*(fileHeader.numVariables+fileHeader.numObservations);
+  	unsigned long indexSize = sizeof(fileHeader) + sizeof(FixedChar)*(fileHeader.numVariables+fileHeader.numObservations);
     if(indexSize != index_filestatus.st_size) {
         errorLog << "Index file "<<indexFilename<<" size(" << (int) index_filestatus.st_size << ") differs from the expected(";
         errorLog << indexSize <<")" << endl << errorExit;
@@ -121,16 +121,16 @@ void FileVector::readNames() {
     if (variableNames) delete[]variableNames;
     if (observationNames) delete[]observationNames;
 
-	variableNames = new (nothrow) fixedchar [fileHeader.numVariables];
+	variableNames = new (nothrow) FixedChar [fileHeader.numVariables];
 	if (!variableNames) errorLog << "can not get RAM for variable names" << errorExit;
-	observationNames = new (nothrow) fixedchar [fileHeader.numObservations];
+	observationNames = new (nothrow) FixedChar [fileHeader.numObservations];
 	if (!observationNames) errorLog << "can not get RAM for observation names" << errorExit;
 
 	indexFile.seekg(sizeof(fileHeader), ios::beg);
 	for (unsigned long i=0;i<fileHeader.numObservations;i++)
-    	indexFile.read((char*)(observationNames+i),sizeof(fixedchar));
+    	indexFile.read((char*)(observationNames+i),sizeof(FixedChar));
 	for (unsigned long i=0;i<fileHeader.numVariables;i++)
-		indexFile.read((char*)(variableNames+i),sizeof(fixedchar));
+		indexFile.read((char*)(variableNames+i),sizeof(FixedChar));
 }
 
 unsigned long FileVector::getCacheSizeInMb() {
@@ -233,56 +233,56 @@ void FileVector::cacheAllNames(bool doCache) {
     }
 }
 
-void FileVector::writeVariableName(unsigned long varIdx, fixedchar name) {
+void FileVector::writeVariableName(unsigned long varIdx, FixedChar name) {
 	if (varIdx >= fileHeader.numVariables) {
 	    errorLog << "Trying to set name of obs out of range (" << varIdx << ")\n\n" << endl << errorExit;
 	}
 	if (updateNamesOnWrite||variableNames == 0){
-	    indexFile.seekp(sizeof(fileHeader) + sizeof(fixedchar)*(varIdx + fileHeader.numObservations), ios::beg);
-	    indexFile.write((char*)&name, sizeof(fixedchar));
+	    indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(varIdx + fileHeader.numObservations), ios::beg);
+	    indexFile.write((char*)&name, sizeof(FixedChar));
 	}
 	if (variableNames) {
 	    variableNames[varIdx] = name;
 	}
 }
 
-void FileVector::writeObservationName(unsigned long obsIdx, fixedchar name) {
+void FileVector::writeObservationName(unsigned long obsIdx, FixedChar name) {
 	if (obsIdx >= fileHeader.numObservations) {
 	    errorLog << "Trying to set name of vars out of range (" << obsIdx << ")\n\n" << endl << errorExit;
 	}
 	if (updateNamesOnWrite || observationNames == 0){
-	    indexFile.seekp(sizeof(fileHeader) + sizeof(fixedchar)*(obsIdx), ios::beg);
-	    indexFile.write((char*)&name, sizeof(fixedchar));
+	    indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(obsIdx), ios::beg);
+	    indexFile.write((char*)&name, sizeof(FixedChar));
     }
     if (observationNames) {
         observationNames[obsIdx] = name;
     }
 }
 
-fixedchar FileVector::readVariableName(unsigned long varIdx) {
+FixedChar FileVector::readVariableName(unsigned long varIdx) {
 	if (varIdx>=fileHeader.numVariables) {
 	    errorLog << "trying to get name of var out of range" << errorExit;
 	}
 
 	if (!variableNames) {
-	    fixedchar ret;
-	    indexFile.seekp(sizeof(fileHeader) + sizeof(fixedchar)*(varIdx+fileHeader.numObservations), ios::beg);
-	    indexFile.read((char*)&ret, sizeof(fixedchar));
+	    FixedChar ret;
+	    indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(varIdx+fileHeader.numObservations), ios::beg);
+	    indexFile.read((char*)&ret, sizeof(FixedChar));
 	    return ret;
 	}
 
 	return variableNames[varIdx];
 }
 
-fixedchar FileVector::readObservationName(unsigned long obsIdx) {
+FixedChar FileVector::readObservationName(unsigned long obsIdx) {
 	if (obsIdx >= fileHeader.numObservations) {
 	    errorLog << "trying to get name of obs out of range" << errorExit;
 	}
 
 	if (!observationNames) {
-	    fixedchar ret;
-	    indexFile.seekp(sizeof(fileHeader) + sizeof(fixedchar)*(obsIdx), ios::beg);
-	    indexFile.read((char*)&ret, sizeof(fixedchar));
+	    FixedChar ret;
+	    indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(obsIdx), ios::beg);
+	    indexFile.read((char*)&ret, sizeof(FixedChar));
 	    return ret;
 	}
 
@@ -290,15 +290,15 @@ fixedchar FileVector::readObservationName(unsigned long obsIdx) {
 }
 
 // can read single variable
-void FileVector::readVariable(unsigned long nvar, void * outvec) {
-	if (nvar>=fileHeader.numVariables) {
-	    errorLog << "Variable number out of range (" << nvar << " >= " << fileHeader.numVariables <<")"<<endl << errorExit;
+void FileVector::readVariable(unsigned long varIdx, void * outvec) {
+	if (varIdx>=fileHeader.numVariables) {
+	    errorLog << "Variable number out of range (" << varIdx << " >= " << fileHeader.numVariables <<")"<<endl << errorExit;
 	}
-	if (in_cache_to > 0 && nvar >= in_cache_from && nvar <= in_cache_to) {
-		unsigned long offset = (nvar - in_cache_from)*fileHeader.numObservations*getElementSize();
+	if (in_cache_to > 0 && varIdx >= in_cache_from && varIdx <= in_cache_to) {
+		unsigned long offset = (varIdx - in_cache_from)*fileHeader.numObservations*getElementSize();
 		memcpy(outvec,cached_data+offset,getElementSize()*(fileHeader.numObservations));
     } else {
-		update_cache(nvar);
+		update_cache(varIdx);
         memcpy(outvec,cached_data,getElementSize()*fileHeader.numObservations);
 	}
 }
@@ -327,11 +327,11 @@ void FileVector::writeObservation(unsigned long obsIdx, void * invec) {
 }
 
 // can write single variable
-void FileVector::writeVariable(unsigned long nvar, void * datavec) {
+void FileVector::writeVariable(unsigned long varIdx, void * datavec) {
     if (readOnly) {
         errorLog << "Trying to write to the readonly file." << errorExit;
     }
-	unsigned long pos = nrnc_to_nelem(nvar, 0);
+	unsigned long pos = nrnc_to_nelem(varIdx, 0);
 	dataFile.seekp(pos*getElementSize(), ios::beg);
 	dataFile.write((char*)datavec,getElementSize()*fileHeader.numObservations);
 	if (!dataFile) {
@@ -339,46 +339,46 @@ void FileVector::writeVariable(unsigned long nvar, void * datavec) {
 	}
 
 	//update data in cache
-// 	deepDbg << "var:"<< nvar << ",cache from :"<< in_cache_from << ", to: "<< in_cache_to  << endl;
+// 	deepDbg << "var:"<< varIdx << ",cache from :"<< in_cache_from << ", to: "<< in_cache_to  << endl;
 
-	if (nvar >= in_cache_from && nvar <= in_cache_to)
+	if (varIdx >= in_cache_from && varIdx <= in_cache_to)
 	{
-	    unsigned long offset = (nvar - in_cache_from)*fileHeader.numObservations*getElementSize();
+	    unsigned long offset = (varIdx - in_cache_from)*fileHeader.numObservations*getElementSize();
  	    memcpy(cached_data + offset,datavec,getElementSize()*fileHeader.numObservations);
 	}
 }
 
-unsigned long FileVector::nrnc_to_nelem(unsigned long nvar, unsigned long obsIdx) {
-    if (nvar >= fileHeader.numVariables) {
-        errorLog << "Variable number out of bounds (" << nvar << " >= " <<  fileHeader.numVariables << ")" << endl << errorExit;
+unsigned long FileVector::nrnc_to_nelem(unsigned long varIdx, unsigned long obsIdx) {
+    if (varIdx >= fileHeader.numVariables) {
+        errorLog << "Variable number out of bounds (" << varIdx << " >= " <<  fileHeader.numVariables << ")" << endl << errorExit;
     }
     if (obsIdx >= fileHeader.numObservations) {
         errorLog << "Observation number out of bounds (" << obsIdx << " >= " <<  fileHeader.numVariables << ")" << endl << errorExit;
     }
-    return( nvar * fileHeader.numObservations + obsIdx );
+    return( varIdx * fileHeader.numObservations + obsIdx );
 }
 
 // should only be used for reading single random elements!
 
-void FileVector::readElement(unsigned long nvar, unsigned long obsIdx, void* out) {
-    deepDbg << "FileVector.readElement(" << nvar << "," << obsIdx << ");" << endl;
-    unsigned long pos = nrnc_to_nelem(nvar, obsIdx);
+void FileVector::readElement(unsigned long varIdx, unsigned long obsIdx, void* out) {
+    deepDbg << "FileVector.readElement(" << varIdx << "," << obsIdx << ");" << endl;
+    unsigned long pos = nrnc_to_nelem(varIdx, obsIdx);
     dataFile.seekg(pos*getElementSize(), ios::beg);
     dataFile.read((char*)out,getElementSize());
 }
 
-void FileVector::writeElement(unsigned long nvar, unsigned long obsIdx, void* data) {
+void FileVector::writeElement(unsigned long varIdx, unsigned long obsIdx, void* data) {
     if (readOnly) {
         errorLog << "Trying to write to the readonly file." << errorExit;
     }
-    deepDbg << "FileVector.writeElement(" << nvar << "," << obsIdx << ");" << endl;
-    unsigned long pos = nrnc_to_nelem(nvar, obsIdx);
+    deepDbg << "FileVector.writeElement(" << varIdx << "," << obsIdx << ");" << endl;
+    unsigned long pos = nrnc_to_nelem(varIdx, obsIdx);
     dataFile.seekp(pos*getElementSize(), ios::beg);
     dataFile.write((char*)data,getElementSize());
     dataFile.flush();
 
-    if (nvar >= in_cache_from && nvar <= in_cache_to) {
-	    unsigned long offset = (nvar - in_cache_from)*fileHeader.numObservations*getElementSize() + obsIdx *getElementSize();
+    if (varIdx >= in_cache_from && varIdx <= in_cache_to) {
+	    unsigned long offset = (varIdx - in_cache_from)*fileHeader.numObservations*getElementSize() + obsIdx *getElementSize();
 	    memcpy(cached_data+offset,data,getElementSize() );
     }
 }
@@ -526,7 +526,7 @@ void FileVector::saveAsText(string newFilename, unsigned long nvars, unsigned lo
 
     // copy observation names from the first object
 	for( unsigned long i=0 ; i < nobss ; i++ ) {
-	    fixedchar fc = readObservationName( obsindexes[i] ) ;
+	    FixedChar fc = readObservationName( obsindexes[i] ) ;
         textfile << fc.name << " ";
     }
 
@@ -544,7 +544,7 @@ void FileVector::saveAsText(string newFilename, unsigned long nvars, unsigned lo
         dbg << "Writing var " << i << " of " << nvars << endl;
 		unsigned long selected_index = varindexes[i];
     	//write var names
-    	fixedchar fc = readVariableName(selected_index);
+    	FixedChar fc = readVariableName(selected_index);
 		textfile << fc.name << " ";
 		//write variables
 		readVariable(selected_index, in_variable);
@@ -580,29 +580,29 @@ void FileVector::addVariable(void *invec, string varName) {
     //recalculate
     fileHeader.nelements = fileHeader.numVariables*fileHeader.numObservations;
 
-    fixedchar _fc_varname(varName);
+    FixedChar _fc_varname(varName);
 
     // are names loaded from disk ?
     if (variableNames && observationNames) {
 
-        fixedchar * newVariablesNames = new (nothrow)fixedchar[fileHeader.numVariables];
+        FixedChar * newVariablesNames = new (nothrow)FixedChar[fileHeader.numVariables];
         if (!newVariablesNames) {
             errorLog << "Can not allocate memory in addVariable()" << errorExit;
         }
 
         //reallocate greater array for var names
-        memcpy(newVariablesNames, variableNames, sizeof(fixedchar)*(fileHeader.numVariables-1));
+        memcpy(newVariablesNames, variableNames, sizeof(FixedChar)*(fileHeader.numVariables-1));
         newVariablesNames[fileHeader.numVariables - 1] = _fc_varname;
-        fixedchar *oldvar_names = variableNames;
+        FixedChar *oldvar_names = variableNames;
         variableNames = newVariablesNames;
         delete[] oldvar_names;
         if (updateNamesOnWrite) {
-	        indexFile.seekp(sizeof(fileHeader) + sizeof(fixedchar)*(fileHeader.numVariables - 1 + fileHeader.numObservations), ios::beg);
-	        indexFile.write((char*)&_fc_varname.name, sizeof(fixedchar));
+	        indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(fileHeader.numVariables - 1 + fileHeader.numObservations), ios::beg);
+	        indexFile.write((char*)&_fc_varname.name, sizeof(FixedChar));
 	    }
     } else { // not loaded
-	    indexFile.seekp(sizeof(fileHeader) + sizeof(fixedchar)*(fileHeader.numVariables - 1 + fileHeader.numObservations), ios::beg);
-	    indexFile.write((char*)&_fc_varname.name, sizeof(fixedchar));
+	    indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(fileHeader.numVariables - 1 + fileHeader.numObservations), ios::beg);
+	    indexFile.write((char*)&_fc_varname.name, sizeof(FixedChar));
     }
     writeVariable(fileHeader.numVariables - 1, invec);
 }
