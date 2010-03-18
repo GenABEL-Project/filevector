@@ -3,7 +3,7 @@
                      
 ErrorExit errorExit;
 
-#define all false
+#define all true
 
 Logger inf(MESSAGE_LEVEL,all);
 Logger dbg(DEBUG_LEVEL,all);
