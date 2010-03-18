@@ -22,7 +22,7 @@ using namespace std;
 class UnitTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE( UnitTest );
-/*    CPPUNIT_TEST( testCacheUpdatedOnWrite );
+    CPPUNIT_TEST( testCacheUpdatedOnWrite );
     CPPUNIT_TEST( test_write_variable_name );
     CPPUNIT_TEST( test_writeObservationName );
     CPPUNIT_TEST( test_save );
@@ -31,10 +31,10 @@ class UnitTest : public CppUnit::TestFixture
     CPPUNIT_TEST( test_save_vars_obs );
     CPPUNIT_TEST( test_setCacheSizeMb );
     CPPUNIT_TEST( test_read_write_observation );
-    CPPUNIT_TEST( test_readVariable_convert_to );*/
+    CPPUNIT_TEST( test_readVariable_convert_to );
     CPPUNIT_TEST( test_add_variable );
-/*    CPPUNIT_TEST( test_extract_base_file_name );
-    CPPUNIT_TEST( testFilteredMatrix );*/
+    CPPUNIT_TEST( test_extract_base_file_name );
+    CPPUNIT_TEST( testFilteredMatrix );
 
     CPPUNIT_TEST_SUITE_END();
 
