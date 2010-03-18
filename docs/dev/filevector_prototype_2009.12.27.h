@@ -47,9 +47,9 @@ template <class DT> class filevector
 
 // constructor
 // current:
-	filevector(char * filename_toload, unsigned long cachesizeMb);
+	filevector(char * filename_toload, unsigned long int cachesizeMb);
 //	required:
-	filevector(char * filename_toload, unsigned long desired_cache_size_Mb, int oFlag, int dbFormat);
+	filevector(char * filename_toload, unsigned long int desired_cache_size_Mb, int oFlag, int dbFormat);
 //	HIGH:
 //	oFlag (= BDB):
 //		DB_CREATE: If the database does not currently exist, create it.
@@ -75,26 +75,26 @@ template <class DT> class filevector
 // ...
 // these need to be fixed given new constructor specification
 // can read single variable
-	void read_variable(unsigned long nvar, DT * outvec);
+	void read_variable(unsigned long int nvar, DT * outvec);
 // should only be used for reading single random elements!
-	DT read_element(unsigned long nvar, unsigned long nobs);
+	DT read_element(unsigned long int nvar, unsigned long int nobs);
 // write single variable
 // CURRENTLY CACHE IS NOT UPDATED!
-	void write_variable(unsigned long nvar, DT * datavec);
+	void write_variable(unsigned long int nvar, DT * datavec);
 // write single element
 // CURRENTLY CACHE IS NOT UPDATED!
-	void write_element(unsigned long nvar, unsigned long nobs, DT data);
+	void write_element(unsigned long int nvar, unsigned long int nobs, DT data);
 // working with names /do not like FIXEDCHAR!/
-	fixedchar read_observation_name(unsigned long nobs); // CHANGE NAME -- is now get_...
-	fixedchar read_variable_name(unsigned long nvar);    // CHANGE NAME -- is now get_...
+	fixedchar read_observation_name(unsigned long int nobs); // CHANGE NAME -- is now get_...
+	fixedchar read_variable_name(unsigned long int nvar);    // CHANGE NAME -- is now get_...
 // destroy object
 	void free_filevector();
 
 // These are new functions
 // HIGH
 // TAKE CARE BOTH FILE AND CACHE ARE UPDATED
-    void write_variable_name(unsigned long nvar,fixedchar newname);  // loooong future -- control that name is unique
-    void write_observation_name(unsigned long nobs,fixedchar newname);  // loooong future -- control that name is unique!
+    void write_variable_name(unsigned long int nvar,fixedchar newname);  // loooong future -- control that name is unique
+    void write_observation_name(unsigned long int nobs,fixedchar newname);  // loooong future -- control that name is unique!
  // HIGH -- here I see the possibility to make these functions faster then "random" access functions
     void add_variable(DT * invec, fixedchar varname); // adds variable at the end = write_variable with nvar=NVARS?
                                                       // loooong future -- control that name is unique!
@@ -102,16 +102,16 @@ template <class DT> class filevector
 	void read_first_variable(DT * outvec);
 	void read_next_variable(DT * outvec);
 // LOW
-	void delete_variable(unsigned long nvar);
+	void delete_variable(unsigned long int nvar);
 // MEDIUM -- see notes on redundant data storage
-	void read_observation(unsigned long nobs, DT * outvec);
-    void write_observation(unsigned long nobs, DT * invec);
+	void read_observation(unsigned long int nobs, DT * outvec);
+    void write_observation(unsigned long int nobs, DT * invec);
 // ???? nado ????
 	void read_first_observation(DT * outvec);
 	void read_next_observation(DT * outvec);
 // LOW
 	void add_observation(DT * invec, fixedchar obsname); // loooong future -- control that name is unique!
-	void delete_observation(unsigned long nobs);
+	void delete_observation(unsigned long int nobs);
 
 // MEDIUM
 // same functions working through NAMES -- primitive
@@ -133,10 +133,10 @@ template <class DT> class filevector
 // NEW STAFF -- AFTER 27.12.2009
 // these functions should create a copy of a file with (filtered) object
 	void save(char * new_file_name);
-	void save(char * new_file_name, unsigned long nvars, unsigned long * varindexes);
-	void save(char * new_file_name, unsigned long nobss, unsigned long * obsindexes);
-	void save(char * new_file_name, unsigned long nvars, unsigned long nobss, unsigned long * varindexes, unsigned long * obsindexes);
+	void save(char * new_file_name, unsigned long int nvars, unsigned long int * varindexes);
+	void save(char * new_file_name, unsigned long int nobss, unsigned long int * obsindexes);
+	void save(char * new_file_name, unsigned long int nvars, unsigned long int nobss, unsigned long int * varindexes, unsigned long int * obsindexes);
 // changing cache size on the fly
-	void set_cachesizeMb(unsigned long cachesizeMb);
+	void set_cachesizeMb(unsigned long int cachesizeMb);
 };
 ;
