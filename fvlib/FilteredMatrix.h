@@ -1,13 +1,19 @@
 #ifndef __FilteredMatrix__
 #define __FilteredMatrix__
 
+typedef map<unsigned long, unsigned long> IndexMap;
+
 #include "AbstractMatrix.h"
 
 class FilteredMatrix : public AbstractMatrix {
-    AbstractMatrix &nestedMatrix;
+    AbstractMatrix *nestedMatrix;
+    FilteredMatrix *nestedFilteredMatrix;
+    bool nestedMatrixIsFiltered;
     
     map<unsigned long, unsigned long> filteredToRealColIdx;
     map<unsigned long, unsigned long> filteredToRealRowIdx;
+
+    void fillUpIndexMap(vector<unsigned long> &v, IndexMap &m, IndexMap &result );
 
     void filterIdxList(unsigned long *iIndexes, unsigned long numIndexes, vector<unsigned long> &oIndexes, map<unsigned long, unsigned long> &filterMap) {
         oIndexes.reserve(filteredToRealColIdx.size());
@@ -19,7 +25,17 @@ class FilteredMatrix : public AbstractMatrix {
     }
     
 public:
-    FilteredMatrix(AbstractMatrix &matrix, vector<unsigned long> rowMask, vector<unsigned long> colMask) : nestedMatrix(matrix) {
+    map<unsigned long, unsigned long> &getFilteredToRealColMap() {
+        return filteredToRealColIdx;
+    }
+    map<unsigned long, unsigned long> &getFilteredToRealRowMap() {
+        return filteredToRealRowIdx;
+    }
+
+    FilteredMatrix(AbstractMatrix &matrix, vector<unsigned long> rowMask, vector<unsigned long> colMask)
+    : nestedMatrix(&matrix),
+     nestedMatrixIsFiltered (false)
+    {
         unsigned long realColIdx;
         for (realColIdx=0; realColIdx<colMask.size(); realColIdx++) {
            filteredToRealColIdx[realColIdx] = colMask[realColIdx];
@@ -30,6 +46,18 @@ public:
             filteredToRealRowIdx[realRowIdx] = rowMask[realRowIdx];
         }
     }
+
+    FilteredMatrix(FilteredMatrix& fm, vector<unsigned long> rowMask, vector<unsigned long> colMask )
+        : nestedFilteredMatrix(&fm),
+        nestedMatrixIsFiltered (true) {
+        fillUpIndexMap(rowMask,fm.getFilteredToRealRowMap(),filteredToRealRowIdx);
+        fillUpIndexMap(colMask,fm.getFilteredToRealColMap(),filteredToRealColIdx);
+    }
+
+    AbstractMatrix &getNestedMatrix() {
+        return nestedMatrixIsFiltered?nestedFilteredMatrix->getNestedMatrix():*nestedMatrix;
+    }
+
     unsigned int getNumVariables();
     unsigned int getNumObservations();
     void cacheAllNames(bool);

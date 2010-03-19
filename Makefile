@@ -35,7 +35,7 @@ REGFILES = $(SRCDIR)/usage.cpp $(SRCDIR)/usage.h
 
 TESTSFILES = $(TESTSDIR)/*.cpp $(TESTSDIR)/*.h
 
-all: converter text2fvf fv2text transpose writespeed tests# $(RSHLIB)
+all: converter text2fvf fv2text transpose writespeed # $(RSHLIB)
 
 text2fvf: $(TEXT2FVF)
 $(TEXT2FVF): $(LIBFILES) $(REGFILES) $(SRCDIR)/text2fvf.cpp $(SRCDIR)/text2fvf_main.cpp

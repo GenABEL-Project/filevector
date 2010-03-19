@@ -1,6 +1,6 @@
 #include "Logger.h"
 
-                     
+                    
 ErrorExit errorExit;
 
 #define all true

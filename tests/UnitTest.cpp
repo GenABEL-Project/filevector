@@ -315,7 +315,7 @@ void UnitTest::test_extract_base_file_name()  {
 }
 
 void UnitTest::testFilteredMatrix() {
-    cout << "testFilteredMatrix()" << endl;
+    testDbg << "testFilteredMatrix()" << endl;
 	string filename = TestUtil::get_temp_file_name();
 	TestUtil::create_empty_filevector(filename, 5, 4);
 	FileVector fv(filename,1);
@@ -360,10 +360,22 @@ void UnitTest::testFilteredMatrix() {
     CPPUNIT_ASSERT_EQUAL((float)9,obs[1]);
     CPPUNIT_ASSERT_EQUAL((float)12,obs[2]);
 
+	vector<unsigned long> rFilter2,cFilter2;
+	rFilter2.push_back(3);
+	rFilter2.push_back(4);
+	cFilter2.push_back(0);
+	cFilter2.push_back(1);
+
+	testDbg << "Nested FilteredMatrix testing" << endl;
+
+	FilteredMatrix fm2(fm, rFilter2, cFilter2);
+
+	fm2.readElementAs(2,0,f); CPPUNIT_ASSERT_EQUAL((float)12,f);
+	fm2.readElementAs(2,1,f); CPPUNIT_ASSERT_EQUAL((float)12,f);
+	fm2.readElementAs(2,2,f); CPPUNIT_ASSERT_EQUAL((float)34,f);
+
     testDbg << "End of FilteredMatrix test" << endl;
 }
-
-
 
 int main( int argc, char **argv)
 {
