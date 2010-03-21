@@ -50,7 +50,8 @@ public:
        delete[] tmp;
     }
 
-    void readElementAs(unsigned long varNumber, unsigned long obsNumber, float& element){
+    template<class DT>
+    void readElementAs(unsigned long varNumber, unsigned long obsNumber, DT & element){
         char *ret= new char [getElementSize()];
         readElement(varNumber, obsNumber, ret);
         performCast(element, ret, getElementType());

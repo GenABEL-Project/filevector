@@ -63,10 +63,10 @@ void text2fvf(string program_name, string infilename, string outfilename,
 		msg << "\t --infile    = " << infilename.c_str() << endl;
 		msg << "\t --outfile   = " << outfilename.c_str()<< endl;
 
-		msg << "\t --skiprows  = " << endl;
+		msg << "\t --skiprows  = ";
 		if (skiprows) msg << skiprows << endl; else msg << "OFF\n";
 
-		msg << "\t --skipcols  = " << endl;
+		msg << "\t --skipcols  = ";
 		if (skipcols) msg << skipcols << endl; else msg <<"OFF\n";
 
 		msg << "\t --cnrow     = ";

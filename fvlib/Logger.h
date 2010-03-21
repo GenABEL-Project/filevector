@@ -1,6 +1,10 @@
 #ifndef __LOGGER__
 #define __LOGGER__
 
+#if COMPILE_WITH_R
+#include <R.h>
+#endif
+
 #include <ostream>
 #include <iostream>
 #include <cstdlib>

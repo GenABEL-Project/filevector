@@ -487,7 +487,7 @@ void FileVector::copyVariable(char* to, char* from, int n, unsigned long * index
 
 void FileVector::saveAs(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long *varindexes, unsigned long *obsindexes) {
     if (headerOrDataExists(newFilename)) {
-        errorLog << "File "<< newFilename <<" already exists." << endl;
+        errorLog << "File "<< newFilename <<" already exists." << endl << errorExit;
     }
     initializeEmptyFile( (char *)newFilename.c_str(), nvars, nobss, fileHeader.type, true);
     FileVector outdata( newFilename, 64 );//todo which size for cache to use?
