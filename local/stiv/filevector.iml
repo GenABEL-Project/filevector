@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="C++" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../DatABEL">
+      <excludeFolder url="file://$MODULE_DIR$/../../../DatABEL/src/fvlib" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../DatABEL/tests/big_data" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../fvfutil" />
+    <content url="file://$MODULE_DIR$/../../fvlib" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../tests">
+      <sourceFolder url="file://$MODULE_DIR$/../../tests" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/../../tests/data" />
+    </content>
+    <orderEntry type="jdk" jdkName="Cpp SDK" jdkType="CppSdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Unnamed" level="application" />
+  </component>
+</module>
+
