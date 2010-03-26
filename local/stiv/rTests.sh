@@ -1,3 +1,3 @@
-cd ../DatABEL/inst/unitTests
+cd /home/stiv/genabel/pkg/DatABEL/inst/unitTests
 sudo make
 

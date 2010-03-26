@@ -1,17 +1,21 @@
 #ifndef __FilteredMatrix__
 #define __FilteredMatrix__
 
-typedef map<unsigned long, unsigned long> IndexMap;
+#include <map>
+
+using namespace std;
 
 #include "AbstractMatrix.h"
+
+typedef map<unsigned long, unsigned long> IndexMap;
 
 class FilteredMatrix : public AbstractMatrix {
     AbstractMatrix *nestedMatrix;
     FilteredMatrix *nestedFilteredMatrix;
     bool nestedMatrixIsFiltered;
     
-    map<unsigned long, unsigned long> filteredToRealColIdx;
-    map<unsigned long, unsigned long> filteredToRealRowIdx;
+    IndexMap filteredToRealColIdx;
+    IndexMap filteredToRealRowIdx;
 
     void fillUpIndexMap(vector<unsigned long> &v, IndexMap &m, IndexMap &result );
 
