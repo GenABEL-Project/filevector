@@ -109,7 +109,7 @@ void UnitTest::test_save_vars() {
 
     AbstractMatrix *fv_copy = new FileVector( dest_file_name, 2 );
     CPPUNIT_ASSERT_EQUAL(fv->getNumObservations(),fv_copy->getNumObservations());
-    CPPUNIT_ASSERT_EQUAL( (unsigned int )2 ,fv_copy->getNumVariables() );
+    CPPUNIT_ASSERT_EQUAL( (unsigned long)2 ,fv_copy->getNumVariables() );
 }
 
 void UnitTest::test_save_obs() {
@@ -120,7 +120,7 @@ void UnitTest::test_save_obs() {
     remove((dest_file_name+FILEVECTOR_INDEX_FILE_SUFFIX).c_str( ));
 
     AbstractMatrix *fv = new FileVector( src_file_name, 64 );
-    unsigned int orig_nvars = fv->getNumVariables();
+    unsigned long orig_nvars = fv->getNumVariables();
     float * orig_var = new float [fv->getNumObservations()];
     fv->readVariableAs(1, orig_var);
 
@@ -129,7 +129,7 @@ void UnitTest::test_save_obs() {
     delete fv;
 
     AbstractMatrix* fv_copy = new FileVector( dest_file_name, 2 );
-    CPPUNIT_ASSERT_EQUAL((unsigned int )2 ,fv_copy->getNumObservations());
+    CPPUNIT_ASSERT_EQUAL((unsigned long )2 ,fv_copy->getNumObservations());
     CPPUNIT_ASSERT_EQUAL( orig_nvars ,fv_copy->getNumVariables() );
     float * saved_var = new float [fv_copy->getNumObservations()];
     fv_copy->readVariableAs(1, saved_var);
@@ -157,8 +157,8 @@ void UnitTest::test_save_vars_obs() {
 	fv->saveAs( dest_file_name , 3, 2, var_indexes,obs_indexes);
 
 	AbstractMatrix* fv_copy = new FileVector( dest_file_name, 2 );
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong number of variables in fv_copy", (unsigned int )3,fv_copy->getNumVariables());
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong number of observations in fv_copy", (unsigned int )2 ,fv_copy->getNumObservations());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong number of variables in fv_copy", (unsigned long )3,fv_copy->getNumVariables());
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Wrong number of observations in fv_copy", (unsigned long )2 ,fv_copy->getNumObservations());
 
     float * orig_var = new float [fv->getNumObservations()];
     float * saved_var = new float [fv_copy->getNumObservations()];
@@ -280,7 +280,7 @@ void UnitTest::test_add_variable() {
 	fv->addVariableAs(var,varname);
 	fv->addVariableAs(var,varname2);
 
-	CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv->getNumVariables());
+	CPPUNIT_ASSERT_EQUAL((unsigned long)12, fv->getNumVariables());
 	FixedChar _fc_varname_loaded = fv->readVariableName(10);
     CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
     _fc_varname_loaded = fv->readVariableName(11);
@@ -291,7 +291,7 @@ void UnitTest::test_add_variable() {
     tempFileName = TestUtil::get_temp_file_name();
     AbstractMatrix* fv2 = new FileVector( tempFileName, 1 );
 
-    CPPUNIT_ASSERT_EQUAL((unsigned int)12, fv2->getNumVariables());
+    CPPUNIT_ASSERT_EQUAL((unsigned long)12, fv2->getNumVariables());
 	_fc_varname_loaded = fv2->readVariableName(10);
     CPPUNIT_ASSERT_EQUAL( varname, string(_fc_varname_loaded.name) );
     _fc_varname_loaded = fv2->readVariableName(11);
@@ -315,7 +315,7 @@ void UnitTest::test_extract_base_file_name()  {
 }
 
 void UnitTest::testFilteredMatrix() {
-    testDbg << "testFilteredMatrix()" << endl;
+    testDbg << "testFilteredMatrix()" << endl; 
 	string filename = TestUtil::get_temp_file_name();
 	TestUtil::create_empty_filevector(filename, 5, 4);
 	FileVector fv(filename,1);
@@ -337,7 +337,8 @@ void UnitTest::testFilteredMatrix() {
 	cFilter.push_back(1);
 	cFilter.push_back(3);
 
-	FilteredMatrix fm(fv,rFilter,cFilter);
+	FilteredMatrix fm(fv);
+	fm.setFilters(rFilter,cFilter);
 
     fm.readElementAs(0,0,f); CPPUNIT_ASSERT_EQUAL(f,(float)1);
     fm.readElementAs(0,1,f); CPPUNIT_ASSERT_EQUAL(f,(float)3);
@@ -368,7 +369,8 @@ void UnitTest::testFilteredMatrix() {
 
 	testDbg << "Nested FilteredMatrix testing" << endl;
 
-	FilteredMatrix fm2(fm, rFilter2, cFilter2);
+	FilteredMatrix fm2(fm);
+	fm2.setFilters(rFilter2, cFilter2);
 
 	fm2.readElementAs(2,0,f); CPPUNIT_ASSERT_EQUAL((float)12,f);
 	fm2.readElementAs(2,1,f); CPPUNIT_ASSERT_EQUAL((float)12,f);

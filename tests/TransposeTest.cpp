@@ -62,8 +62,8 @@ void TransposeTest::testTransposeTwoVars() {
    testDbg << "18" << endl;
 
    AbstractMatrix* fv_tr =  new FileVector ( dest_file_name, 1 );
-   CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->getNumVariables());
-   CPPUNIT_ASSERT_EQUAL((unsigned int)2, fv_tr->getNumObservations());
+   CPPUNIT_ASSERT_EQUAL((unsigned long)3, fv_tr->getNumVariables());
+   CPPUNIT_ASSERT_EQUAL((unsigned long)2, fv_tr->getNumObservations());
 
    int var[2];
    fv_tr->readVariableAs(0,var);
@@ -113,8 +113,8 @@ void TransposeTest::testTranspose3x3_matrix()    {
   tr.process( src_file_name );
 
   AbstractMatrix* fv_tr =  new FileVector ( dest_file_name, 1 );
-  CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->getNumVariables());
-  CPPUNIT_ASSERT_EQUAL((unsigned int)3, fv_tr->getNumObservations());
+  CPPUNIT_ASSERT_EQUAL((unsigned long)3, fv_tr->getNumVariables());
+  CPPUNIT_ASSERT_EQUAL((unsigned long)3, fv_tr->getNumObservations());
 
    int var[3];
    fv_tr->readVariableAs(0,var);

@@ -69,8 +69,8 @@ public:
        delete [] ret;
     }
 
-    virtual unsigned int getNumVariables() = 0;
-    virtual unsigned int getNumObservations() = 0;
+    virtual unsigned long getNumVariables() = 0;
+    virtual unsigned long getNumObservations() = 0;
 
 	virtual void saveAs( string newFilename ) = 0;
 	virtual void saveVariablesAs( string newFilename, unsigned long nvars, unsigned long * varindexes) = 0;

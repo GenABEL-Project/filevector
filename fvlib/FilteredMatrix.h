@@ -29,41 +29,56 @@ class FilteredMatrix : public AbstractMatrix {
     }
     
 public:
-    map<unsigned long, unsigned long> &getFilteredToRealColMap() {
+    IndexMap &getFilteredToRealColMap() {
         return filteredToRealColIdx;
     }
-    map<unsigned long, unsigned long> &getFilteredToRealRowMap() {
+    IndexMap &getFilteredToRealRowMap() {
         return filteredToRealRowIdx;
     }
 
-    FilteredMatrix(AbstractMatrix &matrix, vector<unsigned long> rowMask, vector<unsigned long> colMask)
-    : nestedMatrix(&matrix),
-     nestedMatrixIsFiltered (false)
-    {
-        unsigned long realColIdx;
-        for (realColIdx=0; realColIdx<colMask.size(); realColIdx++) {
-           filteredToRealColIdx[realColIdx] = colMask[realColIdx];
+    // makes this matrix don't filter any cells
+    void setNoFiltering(){
+        unsigned long i;
+        filteredToRealRowIdx = IndexMap();
+        for(i=0;i<nestedMatrix->getNumVariables();i++) {
+            filteredToRealRowIdx[i]=i;
         }
 
-        unsigned long realRowIdx;
-        for (realRowIdx=0; realRowIdx<rowMask.size(); realRowIdx++) {
-            filteredToRealRowIdx[realRowIdx] = rowMask[realRowIdx];
+        filteredToRealColIdx = IndexMap();
+        for(i=0;i<nestedMatrix->getNumObservations();i++) {
+            filteredToRealColIdx[i]=i;
         }
     }
 
-    FilteredMatrix(FilteredMatrix& fm, vector<unsigned long> rowMask, vector<unsigned long> colMask )
-        : nestedFilteredMatrix(&fm),
-        nestedMatrixIsFiltered (true) {
-        fillUpIndexMap(rowMask,fm.getFilteredToRealRowMap(),filteredToRealRowIdx);
-        fillUpIndexMap(colMask,fm.getFilteredToRealColMap(),filteredToRealColIdx);
+    void setFilters(vector<unsigned long> &rowMask, vector<unsigned long> &colMask){
+        filteredToRealRowIdx = IndexMap();
+        filteredToRealColIdx = IndexMap();
+        if (nestedMatrixIsFiltered) {
+            fillUpIndexMap(rowMask,nestedFilteredMatrix->getFilteredToRealRowMap(),filteredToRealRowIdx);
+            fillUpIndexMap(colMask,nestedFilteredMatrix->getFilteredToRealColMap(),filteredToRealColIdx);
+        } else {
+            unsigned long realColIdx;
+            for (realColIdx=0; realColIdx<colMask.size(); realColIdx++) {
+                filteredToRealColIdx[realColIdx] = colMask[realColIdx];
+            }
+
+            unsigned long realRowIdx;
+            for (realRowIdx=0; realRowIdx<rowMask.size(); realRowIdx++) {
+                filteredToRealRowIdx[realRowIdx] = rowMask[realRowIdx];
+            }
+        }
     }
+
+    FilteredMatrix(AbstractMatrix &matrix) : nestedMatrix(&matrix), nestedMatrixIsFiltered (false) { }
+
+    FilteredMatrix(FilteredMatrix& fm ): nestedFilteredMatrix(&fm), nestedMatrixIsFiltered (true) { }
 
     AbstractMatrix &getNestedMatrix() {
         return nestedMatrixIsFiltered?nestedFilteredMatrix->getNestedMatrix():*nestedMatrix;
     }
 
-    unsigned int getNumVariables();
-    unsigned int getNumObservations();
+    unsigned long getNumVariables();
+    unsigned long getNumObservations();
     void cacheAllNames(bool);
 
 	void saveAs(string newFilename);

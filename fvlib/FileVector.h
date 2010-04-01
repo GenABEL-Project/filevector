@@ -97,8 +97,8 @@ public:
 	void writeVariableName(unsigned long varIdx, FixedChar name);
 	void writeObservationName(unsigned long obsIdx, FixedChar name);
 
-	virtual unsigned int getNumVariables();
-	virtual unsigned int getNumObservations();
+	virtual unsigned long getNumVariables();
+	virtual unsigned long getNumObservations();
 
 	FixedChar readVariableName(unsigned long varIdx);
 	FixedChar readObservationName(unsigned long obsIdx);
