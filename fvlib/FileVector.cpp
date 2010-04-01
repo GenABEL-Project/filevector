@@ -142,12 +142,12 @@ void FileVector::setCacheSizeInMb( unsigned long cachesizeMb ) {
 	cache_size_Mb = cachesizeMb;
 	cache_size_nvars = (unsigned long) 1024*1024*cache_size_Mb/(fileHeader.numObservations*fileHeader.bytesPerRecord);
 	if (cache_size_nvars<1) {
-		cache_size_Mb = (long unsigned int) ceil(
+		cache_size_Mb = (unsigned long) ceil(
 				(float) fileHeader.numObservations*fileHeader.bytesPerRecord/(1024.*1024.)
 				);
 		cache_size_nvars = 1;
 	} else if (cache_size_nvars>fileHeader.numVariables) {
-		cache_size_Mb = (long unsigned int) ceil(
+		cache_size_Mb = (unsigned long) ceil(
 				(float) fileHeader.numVariables*fileHeader.numObservations*fileHeader.bytesPerRecord/(1024.*1024.)
 				);
 		cache_size_nvars = fileHeader.numVariables;
@@ -383,11 +383,11 @@ void FileVector::writeElement(unsigned long varIdx, unsigned long obsIdx, void* 
     }
 }
 
-unsigned int FileVector::getNumVariables() {
+unsigned long FileVector::getNumVariables() {
    return fileHeader.numVariables;
 }
 
-unsigned int FileVector::getNumObservations() {
+unsigned long FileVector::getNumObservations() {
    return fileHeader.numObservations;
 }
 

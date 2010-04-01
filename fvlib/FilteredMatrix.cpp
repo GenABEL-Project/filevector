@@ -15,6 +15,7 @@ unsigned long FilteredMatrix::getCacheSizeInMb() {
 	return getNestedMatrix().getCacheSizeInMb();
 }
 
+// calculates filtering map for multiply filtering
 void FilteredMatrix::fillUpIndexMap(vector<unsigned long> &v, IndexMap &m, IndexMap &result ){
     set<unsigned long> s;
     IndexMap::iterator i;
@@ -101,11 +102,11 @@ void FilteredMatrix::writeElement(unsigned long varIdx, unsigned long obsIdx, vo
     getNestedMatrix().writeElement(filteredToRealRowIdx[varIdx], filteredToRealColIdx[obsIdx], data);
 }
 
-unsigned int FilteredMatrix::getNumVariables() {
+unsigned long FilteredMatrix::getNumVariables() {
    return filteredToRealRowIdx.size();
 }
 
-unsigned int FilteredMatrix::getNumObservations() {
+unsigned long FilteredMatrix::getNumObservations() {
    return filteredToRealColIdx.size();
 }
 
