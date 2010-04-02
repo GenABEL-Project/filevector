@@ -53,12 +53,20 @@ void FileVector::initialize(string filename, unsigned long cachesizeMb) {
     struct stat index_filestatus;
     stat(indexFilename.c_str(), &index_filestatus);
 
-    indexFile.open(indexFilename.c_str(), ios::out | ios::in | ios::binary);
+    if (readOnly) {
+    	indexFile.open(indexFilename.c_str(), ios::in | ios::binary);
+    } else {
+    	indexFile.open(indexFilename.c_str(), ios::out | ios::in | ios::binary);
+    }
     if (!indexFile) {
         errorLog << "Opening file "<< indexFilename <<" for write & read failed\n" << errorExit;
     }
 
-    dataFile.open(data_filename.c_str(), ios::out | ios::in | ios::binary);
+    if (readOnly) {
+    	dataFile.open(data_filename.c_str(), ios::in | ios::binary);
+    } else {
+    	dataFile.open(data_filename.c_str(), ios::out | ios::in | ios::binary);
+    }
     if (!dataFile) {
         errorLog << "Opening file "<< data_filename << " for write & read failed\n" << errorExit;
     }
