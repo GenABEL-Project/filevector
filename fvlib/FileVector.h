@@ -133,7 +133,8 @@ public:
 	void saveIndexFile();
 
 	virtual void setUpdateNamesOnWrite(bool bUpdate);
-
+    virtual AbstractMatrix* castToAbstractMatrix();
+    
 	// FOR FUTURE:
 	// very slow one!
 	//	DT * readObservation(unsigned long obsIdx);

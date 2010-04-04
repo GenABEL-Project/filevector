@@ -315,7 +315,7 @@ void UnitTest::test_extract_base_file_name()  {
 }
 
 void UnitTest::testFilteredMatrix() {
-    testDbg << "testFilteredMatrix()" << endl; 
+    testDbg << "testFilteredMatrix()" << endl;
 	string filename = TestUtil::get_temp_file_name();
 	TestUtil::create_empty_filevector(filename, 5, 4);
 	FileVector fv(filename,1);
@@ -338,7 +338,8 @@ void UnitTest::testFilteredMatrix() {
 	cFilter.push_back(3);
 
 	FilteredMatrix fm(fv);
-	fm.setFilters(rFilter,cFilter);
+
+	fm.setFilteredArea(rFilter,cFilter);
 
     fm.readElementAs(0,0,f); CPPUNIT_ASSERT_EQUAL(f,(float)1);
     fm.readElementAs(0,1,f); CPPUNIT_ASSERT_EQUAL(f,(float)3);
@@ -370,7 +371,7 @@ void UnitTest::testFilteredMatrix() {
 	testDbg << "Nested FilteredMatrix testing" << endl;
 
 	FilteredMatrix fm2(fm);
-	fm2.setFilters(rFilter2, cFilter2);
+	fm2.setFilteredArea(rFilter2, cFilter2);
 
 	fm2.readElementAs(2,0,f); CPPUNIT_ASSERT_EQUAL((float)12,f);
 	fm2.readElementAs(2,1,f); CPPUNIT_ASSERT_EQUAL((float)12,f);

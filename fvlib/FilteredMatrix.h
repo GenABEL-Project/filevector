@@ -39,20 +39,20 @@ public:
     // makes this matrix don't filter any cells
     void setNoFiltering(){
         unsigned long i;
-        filteredToRealRowIdx = IndexMap();
-        for(i=0;i<nestedMatrix->getNumVariables();i++) {
+        filteredToRealRowIdx.clear();
+        for(i=0;i<getNestedMatrix().getNumVariables();i++) {
             filteredToRealRowIdx[i]=i;
         }
 
-        filteredToRealColIdx = IndexMap();
-        for(i=0;i<nestedMatrix->getNumObservations();i++) {
+        filteredToRealColIdx.clear();
+        for(i=0;i<getNestedMatrix().getNumObservations();i++) {
             filteredToRealColIdx[i]=i;
         }
     }
 
-    void setFilters(vector<unsigned long> &rowMask, vector<unsigned long> &colMask){
-        filteredToRealRowIdx = IndexMap();
-        filteredToRealColIdx = IndexMap();
+    void setFilteredArea(vector<unsigned long> &rowMask, vector<unsigned long> &colMask){
+        filteredToRealRowIdx.clear();
+        filteredToRealColIdx.clear();
         if (nestedMatrixIsFiltered) {
             fillUpIndexMap(rowMask,nestedFilteredMatrix->getFilteredToRealRowMap(),filteredToRealRowIdx);
             fillUpIndexMap(colMask,nestedFilteredMatrix->getFilteredToRealColMap(),filteredToRealColIdx);
@@ -69,9 +69,15 @@ public:
         }
     }
 
-    FilteredMatrix(AbstractMatrix &matrix) : nestedMatrix(&matrix), nestedMatrixIsFiltered (false) { }
+    FilteredMatrix(AbstractMatrix &matrix) : nestedMatrix(&matrix), nestedMatrixIsFiltered (false) {
+        dbg << "Constructing FilteredMatrix from AbstractMatrix, ptr = " << (long)this << endl;
+        setNoFiltering();
+    }
 
-    FilteredMatrix(FilteredMatrix& fm ): nestedFilteredMatrix(&fm), nestedMatrixIsFiltered (true) { }
+    FilteredMatrix(FilteredMatrix& fm ): nestedFilteredMatrix(&fm), nestedMatrixIsFiltered (true) {
+        dbg << "Constructing FilteredMatrix from FilteredMatrix, ptr = "<< (long)this  << endl; 
+        setNoFiltering();
+    }
 
     AbstractMatrix &getNestedMatrix() {
         return nestedMatrixIsFiltered?nestedFilteredMatrix->getNestedMatrix():*nestedMatrix;
@@ -101,6 +107,7 @@ public:
 	void readElement(unsigned long varIdx, unsigned long obsIdx, void * elem);
 	void writeVariable(unsigned long varIdx, void * datavec);
 	void writeElement(unsigned long varIdx, unsigned long obsIdx, void * data);
+    virtual AbstractMatrix* castToAbstractMatrix();
 
 private:
     void addVariable(void * invec, string varname);

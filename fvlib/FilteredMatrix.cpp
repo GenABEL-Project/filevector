@@ -168,7 +168,6 @@ void FilteredMatrix::cacheAllNames(bool doCache) {
     getNestedMatrix().cacheAllNames(doCache);
 }
 
-
-
-
-
+AbstractMatrix* FilteredMatrix::castToAbstractMatrix(){
+    return this;
+}

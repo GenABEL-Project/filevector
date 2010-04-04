@@ -99,6 +99,7 @@ public:
 	virtual void readElement(unsigned long varIdx, unsigned long obsIdx, void * elem) = 0;
 	virtual void writeVariable(unsigned long varIdx, void * datavec) = 0;
 	virtual void writeElement(unsigned long varIdx, unsigned long obsIdx, void * data) = 0;
+	virtual AbstractMatrix* castToAbstractMatrix() = 0;
 private:
 
     // HIGH -- here I see the possibility to make these functions faster then "random" access functions
