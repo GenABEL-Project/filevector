@@ -19,6 +19,7 @@ void FileVector::saveIndexFile() {
     }
 }
 
+
 FileVector::~FileVector() {
     dbg << "Closing FileVector" << endl;
     saveIndexFile();
@@ -613,5 +614,9 @@ void FileVector::addVariable(void *invec, string varName) {
 	    indexFile.write((char*)&_fc_varname.name, sizeof(FixedChar));
     }
     writeVariable(fileHeader.numVariables - 1, invec);
+}
+
+AbstractMatrix* FileVector::castToAbstractMatrix(){
+    return this; 
 }
 
