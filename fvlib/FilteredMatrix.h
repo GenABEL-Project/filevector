@@ -74,7 +74,7 @@ public:
         setNoFiltering();
     }
 
-    FilteredMatrix(FilteredMatrix& fm ): nestedFilteredMatrix(&fm), nestedMatrixIsFiltered (true) {
+    FilteredMatrix(FilteredMatrix &fm): nestedFilteredMatrix(&fm), nestedMatrixIsFiltered (true) {
         dbg << "Constructing FilteredMatrix from FilteredMatrix, ptr = "<< (long)this  << endl; 
         setNoFiltering();
     }

@@ -260,12 +260,13 @@ void text2fvf(string program_name, string infilename, string outfilename,
 		lineCnt++;
 	}
 
-	char * tmpstr;
 	if (!colNamesFilePresents && cnrow < 0) for (unsigned long i=1;i<=numColumns;i++) {
+		char * tmpstr;
 		sprintf(tmpstr,"%lu",i);
 		extColNames.push_back(tmpstr);
 	}
 	if (!rowNamesFilePresents && cnrow < 0) for (unsigned long i=1;i<=numRows;i++) {
+		char * tmpstr;
 		sprintf(tmpstr,"%lu",i);
 		extRowNames.push_back(tmpstr);
 	}
