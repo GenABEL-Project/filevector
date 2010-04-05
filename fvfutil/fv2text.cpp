@@ -8,6 +8,7 @@ using namespace std;
 
 #include "../fvlib/Logger.h"
 #include "../fvlib/FileVector.h"
+#include "../fvlib/CastUtils.h"
 
 void info() 
 {
@@ -27,31 +28,7 @@ void info()
     return ret;    
 }*/
 
-string bufToString(short int dataType, char *data){
-    char ret[20];
-    switch(dataType){
-	case UNSIGNED_SHORT_INT:
-	    sprintf(ret, "%hu", *(unsigned short int*)data);
-    	    break;
-	case SHORT_INT:
-	    sprintf(ret, "%sd", *(short int*)data);
-    	    break;
-    	case UNSIGNED_INT:
-	    sprintf(ret, "%ud", *(unsigned int*)data);
-	    break;
-        case INT:
-	    sprintf(ret, "%d", *(int*)data);
-            break;
-	case FLOAT:
-	    sprintf(ret, "%f", *(float*)data);
-	    break;
-    	case DOUBLE: // changed from %lf [not ISO C++]
-	    sprintf(ret, "%f", *(double*)data);
-	    break;
-    }
-    
-    return string(ret);                                     	
-}
+
 
 int main(int argc, char* argv[])
 {

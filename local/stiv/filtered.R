@@ -1,0 +1,12 @@
+library("RUnit")
+library("DatABEL")
+source("/home/stiv/genabel/pkg/DatABEL/inst/unitTests/shared_functions.R")
+unlink("tmp*.fv?")
+unlink("test*.fv?")
+dta <- matrix(rnorm(3*3),3,3);
+null <- as(dta,"databel_base_R")
+checkNumEq(dta,null)
+checkIdentical("databel_base_R",class(null)[1])
+x <- databel_filtered_R(null)
+show(x)
+show(null)
