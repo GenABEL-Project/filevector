@@ -249,6 +249,7 @@ void FileVector::writeVariableName(unsigned long varIdx, FixedChar name) {
 	if (updateNamesOnWrite||variableNames == 0){
 	    indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(varIdx + fileHeader.numObservations), ios::beg);
 	    indexFile.write((char*)&name, sizeof(FixedChar));
+	    indexFile.flush();
 	}
 	if (variableNames) {
 	    variableNames[varIdx] = name;
@@ -262,6 +263,7 @@ void FileVector::writeObservationName(unsigned long obsIdx, FixedChar name) {
 	if (updateNamesOnWrite || observationNames == 0){
 	    indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(obsIdx), ios::beg);
 	    indexFile.write((char*)&name, sizeof(FixedChar));
+	    indexFile.flush();
     }
     if (observationNames) {
         observationNames[obsIdx] = name;
