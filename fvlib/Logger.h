@@ -73,5 +73,6 @@ extern Logger errorLog;
 extern Logger testDbg;
 extern Logger deepDbg;
 extern Logger fmDbg;
+extern Logger wrapperLog;
 
 #endif
