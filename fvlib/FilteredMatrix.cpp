@@ -9,6 +9,7 @@
 using namespace std;
 
 #include "FilteredMatrix.h"
+#include "CastUtils.h"
 #include "frutil.h"
 
 unsigned long FilteredMatrix::getCacheSizeInMb() {
@@ -17,6 +18,7 @@ unsigned long FilteredMatrix::getCacheSizeInMb() {
 
 // calculates filtering map for multiply filtering
 void FilteredMatrix::fillUpIndexMap(vector<unsigned long> &v, IndexMap &m, IndexMap &result ){
+    fmDbg <<"fillUpIndexMap()" << endl;
     set<unsigned long> s;
     IndexMap::iterator i;
     for(i=m.begin();i!=m.end();i++) {
@@ -37,7 +39,6 @@ void FilteredMatrix::fillUpIndexMap(vector<unsigned long> &v, IndexMap &m, Index
         k++;
     }
 }
-
 
 void FilteredMatrix::setCacheSizeInMb( unsigned long cachesizeMb ) {
     getNestedMatrix().setCacheSizeInMb(cachesizeMb);
@@ -65,6 +66,7 @@ FixedChar FilteredMatrix::readObservationName(unsigned long obsIdx) {
 
 void FilteredMatrix::readVariable(unsigned long varIdx, void * outvec) {
     unsigned long i;
+    fmDbg << "readVariable(" << varIdx << ");" << endl;
     for(i=0;i<getNumObservations();i++){
         readElement(varIdx, i, (char*)outvec + i * getElementSize());
     }
@@ -72,6 +74,7 @@ void FilteredMatrix::readVariable(unsigned long varIdx, void * outvec) {
 
 void FilteredMatrix::readObservation(unsigned long obsIdx, void * outvec) {
     unsigned long i;
+    fmDbg << "readObservation(" << obsIdx << ");" << endl;
     for(i=0;i<getNumVariables();i++){
         readElement( i, obsIdx, (char*)outvec + i * getElementSize());
     }
@@ -86,19 +89,20 @@ void FilteredMatrix::writeObservation(unsigned long obsIdx, void * invec) {
 
 void FilteredMatrix::writeVariable(unsigned long varIdx, void *datavec) {
     unsigned long i;
-    deepDbg << "FilteredMatrix.writeVariable(" << varIdx << ")" << endl;
+    fmDbg << "FilteredMatrix.writeVariable(" << varIdx << ")" << endl;
     for(i=0;i<getNumObservations();i++){
         writeElement(varIdx, i, (char*)datavec + i * getElementSize());
     }
 }
 
 void FilteredMatrix::readElement(unsigned long varIdx, unsigned long obsIdx, void * out) {
-    deepDbg << "FilteredMatrix::readElement(" << varIdx << "," << obsIdx<<")";
+    fmDbg << "FilteredMatrix::readElement(" << varIdx << "," << obsIdx<<") = ";
     getNestedMatrix().readElement(filteredToRealRowIdx[varIdx], filteredToRealColIdx[obsIdx], out);
+    fmDbg << bufToString(getElementType(), (char*)out) << endl;
 }
 
 void FilteredMatrix::writeElement(unsigned long varIdx, unsigned long obsIdx, void* data) {
-    deepDbg << "FilteredMatrix.writeElement (" << varIdx << "," << obsIdx << ")" << endl;
+    fmDbg << "FilteredMatrix.writeElement (" << varIdx << "," << obsIdx << ")" << endl;
     getNestedMatrix().writeElement(filteredToRealRowIdx[varIdx], filteredToRealColIdx[obsIdx], data);
 }
 

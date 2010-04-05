@@ -38,18 +38,18 @@ void FileVector::initialize(string filename, unsigned long cachesizeMb) {
     }
 
     indexFilename = extract_base_file_name(filename) + FILEVECTOR_INDEX_FILE_SUFFIX;
-    data_filename = extract_base_file_name(filename) + FILEVECTOR_DATA_FILE_SUFFIX;
+    dataFilename = extract_base_file_name(filename) + FILEVECTOR_DATA_FILE_SUFFIX;
 
     if(!file_exists(indexFilename)) {
         errorLog <<"Index file not exists: " <<  indexFilename << endl << errorExit;
     }
 
-    data_filename = extract_base_file_name(filename) + FILEVECTOR_DATA_FILE_SUFFIX;
-    if(!file_exists(data_filename))
-        errorLog <<"Data file not exists: " <<  data_filename.c_str() << endl <<errorExit;
+    dataFilename = extract_base_file_name(filename) + FILEVECTOR_DATA_FILE_SUFFIX;
+    if(!file_exists(dataFilename))
+        errorLog <<"Data file not exists: " <<  dataFilename.c_str() << endl <<errorExit;
 
     struct stat data_filestatus;
-    stat(data_filename.c_str(), &data_filestatus);
+    stat(dataFilename.c_str(), &data_filestatus);
 
     struct stat index_filestatus;
     stat(indexFilename.c_str(), &index_filestatus);
@@ -64,12 +64,12 @@ void FileVector::initialize(string filename, unsigned long cachesizeMb) {
     }
 
     if (readOnly) {
-    	dataFile.open(data_filename.c_str(), ios::in | ios::binary);
+    	dataFile.open(dataFilename.c_str(), ios::in | ios::binary);
     } else {
-    	dataFile.open(data_filename.c_str(), ios::out | ios::in | ios::binary);
+    	dataFile.open(dataFilename.c_str(), ios::out | ios::in | ios::binary);
     }
     if (!dataFile) {
-        errorLog << "Opening file "<< data_filename << " for write & read failed\n" << errorExit;
+        errorLog << "Opening file "<< dataFilename << " for write & read failed\n" << errorExit;
     }
 
 	indexFile.read((char*)&fileHeader, sizeof(fileHeader));
@@ -193,7 +193,7 @@ void FileVector::update_cache(unsigned long from_var) {
 	if (current_cache_size_bytes <= max_buffer_size_bytes) {
 		dataFile.read((char*)char_buffer,current_cache_size_bytes);
 		if (!dataFile) {
-		    errorLog << "Failed to read cache from file '"<< data_filename <<"'\n" << errorExit;
+		    errorLog << "Failed to read cache from file '"<< dataFilename <<"'\n" << errorExit;
 		}
 	} else {
 // cache size is bigger than what we can read in one go ... read in blocks
@@ -203,14 +203,14 @@ void FileVector::update_cache(unsigned long from_var) {
 		if (nbytes_togo > max_buffer_size_bytes) {
 			dataFile.read((char*)(char_buffer+nbytes_finished),max_buffer_size_bytes);
 			if (!dataFile) {
-			    errorLog << "Failed to read cache from file '"<<data_filename<<"'\n"<<errorExit;
+			    errorLog << "Failed to read cache from file '"<<dataFilename<<"'\n"<<errorExit;
 			}
 			nbytes_finished += max_buffer_size_bytes;
 			nbytes_togo -= max_buffer_size_bytes;
 		} else {
 			dataFile.read((char*)(char_buffer+nbytes_finished),nbytes_togo);
 			if (!dataFile) {
-			    errorLog << "Failed to read cache from file '"<<data_filename<<"'\n"<<errorExit;
+			    errorLog << "Failed to read cache from file '"<<dataFilename<<"'\n"<<errorExit;
 			}
 			nbytes_finished += nbytes_togo;
 			nbytes_togo -= nbytes_togo;
@@ -343,12 +343,10 @@ void FileVector::writeVariable(unsigned long varIdx, void * datavec) {
 	unsigned long pos = nrnc_to_nelem(varIdx, 0);
 	dataFile.seekp(pos*getElementSize(), ios::beg);
 	dataFile.write((char*)datavec,getElementSize()*fileHeader.numObservations);
+	dataFile.flush();
 	if (!dataFile) {
 	    errorLog <<"failed to write to data file\n"<<errorExit;
 	}
-
-	//update data in cache
-// 	deepDbg << "var:"<< varIdx << ",cache from :"<< in_cache_from << ", to: "<< in_cache_to  << endl;
 
 	if (varIdx >= in_cache_from && varIdx <= in_cache_to)
 	{
@@ -370,8 +368,8 @@ unsigned long FileVector::nrnc_to_nelem(unsigned long varIdx, unsigned long obsI
 // should only be used for reading single random elements!
 
 void FileVector::readElement(unsigned long varIdx, unsigned long obsIdx, void* out) {
-    deepDbg << "FileVector.readElement(" << varIdx << "," << obsIdx << ");" << endl;
     unsigned long pos = nrnc_to_nelem(varIdx, obsIdx);
+    deepDbg << "FileVector.readElement(" << varIdx << "," << obsIdx << "), pos = " << pos << ", ";
     dataFile.seekg(pos*getElementSize(), ios::beg);
     dataFile.read((char*)out,getElementSize());
 }

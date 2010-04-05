@@ -72,7 +72,6 @@ extern Logger msg;
 extern Logger errorLog;
 extern Logger testDbg;
 extern Logger deepDbg;
-
-
+extern Logger fmDbg;
 
 #endif

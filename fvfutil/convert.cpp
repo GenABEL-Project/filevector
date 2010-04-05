@@ -23,10 +23,10 @@ int main(int argc, char * argv[])
     if(filename.find(".fvf")!=filename.length()-4)
        errorLog << "filename should have .fvf extention" << errorExit;
 
-    string data_filename  =filename.substr(0,filename.length()-4) + FILEVECTOR_DATA_FILE_SUFFIX;
-    string indexFilename =filename.substr(0,filename.length()-4) + FILEVECTOR_INDEX_FILE_SUFFIX;
+    string dataFilename = filename.substr(0,filename.length()-4) + FILEVECTOR_DATA_FILE_SUFFIX;
+    string indexFilename = filename.substr(0,filename.length()-4) + FILEVECTOR_INDEX_FILE_SUFFIX;
 
-    dbg << "data:" << data_filename << ", index:" << indexFilename << endl;
+    dbg << "data:" << dataFilename << ", index:" << indexFilename << endl;
 
     FileHeader data_type;
 	struct stat filestatus;
@@ -53,9 +53,9 @@ int main(int argc, char * argv[])
 
 	unsigned long headerSize = sizeof(data_type) + sizeof(FixedChar)*(data_type.numVariables+data_type.numObservations);
 
-    new_data_file.open(data_filename.c_str(), ios::out | ios::binary);
+    new_data_file.open(dataFilename.c_str(), ios::out | ios::binary);
     if (new_data_file.fail())
-    	errorLog << "Creating new data file " << data_filename << " for write failed" << endl << errorExit;
+    	errorLog << "Creating new data file " << dataFilename << " for write failed" << endl << errorExit;
 
     new_index_file.open(indexFilename.c_str(), ios::out | ios::binary);
     if (new_index_file.fail())

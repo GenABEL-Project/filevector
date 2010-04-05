@@ -29,7 +29,7 @@ using namespace std;
 
 class FileVector: public AbstractMatrix {
 public:
-	string data_filename;
+	string dataFilename;
 	string indexFilename;
 	fstream dataFile;
 	fstream indexFile;
