@@ -8,7 +8,7 @@
 
 using namespace std;
 
-string FileModificationTest::get_file_name_to_write()
+string FileModificationTest::getFilenameToWrite()
 {
     return TestUtil::get_base_dir() + string("/../tests/data/2write/modify_me");
 }

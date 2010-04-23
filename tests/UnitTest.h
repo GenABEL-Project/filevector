@@ -21,6 +21,7 @@ using namespace std;
 */
 class UnitTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE( UnitTest );
+    CPPUNIT_TEST( testReadOnly );
     CPPUNIT_TEST( testFilteredMatrix );
     CPPUNIT_TEST( testCacheUpdatedOnWrite );
     CPPUNIT_TEST( test_write_variable_name );
@@ -38,7 +39,7 @@ class UnitTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
 public:
-    string get_file_name_to_write();
+    string getFilenameToWrite();
 
     void testCacheUpdatedOnWrite();
     void test_write_variable_name();
@@ -53,6 +54,7 @@ public:
     void test_add_variable();
     void test_extract_base_file_name();
     void testFilteredMatrix();
+    void testReadOnly();
 };
 
 
