@@ -51,7 +51,7 @@ public:
     }
 
     void setFilteredArea(vector<unsigned long> &rowMask, vector<unsigned long> &colMask){
-        fmDbg<<"setFilteredArea()"<<endl;
+        fmDbg << "setFilteredArea(), nestedMatrixIsFiltered = " << nestedMatrixIsFiltered << endl;
         filteredToRealRowIdx.clear();
         filteredToRealColIdx.clear();
         if (nestedMatrixIsFiltered) {

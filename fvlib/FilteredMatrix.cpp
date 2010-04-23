@@ -66,7 +66,7 @@ FixedChar FilteredMatrix::readObservationName(unsigned long obsIdx) {
 
 void FilteredMatrix::readVariable(unsigned long varIdx, void * outvec) {
     unsigned long i;
-    fmDbg << "readVariable(" << varIdx << ");" << endl;
+    fmDbg << "readVariable(" << varIdx << "), numObservations="<<getNumObservations()<<";" << endl;
     for(i=0;i<getNumObservations();i++){
         readElement(varIdx, i, (char*)outvec + i * getElementSize());
     }

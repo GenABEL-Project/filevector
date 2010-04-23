@@ -4,6 +4,7 @@ source("/home/stiv/genabel/pkg/DatABEL/inst/unitTests/shared_functions.R")
 cat ("Running test.databel_filtered_R_class\n");
 unlink("tmp*.fv?")
 unlink("test*.fv?")
+#-----------------------0-----------------------
 dta <- make_random_matrix()
 null <- as(dta,"databel_base_R")
 checkNumEq(dta,null)
@@ -48,8 +49,10 @@ dta1 <- dta[rRow,rCol]
 x1 <- x[rRow,rCol]
 checkNumEq(dta1,x1)
 cat("4.1")
+show(x@data)
 disconnect(x1)
 connect(x1)
+show(x@data)
 cat("4.2")
 checkNumEq(dta1,x1)
 #-------------------------5-----------------------

@@ -19,7 +19,6 @@ void FileVector::saveIndexFile() {
     }
 }
 
-
 FileVector::~FileVector() {
     dbg << "Closing FileVector" << endl;
     saveIndexFile();
@@ -28,10 +27,15 @@ FileVector::~FileVector() {
     delete [] variableNames;
     indexFile.close();
     dataFile.close();
+    AbstractMatrix::closeForWriting(filename);
 }
 
-void FileVector::initialize(string filename, unsigned long cachesizeMb) {
+void FileVector::initialize(unsigned long cachesizeMb) {
     dbg << "Opening FileVector '" << filename.c_str() <<"'."<< endl;
+
+    if (!readOnly) {
+        AbstractMatrix::checkOpenForWriting(filename);
+    }
 
     if (sizeof(unsigned long) != 8) {
         errorLog << "You appear to work on 32-bit system. Large files are not supported.\n";
@@ -614,6 +618,12 @@ void FileVector::addVariable(void *invec, string varName) {
 	    indexFile.write((char*)&_fc_varname.name, sizeof(FixedChar));
     }
     writeVariable(fileHeader.numVariables - 1, invec);
+}
+
+void FileVector::getPrivateCacheData(unsigned long* cacheSizeNVars, unsigned long *inCacheFrom, unsigned long *inCacheTo ) {
+    *cacheSizeNVars = cache_size_nvars;
+    *inCacheFrom = in_cache_from;
+    *inCacheTo = in_cache_to;
 }
 
 AbstractMatrix* FileVector::castToAbstractMatrix(){

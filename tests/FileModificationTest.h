@@ -18,7 +18,7 @@ class FileModificationTest : public CppUnit::TestFixture
 
 public:
     /* make full path to file being written */
-    string get_file_name_to_write();
+    string getFilenameToWrite();
 
 };
 
