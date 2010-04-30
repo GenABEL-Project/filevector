@@ -88,6 +88,7 @@ public:
 
 	// these ones are the actual used to initialize and free up
 	void initialize(unsigned long cachesizeMb);
+	void deInitialize();
 	// this one updates cache
 	void update_cache(unsigned long from_var);
 	// gives element number from varIdx & obsIdx
@@ -134,6 +135,7 @@ public:
 
 	virtual void setUpdateNamesOnWrite(bool bUpdate);
     virtual AbstractMatrix* castToAbstractMatrix();
+    virtual void setReadOnly(bool readOnly);
     
 	// FOR FUTURE:
 	// very slow one!

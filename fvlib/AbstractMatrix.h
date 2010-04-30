@@ -101,6 +101,7 @@ public:
 	virtual void writeVariable(unsigned long varIdx, void * datavec) = 0;
 	virtual void writeElement(unsigned long varIdx, unsigned long obsIdx, void * data) = 0;
 	virtual AbstractMatrix* castToAbstractMatrix() = 0;
+	virtual void setReadOnly(bool readOnly) = 0;
 
 	static set<string> fileNamesOpenForWriting;
 	static void checkOpenForWriting(const string fileName);

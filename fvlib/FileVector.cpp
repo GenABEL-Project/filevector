@@ -19,8 +19,7 @@ void FileVector::saveIndexFile() {
     }
 }
 
-FileVector::~FileVector() {
-    dbg << "Closing FileVector" << endl;
+void FileVector::deInitialize(){
     saveIndexFile();
     delete [] char_buffer;
     delete [] observationNames;
@@ -28,6 +27,11 @@ FileVector::~FileVector() {
     indexFile.close();
     dataFile.close();
     AbstractMatrix::closeForWriting(filename);
+}
+
+FileVector::~FileVector() {
+    dbg << "Closing FileVector" << endl;
+    deInitialize();
 }
 
 void FileVector::initialize(unsigned long cachesizeMb) {
@@ -626,7 +630,37 @@ void FileVector::getPrivateCacheData(unsigned long* cacheSizeNVars, unsigned lon
     *inCacheTo = in_cache_to;
 }
 
+void FileVector::setReadOnly(bool iReadOnly){
+    if (iReadOnly) {
+        if (!this->readOnly) {
+            deInitialize();
+            this->readOnly = iReadOnly;
+            initialize(this->cache_size_Mb);
+        }
+    } else {
+        if (this->readOnly) {
+            bool canOpen;
+            {
+                ofstream indexFileTest(indexFilename.c_str(),ios::out|ios::in|ios::binary);
+                ofstream dataFileTest(dataFilename.c_str(),ios::out|ios::in|ios::binary);
+                canOpen = indexFileTest.good() && dataFileTest.good();
+            }
+
+            if (canOpen) {
+                deInitialize();
+                this->readOnly = iReadOnly;
+                initialize(this->cache_size_Mb);
+            } else {
+                errorLog << "Can't open " << filename << "for writing. " << endl;
+            }
+
+        }
+    }
+}
+
 AbstractMatrix* FileVector::castToAbstractMatrix(){
     return this; 
 }
+
+
 
