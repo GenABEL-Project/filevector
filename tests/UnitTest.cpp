@@ -16,15 +16,19 @@ string UnitTest::getFilenameToWrite() {
 }
 
 void UnitTest::testReadOnly(){
+    testDbg << "testReadOnly" << endl;
     string filename = getFilenameToWrite();
     FileVector *fv = new FileVector(filename,1);
     try {
         FileVector *fv2;
         fv2 = new FileVector(filename,1);
     } catch (int x) {
+        testDbg << 1;
     }
+    testDbg << 2;
 
     delete fv;
+    testDbg << "endOftestReadOnly"<<endl;
 }
 
 void UnitTest::testCacheUpdatedOnWrite() {
@@ -50,6 +54,7 @@ void UnitTest::testCacheUpdatedOnWrite() {
 };
 
 void UnitTest::test_write_variable_name() {
+    testDbg << "test_write_variable_name" << endl;
     string file_name = getFilenameToWrite();
     AbstractMatrix* fv = new FileVector( file_name, 2 );//no need in big cache
     FixedChar _fc_varname_saved;
@@ -387,27 +392,11 @@ void UnitTest::testFilteredMatrix() {
     CPPUNIT_ASSERT_EQUAL((float)1,obs[0]);
     CPPUNIT_ASSERT_EQUAL((float)9,obs[1]);
     CPPUNIT_ASSERT_EQUAL((float)12,obs[2]);
-
-	vector<unsigned long> rFilter2,cFilter2;
-	rFilter2.push_back(3);
-	rFilter2.push_back(4);
-	cFilter2.push_back(0);
-	cFilter2.push_back(1);
-
-	testDbg << "Nested FilteredMatrix testing" << endl;
-
-	FilteredMatrix fm2(fm);
-	fm2.setFilteredArea(rFilter2, cFilter2);
-
-	fm2.readElementAs(2,0,f); CPPUNIT_ASSERT_EQUAL((float)12,f);
-	fm2.readElementAs(2,1,f); CPPUNIT_ASSERT_EQUAL((float)12,f);
-	fm2.readElementAs(2,2,f); CPPUNIT_ASSERT_EQUAL((float)34,f);
-
-    testDbg << "End of FilteredMatrix test" << endl;
 }
 
 int main( int argc, char **argv)
 {
+    testDbg <<"Here i am" << endl;  
     TestUtil::detect_base_dir(string(argv[0]));
     CppUnit::TextUi::TestRunner runner;
     runner.addTest( UnitTest::suite() );
