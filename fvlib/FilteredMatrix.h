@@ -79,7 +79,7 @@ public:
 	void writeVariable(unsigned long varIdx, void * datavec);
 	void writeElement(unsigned long varIdx, unsigned long obsIdx, void * data);
     virtual AbstractMatrix* castToAbstractMatrix();
-    virtual void setReadOnly(bool readOnly);
+    virtual bool setReadOnly(bool readOnly);
     
 private:
     void addVariable(void * invec, string varname);

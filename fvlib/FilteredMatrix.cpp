@@ -159,7 +159,7 @@ AbstractMatrix* FilteredMatrix::castToAbstractMatrix(){
     return this;
 }
 
-void FilteredMatrix::setReadOnly(bool iReadOnly){
-    nestedMatrix->setReadOnly(iReadOnly);
+bool FilteredMatrix::setReadOnly(bool iReadOnly){
+    return nestedMatrix->setReadOnly(iReadOnly);
 }
 

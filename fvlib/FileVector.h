@@ -135,7 +135,7 @@ public:
 
 	virtual void setUpdateNamesOnWrite(bool bUpdate);
     virtual AbstractMatrix* castToAbstractMatrix();
-    virtual void setReadOnly(bool readOnly);
+    virtual bool setReadOnly(bool readOnly);
     
 	// FOR FUTURE:
 	// very slow one!

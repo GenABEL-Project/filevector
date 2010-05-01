@@ -630,7 +630,7 @@ void FileVector::getPrivateCacheData(unsigned long* cacheSizeNVars, unsigned lon
     *inCacheTo = in_cache_to;
 }
 
-void FileVector::setReadOnly(bool iReadOnly){
+bool FileVector::setReadOnly(bool iReadOnly){
     if (iReadOnly) {
         if (!this->readOnly) {
             deInitialize();
@@ -652,10 +652,12 @@ void FileVector::setReadOnly(bool iReadOnly){
                 initialize(this->cache_size_Mb);
             } else {
                 errorLog << "Can't open " << filename << "for writing. " << endl;
+                return false;
             }
 
         }
     }
+    return true;
 }
 
 AbstractMatrix* FileVector::castToAbstractMatrix(){
