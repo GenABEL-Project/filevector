@@ -57,6 +57,7 @@ public:
     unsigned long getNumVariables();
     unsigned long getNumObservations();
     void cacheAllNames(bool);
+    AbstractMatrix* getNestedMatrix() {return nestedMatrix;}
 
 	void saveAs(string newFilename);
 	void saveVariablesAs(string newFilename, unsigned long nvars, unsigned long * varindexes);
