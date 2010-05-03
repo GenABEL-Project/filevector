@@ -510,14 +510,16 @@ void FileVector::saveAs(string newFilename, unsigned long nvars, unsigned long n
     FileVector outdata( newFilename, 64 );//todo which size for cache to use?
 
     // copy observation names from the first object
-	for( unsigned long i=0 ; i < nobss ; i++ )
+	for( unsigned long i=0 ; i < nobss ; i++ ) {
+		//cout << nobss << " " << i << "-" << obsindexes[i] << ";";
 		outdata.writeObservationName( i, readObservationName( obsindexes[i] ) );
+	}
 
     char * out_variable = new (nothrow) char[nobss*getElementSize()];
-    if (!out_variable) errorLog << "can not allocate memory for out_variable" << errorExit;
+    if (!out_variable) errorLog << "can not allocate memory for out_variable" << endl << errorExit;
 
 	char * in_variable = new (nothrow) char[getNumObservations()*getElementSize()];
-	if (!in_variable) errorLog << "can not allocate memory for in_variable" << endl << endl << errorExit;
+	if (!in_variable) errorLog << "can not allocate memory for in_variable" << endl << errorExit;
 
 	for( unsigned long i=0 ; i<nvars ; i++ ) {
 		unsigned long selected_index =  varindexes[i];
