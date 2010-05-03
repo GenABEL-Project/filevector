@@ -126,7 +126,7 @@ void FilteredMatrix::saveObservationsAs( string newFilename, unsigned long nobss
 void FilteredMatrix::saveAs(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long *varIndexes, unsigned long *obsIndexes) {
     vector<unsigned long> recodedColIndexes;
     vector<unsigned long> recodedRowIndexes;
-    filterIdxList(varIndexes, nobss, recodedColIndexes, filteredToRealColIdx);
+    filterIdxList(obsIndexes, nobss, recodedColIndexes, filteredToRealColIdx);
     filterIdxList(varIndexes, nvars, recodedRowIndexes, filteredToRealRowIdx);
     nestedMatrix->saveAs(newFilename, nvars, nobss, &recodedRowIndexes[0], &recodedColIndexes[0]);
 }
