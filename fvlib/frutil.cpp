@@ -152,3 +152,19 @@ void tokenize(const string& str, vector<string>& tokens, const string& delimiter
         pos = str.find_first_of(delimiters, lastPos);
     }
 }
+
+#define PART_SIZE INT_MAX
+void blockWriteOrRead(fstream& file, unsigned long length, char* data, bool writeAction){
+  unsigned long i;
+  unsigned long numParts = length/PART_SIZE;
+  for(i = 0; i <= numParts; i++){
+    unsigned long subLength =
+     (numParts>0 && i < numParts )?PART_SIZE:(length%PART_SIZE);
+    if (writeAction){
+      file.write(data+i*PART_SIZE, subLength);
+    } else {
+      file.read(data+i*PART_SIZE, subLength);
+    }
+  }
+}
+

@@ -12,7 +12,7 @@ void AbstractMatrix::checkOpenForWriting(const string fileName){
     }
 }
 void AbstractMatrix::closeForWriting(const string fileName){
-    testDbg << "closeForWriting("<< fileName << ")" << endl;
+    fmDbg << "closeForWriting("<< fileName << ")" << endl;
     AbstractMatrix::fileNamesOpenForWriting.erase(fileName);
 }
 
