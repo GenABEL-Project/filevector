@@ -48,10 +48,10 @@ string bufToString(short int dataType, char *data){
 	    sprintf(ret, "%hu", *(unsigned short int*)data);
     	break;
 	case SHORT_INT:
-	    sprintf(ret, "%sd", *(short int*)data);
+	    sprintf(ret, "%hd", *(short int*)data);
     	break;
     case UNSIGNED_INT:
-	    sprintf(ret, "%ud", *(unsigned int*)data);
+	    sprintf(ret, "%u", *(unsigned int*)data);
 	    break;
     case INT:
 	    sprintf(ret, "%d", *(int*)data);

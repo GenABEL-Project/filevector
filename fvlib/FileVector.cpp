@@ -29,6 +29,7 @@ void FileVector::deInitialize(){
 	delete [] variableNames;
 	indexFile.close();
 	dataFile.close();
+	//Rprintf("deInitialize, closing files %s\n",filename.c_str());
 	AbstractMatrix::closeForWriting(filename);
 }
 
@@ -38,6 +39,7 @@ FileVector::~FileVector() {
 }
 
 void FileVector::initialize(unsigned long cachesizeMb) {
+	//Rprintf("initialize, open file %s\n",filename.c_str());
 	dbg << "Opening FileVector '" << filename.c_str() <<"'."<< endl;
 
 	if (!readOnly) {
@@ -109,7 +111,7 @@ void FileVector::initialize(unsigned long cachesizeMb) {
 	}
 
 	unsigned long indexSize = sizeof(fileHeader) + sizeof(FixedChar)*(fileHeader.numVariables+fileHeader.numObservations);
-	if(indexSize != index_filestatus.st_size) {
+	if(indexSize != (unsigned long) index_filestatus.st_size) {
 		errorLog << "Index file "<<indexFilename<<" size(" << (int) index_filestatus.st_size << ") differs from the expected(";
 		errorLog << indexSize <<")" << endl << errorExit;
 	}
@@ -121,7 +123,7 @@ void FileVector::initialize(unsigned long cachesizeMb) {
 			(unsigned long) fileHeader.numVariables *
 			(unsigned long) fileHeader.numObservations;
 
-	if (estimated_size != data_filestatus.st_size) {
+	if (estimated_size != (unsigned long) data_filestatus.st_size) {
 		errorLog << "Data file size (" << (int) data_filestatus.st_size;
 		errorLog << ") differs from the expected ("<<estimated_size<<")"<<endl<<" [";
 		errorLog << fileHeader.numVariables<<","<<fileHeader.numObservations<<"]" << endl;
@@ -330,7 +332,7 @@ void FileVector::readObservation(unsigned long obsIdx, void *outvec) {
 	if(!tmpdata)
 		errorLog << "readObservation: cannot allocate tmpdata" << errorExit;
 
-	for( int i = 0; i< getNumVariables(); i++)
+	for(unsigned long int i = 0; i< getNumVariables(); i++)
 	{
 		readVariable(i, tmpdata);
 		memcpy((char*)outvec+i*getElementSize(),tmpdata+getElementSize()*obsIdx,getElementSize());
@@ -342,7 +344,7 @@ void FileVector::writeObservation(unsigned long obsIdx, void * invec) {
 	if (readOnly) {
 		errorLog << "Trying to write to the readonly file." << errorExit;
 	}
-	for( int i = 0; i< getNumVariables(); i++)
+	for(unsigned long int i = 0; i< getNumVariables(); i++)
 	{
 		writeElement( i, obsIdx, (char*)invec+ i*getElementSize() );
 	}
@@ -495,7 +497,7 @@ void FileVector::saveObservationsAs( string newFilename, unsigned long nobss, un
 void FileVector::copyVariable(char* to, char* from, int n, unsigned long * indexes ) {
 	for ( int j=0 ; j<n ; j++ )	{
 		//copy only selected observations to out_variable  from in_variable
-		int read_offset = indexes[j]*getElementSize();
+		unsigned long int read_offset = indexes[j]*getElementSize();
 		if(read_offset + getElementSize() > getNumObservations() * getElementSize()) {
 			errorLog << "When saving selected observations: index in obsindexes(" <<indexes[j];
 			errorLog << ") is out of range, source obsIdx is " << getNumObservations()<< endl;
