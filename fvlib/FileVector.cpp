@@ -206,7 +206,7 @@ void FileVector::update_cache(unsigned long from_var) {
 	if (current_cache_size_bytes <= max_buffer_size_bytes) {
 		dataFile.read((char*)char_buffer,current_cache_size_bytes);
 		if (!dataFile) {
-			//errorLog << current_cache_size_bytes << " " << max_buffer_size_bytes << "\n";
+			errorLog << internal_from << " aa " << current_cache_size_bytes << " " << max_buffer_size_bytes << "\n";
 			errorLog << "Failed to read cache from file '"<< dataFilename <<"' (1)\n" << errorExit;
 		}
 	} else {
