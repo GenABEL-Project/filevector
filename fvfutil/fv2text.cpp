@@ -10,6 +10,8 @@ using namespace std;
 #include "../fvlib/FileVector.h"
 #include "../fvlib/CastUtils.h"
 
+
+
 void info() 
 {
     cout << "fv2text converts .fv* files to a text file" << endl;
@@ -18,7 +20,7 @@ void info()
 
 /*string printByteSeq(char *data, int length){
     string ret;
-    
+
     char s[20];
     for(int i=0;i<length;i++){
 	sprintf(s,"%x ", ((unsigned char*)data)[i]);
@@ -29,7 +31,6 @@ void info()
 }*/
 
 
-
 int main(int argc, char* argv[])
 {
     argc--;
@@ -38,35 +39,35 @@ int main(int argc, char* argv[])
         info();
 	return 0;
     }
-  
+
     string inputFileName = string(argv[1]);
     string outputFileName = string(argv[2]);
-    
+
     bool isRMatrix;
-    
+
     if (argc >= 3) {
 	isRMatrix = (strcmp(argv[3], "--RMatrix") == 0);
     }
-    
+
     cout << "Input file is '" << inputFileName << "'." << endl;
     cout << "Output file is '" << outputFileName << "'." << endl;
     cout << "isRMatrix = " << isRMatrix << endl;
-    
+
     FileVector fv(inputFileName, 1);
     ofstream out(outputFileName.c_str());
-    
+
     unsigned long row, col;
-    
+
     if (!isRMatrix) {
 	    out << "X ";
     }
-    
+
     for (col=0; col<fv.getNumObservations(); col++){
 	    out << fv.readObservationName(col).name << " ";
     }
-    
+
     out << endl;
-	
+
     for (row=0; row<fv.getNumVariables(); row++){
 	    out << fv.readVariableName(row).name << " ";
         for (col=0; col<fv.getNumObservations(); col++){
