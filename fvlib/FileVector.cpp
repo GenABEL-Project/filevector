@@ -206,7 +206,8 @@ void FileVector::update_cache(unsigned long from_var) {
 	if (current_cache_size_bytes <= max_buffer_size_bytes) {
 		dataFile.read((char*)char_buffer,current_cache_size_bytes);
 		if (!dataFile) {
-			errorLog << "Failed to read cache from file '"<< dataFilename <<"'\n" << errorExit;
+			//errorLog << current_cache_size_bytes << " " << max_buffer_size_bytes << "\n";
+			errorLog << "Failed to read cache from file '"<< dataFilename <<"' (1)\n" << errorExit;
 		}
 	} else {
 		// cache size is bigger than what we can read in one go ... read in blocks
@@ -216,14 +217,14 @@ void FileVector::update_cache(unsigned long from_var) {
 			if (nbytes_togo > max_buffer_size_bytes) {
 				dataFile.read((char*)(char_buffer+nbytes_finished),max_buffer_size_bytes);
 				if (!dataFile) {
-					errorLog << "Failed to read cache from file '"<<dataFilename<<"'\n"<<errorExit;
+					errorLog << "Failed to read cache from file '"<<dataFilename<<"' (2)\n"<<errorExit;
 				}
 				nbytes_finished += max_buffer_size_bytes;
 				nbytes_togo -= max_buffer_size_bytes;
 			} else {
 				dataFile.read((char*)(char_buffer+nbytes_finished),nbytes_togo);
 				if (!dataFile) {
-					errorLog << "Failed to read cache from file '"<<dataFilename<<"'\n"<<errorExit;
+					errorLog << "Failed to read cache from file '"<<dataFilename<<"' (3)\n"<<errorExit;
 				}
 				nbytes_finished += nbytes_togo;
 				nbytes_togo -= nbytes_togo;
@@ -290,7 +291,7 @@ FixedChar FileVector::readVariableName(unsigned long varIdx) {
 
 	if (!variableNames) {
 		FixedChar ret;
-		indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(varIdx+fileHeader.numObservations), ios::beg);
+		indexFile.seekg(sizeof(fileHeader) + sizeof(FixedChar)*(varIdx+fileHeader.numObservations), ios::beg);
 		indexFile.read((char*)&ret, sizeof(FixedChar));
 		return ret;
 	}
@@ -305,7 +306,7 @@ FixedChar FileVector::readObservationName(unsigned long obsIdx) {
 
 	if (!observationNames) {
 		FixedChar ret;
-		indexFile.seekp(sizeof(fileHeader) + sizeof(FixedChar)*(obsIdx), ios::beg);
+		indexFile.seekg(sizeof(fileHeader) + sizeof(FixedChar)*(obsIdx), ios::beg);
 		indexFile.read((char*)&ret, sizeof(FixedChar));
 		return ret;
 	}
