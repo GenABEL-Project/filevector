@@ -89,8 +89,8 @@ string bufToString(short int dataType, char *data){
 	case FLOAT:
 		sprintf(ret, "%f", *(float*)data);
 		break;
-	case DOUBLE: // changed from %lf [not ISO C++]
-		sprintf(ret, "%lf", *(double*)data);
+	case DOUBLE: // changed to "%f" from %lf [not ISO C++]
+		sprintf(ret, "%f", *(double*)data);
 		break;
 	}
 
