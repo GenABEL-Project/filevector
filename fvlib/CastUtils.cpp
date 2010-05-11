@@ -15,7 +15,7 @@ bool isNan_exact(string s){
 bool isNan_any(string s){
 	double out = -999.99;
 	int res = sscanf(s.c_str(),"%lf",&out);
-	if (!res) {
+	if (res) {
 		return false;
 	} else {
 		return true;
@@ -27,8 +27,8 @@ void parseStringToArbType(string s, int destType, void *destData) {
 	map<int, string> fmt;
 
 	fmt[UNSIGNED_SHORT_INT] = string("%hu");
-	fmt[SHORT_INT] = string("%sd");
-	fmt[UNSIGNED_INT] = string("%ud");
+	fmt[SHORT_INT] = string("%hd");
+	fmt[UNSIGNED_INT] = string("%u");
 	fmt[INT] = string("%d");
 	fmt[FLOAT] = string("%f");
 	fmt[DOUBLE] = string("%lf");
@@ -90,7 +90,7 @@ string bufToString(short int dataType, char *data){
 		sprintf(ret, "%f", *(float*)data);
 		break;
 	case DOUBLE: // changed from %lf [not ISO C++]
-		sprintf(ret, "%f", *(double*)data);
+		sprintf(ret, "%lf", *(double*)data);
 		break;
 	}
 
