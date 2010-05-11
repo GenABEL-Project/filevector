@@ -1,12 +1,19 @@
 #include <map>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
 #include "frutil.h"
 #include "CastUtils.h"
 
+bool isNan(string s){
+    transform(s.begin(), s.end(), s.begin(), ::tolower);
+    return s=="nan";
+}
+
 void parseStringToArbType(string s, int destType, void *destData) {
+
     map<int, string> fmt;
 
     fmt[UNSIGNED_SHORT_INT] = string("%hu");
@@ -17,6 +24,19 @@ void parseStringToArbType(string s, int destType, void *destData) {
     fmt[DOUBLE] = string("%lf");
 
     string format = fmt[destType];
+
+    if (isNan(s)){
+	double zero = 0;
+	string zeroStr = "0"; // nan for integers
+	if (destType == DOUBLE ) {
+	   *(double*)destData = 0/zero;
+	} else if (destType == FLOAT){
+	   *(float*)destData = 0/zero;
+	} else {
+	   sscanf(zeroStr.c_str(), format.c_str(), destData );
+	}	
+	return;
+    }
 
     sscanf(s.c_str(), format.c_str(), destData);
 }
@@ -56,7 +76,7 @@ string bufToString(short int dataType, char *data){
     case INT:
 	    sprintf(ret, "%d", *(int*)data);
         break;
-	case FLOAT:
+    case FLOAT:
 	    sprintf(ret, "%f", *(float*)data);
 	    break;
     case DOUBLE: // changed from %lf [not ISO C++]
