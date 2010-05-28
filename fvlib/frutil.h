@@ -20,8 +20,16 @@ public:
     FixedChar(){
         memset(name,0xab,NAMELENGTH);
     };
-    FixedChar(string s){strcpy(name,s.c_str());};
-	char name[NAMELENGTH];
+    FixedChar(string s){
+    	if (s.length()>=NAMELENGTH){
+    		errorLog << "Overflow:"<<s.c_str()<<"." << endl;
+  		
+    	}
+    
+        strncpy(name,s.c_str(),NAMELENGTH-1);
+        name[NAMELENGTH-1] = '\0';    
+    };
+    char name[NAMELENGTH];
 };
 
 class FileHeader
