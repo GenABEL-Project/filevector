@@ -22,7 +22,7 @@ public:
     };
     FixedChar(string s){
     	if (s.length()>=NAMELENGTH){
-    		errorLog << "Overflow:"<<s.c_str()<<"." << endl;
+    		errorLog << "Overflow of FixedChar (length of name > NAMELENGTH (" << NAMELENGTH << "): "<<s.c_str()<<"." << endl;
   		
     	}
     
