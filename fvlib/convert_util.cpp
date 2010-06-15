@@ -253,11 +253,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 				continue;
 			}
 
-			//char buf[20] = "01234567";
-			//parseStringToArbType(lineWords[i], type, buf);
-			//out->writeElement(rowCnt-1, colCnt, buf);
 			parseStringToArbType(lineWords[i], type, &ArbTypeData[colCnt*element_size]);
-			//out->writeElement(rowCnt-1, colCnt, (char*)ArbTypeData+i*element_size);
 			colCnt++;
 		}
 
