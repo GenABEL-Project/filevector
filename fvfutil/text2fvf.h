@@ -16,17 +16,6 @@ void text2fvf(
 );
 
 
-void text2fvf_246(
-		string program_name,
-		string infilename, string outfilename,
-		string rownamesfilename, string colnamesfilename,
-		int rownames, int colnames,
-		int skiprows, int skipcols,
-		int transpose, int Rmatrix,
-		unsigned short int type,
-		bool quiet
-);
-
 unsigned short int dataTypeFromString(string type);
 
 #endif
