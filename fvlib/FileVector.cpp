@@ -315,6 +315,7 @@ FixedChar FileVector::readObservationName(unsigned long obsIdx) {
 
 // can read single variable
 void FileVector::readVariable(unsigned long varIdx, void * outvec) {
+    dbg << "readVariable(varIdx = " << varIdx << ")"<< endl; 
 	if (varIdx>=fileHeader.numVariables) {
 		errorLog << "Variable number out of range (" << varIdx << " >= " << fileHeader.numVariables <<")"<<endl << errorExit;
 	}

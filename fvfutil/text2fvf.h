@@ -12,7 +12,7 @@
 
 void text2fvf(
     string program_name, string infilename, string outfilename, string rownamesfilename, string colnamesfilename,
-	int rownames, int colnames,	unsigned long skiprows, unsigned long skipcols, int transpose, int Rmatrix, unsigned short int type, bool quiet
+	int rownames, int colnames,	unsigned long skiprows, unsigned long skipcols, int transpose, int Rmatrix, unsigned short int type, bool quiet, string nanString
 );
 
 

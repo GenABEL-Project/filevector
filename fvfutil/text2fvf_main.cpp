@@ -21,6 +21,7 @@ int main(int argc, char * argv[])
 	    {"Rmatrix",   no_argument,       NULL, 'R'},
 	    {"outType",   required_argument, NULL, 'T'},
 	    {"dataType",  required_argument, NULL, 'd'},
+	    {"nanString", no_argument,       NULL, 'n'},
 	    { NULL     ,  no_argument,       NULL,  0 }
 	};
 
@@ -29,8 +30,10 @@ int main(int argc, char * argv[])
     char *outfilename = NULL;
     string colnamesfilename = "";
     string rownamesfilename = "";
+    string nanString;
 
-    unsigned long rownames = 0, colnames = 0, transpose = 0, skipcols = 0, skiprows = 0, Rmatrix = 0;
+    unsigned long rownames = 0, colnames = 0, transpose = 0, skipcols = 0,
+    skiprows = 0, Rmatrix = 0;
     unsigned short dataType = 0;
 
     do
@@ -73,7 +76,9 @@ int main(int argc, char * argv[])
 	    case 'd':
 	        dataType = dataTypeFromString(optarg);
 	        break;
-
+	    case 'n':
+	        nanString = string(optarg);
+	        break;
 	    case '?': print_text2fvf_usage(program_name);
     	    case ':': print_text2fvf_usage(program_name);
 	    case -1 : break;
@@ -99,7 +104,7 @@ int main(int argc, char * argv[])
     		RFname, CFname,
     		rownames, colnames,
     		skiprows, skipcols,
-    		transpose, Rmatrix, dataType, !!quiet);
+    		transpose, Rmatrix, dataType, !!quiet, nanString);
 
     return(0);
 }

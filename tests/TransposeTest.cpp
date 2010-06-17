@@ -59,7 +59,6 @@ void TransposeTest::testTransposeTwoVars() {
    delete fv;
    Transposer tr;
    tr.process( src_file_name );
-   testDbg << "18" << endl;
 
    AbstractMatrix* fv_tr =  new FileVector ( dest_file_name, 1 );
    CPPUNIT_ASSERT_EQUAL((unsigned long)3, fv_tr->getNumVariables());

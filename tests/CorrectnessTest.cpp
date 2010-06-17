@@ -13,9 +13,9 @@
 
 using namespace std;
 
-float summData(float *data, int length){
+double summData(double *data, int length){
     int i;
-    float sum = 0;
+    double sum = 0;
     for(i=0; i<length; i++) {
         sum += data[i];
     }
@@ -23,7 +23,7 @@ float summData(float *data, int length){
 }
 
 void CorrectnessTest::testReadVariable() {
-    string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose");
+    string inputFile = getInputFileName();
     AbstractMatrix *data =  new FileVector( inputFile, 64 );
 
     testDbg << "Reading file:" << inputFile << endl;
@@ -33,7 +33,7 @@ void CorrectnessTest::testReadVariable() {
 
     testDbg << "Size is " << numVariables << " x " << numObservations << endl;
 
-    float* tmpdat = new( nothrow ) float[numObservations];
+    double* tmpdat = new( nothrow ) double[numObservations];
     string sumFileName = inputFile + string(".fvf_varsum");
     ifstream sums(sumFileName.c_str());
     testDbg << "Reading file: " << sumFileName << endl;
@@ -47,7 +47,7 @@ void CorrectnessTest::testReadVariable() {
       if (i%1000 == 0)
         testDbg << i << endl;
       data->readVariableAs(i, tmpdat);
-      float calcSumm, realSumm;
+      double calcSumm, realSumm;
       sums >> realSumm;
 	    
       calcSumm = summData(tmpdat,numObservations);
@@ -63,8 +63,8 @@ void CorrectnessTest::testReadVariable() {
 
 void CorrectnessTest::testRandomReadObservations(){
     testDbg << "testRandomReadObservations" << endl;
-    string inputFile = TestUtil::get_base_dir() + string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose");
-    string sumFileName = inputFile + string(".fvf_varsum");
+    string inputFile = getInputFileName();
+    string sumFileName = inputFile + string(".fvf_obssum");
     AbstractMatrix* data = new FileVector ( inputFile, 64 );
 
     testDbg << "Reading file:" << inputFile << endl;
@@ -72,7 +72,7 @@ void CorrectnessTest::testRandomReadObservations(){
     unsigned long numVariables = data->getNumVariables();
     unsigned long numObservations = data->getNumObservations();
 
-    float *tmpdat = new (nothrow) float[numVariables];
+    double *tmpdat = new (nothrow) double[numVariables];
 
     testDbg << "Size is " << numVariables << " x " << numObservations << endl;
 
@@ -91,7 +91,7 @@ void CorrectnessTest::testRandomReadObservations(){
 
     CPPUNIT_ASSERT(sums.good());
 
-    float *sumData = new float[numVariables];
+    double *sumData = new double[numVariables];
     for(i=0; i<numObservations; i++) {
         sums >> sumData[i];
     }
@@ -100,13 +100,12 @@ void CorrectnessTest::testRandomReadObservations(){
 	{
 	    testDbg << i << "(" << observationIdx[i] << ")" << endl;
 	    data->readObservation(observationIdx[i], tmpdat);
-	    float calcSumm;
+	    double calcSumm;
 
 	    calcSumm = summData(tmpdat, numVariables);
-	    testDbg << calcSumm << endl;
-	    testDbg << sumData[observationIdx[i]] << endl;
+	    double relDiff = TestUtil::relativeDifference(calcSumm,sumData[observationIdx[i]]);
 
-	    CPPUNIT_ASSERT(TestUtil::relativeDifference(calcSumm,sumData[observationIdx[i]]) < 1E-4);
+	    CPPUNIT_ASSERT(relDiff < 1E-2);
 	}
 
     delete[] tmpdat;
@@ -117,18 +116,20 @@ void CorrectnessTest::testRandomReadObservations(){
     testDbg << "Finished" << endl;
 }
 
+string CorrectnessTest::getInputFileName(){
+    return TestUtil::get_base_dir() + string("/../tests/data/correctnessTestData");
+}
 
 void CorrectnessTest::testSubMatrix() {
-    string extension = string (".fvi");
-    string fileName = string("/../tests/data/ERF.merlin.22.collected.ped.out.mldose");
-    string inputFile = TestUtil::get_base_dir() + fileName;
-    string subMatrixFileName = TestUtil::get_base_dir() + fileName + string(".fvf_submatrix");
-    string obsFileName = TestUtil::get_base_dir() + fileName + string(".fvf_obsnames");
-    string varFileName = TestUtil::get_base_dir() + fileName + string(".fvf_varnames");
+    string fileName = getInputFileName();
+    string subMatrixFileName = fileName + string(".fvf_submatrix");
+    string obsFileName = fileName + string(".fvf_obsnames");
+    string varFileName = fileName + string(".fvf_varnames");
 
     testDbg << "obsFileName = " << obsFileName << endl;
+    testDbg << "subMatrixFileName  = " << subMatrixFileName << endl;
 
-    AbstractMatrix *data = new FileVector ( inputFile, 64 );
+    AbstractMatrix *data = new FileVector ( fileName, 64 );
 
     ifstream subMatrixData(subMatrixFileName.c_str());
     ifstream obsNamesData(obsFileName.c_str());
@@ -138,12 +139,12 @@ void CorrectnessTest::testSubMatrix() {
     CPPUNIT_ASSERT(obsNamesData.good());
     CPPUNIT_ASSERT(varNamesData.good());
 
-    testDbg << "Reading file:" << inputFile << endl;
+    testDbg << "Reading file:" << fileName << endl;
 
     unsigned long numVariables = data->getNumVariables();
     unsigned long numObservations = data->getNumObservations();
 
-    unsigned long i, j;
+    unsigned long i;
 
     testDbg << "Reading observations' names from " << obsFileName << endl;
     map<string, unsigned long> obsToIdx;
@@ -191,11 +192,11 @@ void CorrectnessTest::testSubMatrix() {
 	    unsigned long varIdx = varToIdx[varName];
 
 	    for (i = 0; i < obsIdxesNames.size(); i++) {
-	        float matrixElem;
-	        float submatrixElem;
+	        double matrixElem;
+	        double submatrixElem;
 	        submatrixElem = atof(subMatrixElements[i+1].c_str());
 	        data->readElementAs(varIdx, obsIdexes[i], matrixElem);
-	        float relDiff = TestUtil::relativeDifference(matrixElem, submatrixElem);
+	        double relDiff = TestUtil::relativeDifference(matrixElem, submatrixElem);
 	        CPPUNIT_ASSERT( relDiff = 0./0. || relDiff < 1E-4 );
 	    }
 	}

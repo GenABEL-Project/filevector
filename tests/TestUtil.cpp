@@ -20,6 +20,8 @@ void TestUtil::detect_base_dir(string binpath) {
     string basedir = binpath.substr(0, slashpos);
 
     TestUtil::base_dir = basedir;
+
+    cout << basedir << endl;
 }
 
 string TestUtil::get_base_dir() {
