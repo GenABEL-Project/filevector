@@ -16,9 +16,18 @@ bool checkNan(int &i);
 bool checkNan(float &i);
 bool checkNan(double &i);
 
+string dataTypeToString(int type);
+int getDataType(unsigned short int);
+int getDataType(short int);
+int getDataType(unsigned int);
+int getDataType(int);
+int getDataType(float);
+int getDataType(double);
+
 bool checkNan(void *data, int dataType);
 void setNan(void *data, int dataType);
 
+#define COPY_AND_COMPARE(dest,src) dest=src; if(dest!=src) {errorLog << "Possible loss of precision during conversion from " << dataTypeToString(getDataType(src)) << " to " << dataTypeToString(getDataType(dest)) << "." << endl;}
 
 template <class DT> void performCast(DT &dest, void*src, int srcType) {
     if (checkNan(src,srcType)){
@@ -27,22 +36,22 @@ template <class DT> void performCast(DT &dest, void*src, int srcType) {
     }
     switch (srcType) {
         case UNSIGNED_SHORT_INT:
-    	    dest = (DT)*((unsigned short int*) src);
+    	    COPY_AND_COMPARE(dest, (DT)*((unsigned short int*) src));
     		break;
     	case SHORT_INT:
-    		dest = (DT)*((short int*) src);
+    		COPY_AND_COMPARE(dest, (DT)*((short int*) src));
     		break;
     	case UNSIGNED_INT:
-    		dest = (DT)*((unsigned int*) src);
+    		COPY_AND_COMPARE(dest, (DT)*((unsigned int*) src));
     		break;
     	case INT:
-    		dest = (DT)*((int*) src);
+    		COPY_AND_COMPARE(dest, (DT)*((int*) src));
     		break;
     	case FLOAT:
-    		dest = (DT)*((float*) src);
+    		COPY_AND_COMPARE(dest, (DT)*((float*) src));
     		break;
     	case DOUBLE:
-    		dest = (DT)*((double*) src);
+    		COPY_AND_COMPARE(dest, (DT)*((double*) src));
     		break;
     	default:
     		errorLog << "file contains data of unknown type" << endl << errorExit;
@@ -57,22 +66,22 @@ template <class DT> void performCast(void*dest, DT&src, int destType) {
     }
     switch (destType) {
         case UNSIGNED_SHORT_INT:
-    	    *((unsigned short int*)dest) = src;
+    	    COPY_AND_COMPARE(*((unsigned short int*)dest), src);
     	    break;
     	case SHORT_INT:
-    	    *((short int*)dest) = src;
+    	    COPY_AND_COMPARE(*((short int*)dest), src);
     	    break;
     	case UNSIGNED_INT:
-            *((unsigned int*)dest) = src;
+            COPY_AND_COMPARE(*((unsigned int*)dest), src);
         	break;
     	case INT:
-    	    *((int*)dest) = src;
+    	    COPY_AND_COMPARE(*((int*)dest), src);
     	    break;
     	case FLOAT:
-    	    *((float*)dest) = src;
+    	    COPY_AND_COMPARE(*((float*)dest), src);
     	    break;
     	case DOUBLE:
-        	*((double*)dest) = src;
+        	COPY_AND_COMPARE(*((double*)dest), src);
         	break;
     	default:
     	    errorLog << "file contains data of unknown type" << endl << errorExit;
@@ -81,7 +90,6 @@ template <class DT> void performCast(void*dest, DT&src, int destType) {
 
 void parseStringToArbType(string s, int destType, void *destData, string nanString);
 unsigned short int dataTypeFromString(string type);
-string dataTypeToString(int type);
 string bufToString(short int dataType, char *data);
 
 #endif

@@ -150,3 +150,10 @@ bool checkNan(void *data, int dataType){
     		errorLog << "file contains data of unknown type" << endl << errorExit;
    }
 }
+
+int getDataType(unsigned short int){return UNSIGNED_SHORT_INT;}
+int getDataType(short int){return SHORT_INT;}
+int getDataType(unsigned int){return UNSIGNED_INT;}
+int getDataType(int){return INT;}
+int getDataType(float){return FLOAT;}
+int getDataType(double){return DOUBLE;}
