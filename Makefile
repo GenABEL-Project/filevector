@@ -17,6 +17,8 @@ CONVERTTEST = $(BINDIR)/converttest
 CONVERT = $(BINDIR)/convert
 WRITE_VAR_SPEED = $(BINDIR)/writevarspeed
 TRANSPOSE = $(BINDIR)/transpose
+BUILDTESTDATA = $(BINDIR)/buildtestdata
+BUILDSUBMATRIX = $(BINDIR)/buildsubmatrix
 
 UNITTEST = $(BINDIR)/unittest
 TRANSPOSETEST = $(BINDIR)/transposetest
@@ -26,7 +28,7 @@ CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) #-m64
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -g #-m64 
 CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS) ${CONVERT}
 
@@ -59,7 +61,7 @@ clean:
 
 
 correctnesstest : $(CORRECTNESSTEST)
-$(CORRECTNESSTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/CorrectnessTest.cpp
+$(CORRECTNESSTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/*.cpp $(TESTSDIR)/*.h
 	$(CPP) $(CFLAGS) ${CPPUNITFLAGS} $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/CorrectnessTest.cpp ${TESTSDIR}/TestUtil.cpp -o $(CORRECTNESSTEST); $(CORRECTNESSTEST)
 
 readspeed : $(READSPEED)
@@ -67,7 +69,7 @@ $(READSPEED): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReadSpeed.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/ReadSpeed.cpp  -o $(READSPEED)
 
 modificationtest : $(MODIFTEST)
-$(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.cpp
+$(MODIFTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/FileModificationTest.*
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/FileModificationTest.cpp  -o $(MODIFTEST); $(MODIFTEST)
 
 unittest : $(UNITTEST)
@@ -98,8 +100,15 @@ $(ACCESSMODETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/AccessModeTest.cpp
 converttest : $(CONVERTTEST)
 $(CONVERTTEST):$(LIBFILES) $(TESTFILES) $(TESTSDIR)/ConvertTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/ConvertTest.cpp -o $(CONVERTTEST); $(CONVERTTEST)
+	
+buildtestdata : $(BUILDTESTDATA)
+$(BUILDTESTDATA):$(TESTSDIR)/BuildTestData.cpp $(LIBDIR)/*.cpp $(LIBDIR)/*.h 
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(TESTSDIR)/BuildTestData.cpp $(LIBDIR)/*.cpp -o $(BUILDTESTDATA)
 
-tests : correctnesstest	readspeed modificationtest unittest writespeed accessmodetest converttest transposetest
+preparetestdata: buildtestdata 
+	$(BUILDTESTDATA) tests/data/correctnessTestData 33815 1473 100 120; $(BUILDTESTDATA) tests/data/2write/modify_me 1001 1003; 
+
+tests : preparetestdata correctnesstest readspeed modificationtest unittest writespeed accessmodetest converttest transposetest
 runtests : tests
 
 

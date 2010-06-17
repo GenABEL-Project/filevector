@@ -31,7 +31,7 @@ public :
 
     // returns relative difference between two values
     template<class DT> static DT relativeDifference(DT x, DT y) {
-        return 2.*(abs(x)-abs(y))/(abs(x)+abs(y));
+        return abs(2.*(abs(x)-abs(y))/(abs(x)+abs(y)));
     }
 
     static void create_and_fill_variable(unsigned int  nobs, float * in );
