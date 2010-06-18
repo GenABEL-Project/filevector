@@ -8,6 +8,20 @@ using namespace std;
 #include "frutil.h"
 #include "CastUtils.h"
 
+unsigned short int UNSIGNED_SHORT_INT_NAN;
+short int SHORT_INT_NAN;
+unsigned int UNSIGNED_INT_NAN;
+int INT_NAN;
+
+int initConsts(){
+  sscanf("65535","%hi",&SHORT_INT_NAN);
+  sscanf("65535","%hu",&UNSIGNED_SHORT_INT_NAN);
+  sscanf("65535","%i",&INT_NAN);
+  sscanf("65535","%u",&UNSIGNED_INT_NAN);
+}
+
+int dummy = initConsts();
+
 
 bool isNan_exact(string s){
 	transform(s.begin(), s.end(), s.begin(), ::tolower);
@@ -110,16 +124,16 @@ void setNan(void *data, int dataType){
     float fZero = 0.;
     switch (dataType) {
         case UNSIGNED_SHORT_INT:
-    	    (*(unsigned short int*) data) = 65535;
+    	    (*(unsigned short int*) data) = UNSIGNED_SHORT_INT_NAN;
     		break;
     	case SHORT_INT:
-    	    (*(short int*) data) = 32767;
+    	    (*(short int*) data) = SHORT_INT_NAN;
     		break;
     	case UNSIGNED_INT:
-    	    (*(unsigned int*) data) = 4294967295;
+    	    (*(unsigned int*) data) = UNSIGNED_INT_NAN;
     		break;
     	case INT:
-    	    (*(int*) data) = 2147483647;
+    	    (*(int*) data) = INT_NAN;
     		break;
     	case FLOAT:
     	    (*(float*) data) = fZero/fZero;
@@ -135,13 +149,13 @@ void setNan(void *data, int dataType){
 bool checkNan(void *data, int dataType){
     switch (dataType) {
         case UNSIGNED_SHORT_INT:
-    	    return (*(unsigned short int*) data) == 65535;
+    	    return (*(unsigned short int*) data) == UNSIGNED_SHORT_INT_NAN;
     	case SHORT_INT:
-    	    return (*(short int*) data) == 32767;
+    	    return (*(short int*) data) == SHORT_INT_NAN;
     	case UNSIGNED_INT:
-    	    return (*(unsigned int*) data) == 4294967295;
+    	    return (*(unsigned int*) data) == UNSIGNED_INT_NAN;
     	case INT:
-    	    return (*(int*) data) == 2147483647;
+    	    return (*(int*) data) == INT_NAN;
     	case FLOAT:
     	    return isnan(*(float*) data);
     	case DOUBLE:
