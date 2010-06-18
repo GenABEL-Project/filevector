@@ -550,8 +550,6 @@ void FileVector::saveAsText(string newFilename, unsigned long nvars, unsigned lo
 		FixedChar fc = readObservationName( obsindexes[i] ) ;
 		textfile << fc.name << " ";
 	}
-	
-	cout << "Here2"<<endl;
 
 	textfile << endl;
 
