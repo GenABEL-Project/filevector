@@ -27,6 +27,11 @@ int getDataType(double);
 bool checkNan(void *data, int dataType);
 void setNan(void *data, int dataType);
 
+extern unsigned short int UNSIGNED_SHORT_INT_NAN;
+extern short int SHORT_INT_NAN;
+extern unsigned int UNSIGNED_INT_NAN;
+extern int INT_NAN;
+
 #define COPY_AND_COMPARE(dest,src) dest=src; if(dest!=src) {errorLog << "Possible loss of precision during conversion from " << dataTypeToString(getDataType(src)) << " to " << dataTypeToString(getDataType(dest)) << "." << endl;}
 
 template <class DT> void performCast(DT &dest, void*src, int srcType) {
