@@ -31,7 +31,7 @@ void buildSubmatrix(string baseName, unsigned long numVariables, unsigned long n
         varIdx = subVarIdx + numVariables/2;
         f << "var" << varIdx << " ";
         varNames << "var" << varIdx << " ";
-        for(subObsIdx=0;subObsIdx<subMatrixNumObs;subObsIdx++){T
+        for(subObsIdx=0;subObsIdx<subMatrixNumObs;subObsIdx++){
             obsIdx = subObsIdx + numObservations/2;
             f << val(varIdx, obsIdx) << " ";
         }
