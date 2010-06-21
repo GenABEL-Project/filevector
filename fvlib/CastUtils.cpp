@@ -14,10 +14,10 @@ unsigned int UNSIGNED_INT_NAN;
 int INT_NAN;
 
 int initConsts(){
-  sscanf("65535","%hi",&SHORT_INT_NAN);
+  sscanf("32767","%hi",&SHORT_INT_NAN);
   sscanf("65535","%hu",&UNSIGNED_SHORT_INT_NAN);
-  sscanf("65535","%i",&INT_NAN);
-  sscanf("65535","%u",&UNSIGNED_INT_NAN);
+  sscanf("2147483647","%i",&INT_NAN);
+  sscanf("4294967295","%u",&UNSIGNED_INT_NAN);
 }
 
 int dummy = initConsts();
@@ -112,12 +112,12 @@ void setNan(int &i){setNan(&i, INT);}
 void setNan(float &i){setNan(&i, FLOAT);}
 void setNan(double &i){setNan(&i, DOUBLE);}
 
-bool checkNan(unsigned short int &i){return checkNan(&i, UNSIGNED_SHORT_INT);}
-bool checkNan(short int &i){return checkNan(&i, SHORT_INT);}
-bool checkNan(unsigned int &i){return checkNan(&i, UNSIGNED_INT);}
-bool checkNan(int &i){return checkNan(&i, INT);}
-bool checkNan(float &i){return checkNan(&i, FLOAT);}
-bool checkNan(double &i){return checkNan(&i, DOUBLE);}
+bool checkNan(unsigned short int i){return checkNan(&i, UNSIGNED_SHORT_INT);}
+bool checkNan(short int i){return checkNan(&i, SHORT_INT);}
+bool checkNan(unsigned int i){return checkNan(&i, UNSIGNED_INT);}
+bool checkNan(int i){return checkNan(&i, INT);}
+bool checkNan(float i){return checkNan(&i, FLOAT);}
+bool checkNan(double i){return checkNan(&i, DOUBLE);}
 
 void setNan(void *data, int dataType){
     double dZero = 0.;
