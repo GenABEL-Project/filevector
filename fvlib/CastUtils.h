@@ -32,7 +32,7 @@ extern short int SHORT_INT_NAN;
 extern unsigned int UNSIGNED_INT_NAN;
 extern int INT_NAN;
 
-#define COPY_AND_COMPARE(dest,src) dest=src; if(dest!=src || checkNan(dest) != checkNan(src)) {errorLog << "Loss of precision / loss of data during conversion from " << dataTypeToString(getDataType(src)) << " to " << dataTypeToString(getDataType(dest)) << "." << endl;}
+#define COPY_AND_COMPARE(dest,src) dest=src; //if(dest!=src || checkNan(dest) != checkNan(src)) {errorLog << "Loss of precision / loss of data during conversion from " << dataTypeToString(getDataType(src)) << " to " << dataTypeToString(getDataType(dest)) << "." << endl;}
 template <class DT> void performCast(DT &dest, void*src, int srcType) {
     if (checkNan(src,srcType)){
         setNan(dest);
