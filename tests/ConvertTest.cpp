@@ -35,31 +35,31 @@ void ConvertTest::test() {
 
     delete[] var;
 
-    unsigned long varMask[] = {0, 2};
-    unsigned long obsMask[] = {1, 2};
-
-    fv->saveAsText(textFileName, 2, 2, varMask, obsMask);
+    fv->saveAsText(textFileName, true, true);
 
     delete fv;
 
     ifstream txt(textFileName.c_str());
     string s;
-    txt >> s;
-    CPPUNIT_ASSERT_EQUAL(string("2"), s);
-    txt >> s;
-    CPPUNIT_ASSERT_EQUAL(string("3"), s);
-    txt >> s;
-    CPPUNIT_ASSERT_EQUAL(string("1"), s);
-    txt >> s;
-    CPPUNIT_ASSERT_EQUAL(string("2.1"), s);
-    txt >> s;
-    CPPUNIT_ASSERT_EQUAL(string("3.1"), s);
-    txt >> s;
-    CPPUNIT_ASSERT_EQUAL(string("3"), s);
-    txt >> s;
-    CPPUNIT_ASSERT_EQUAL(string("2.1"), s);
-    txt >> s;
-    CPPUNIT_ASSERT_EQUAL(string("3.1"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("1"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("2"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("3"), s);
+
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("1"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("1.1"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("2.1"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("3.1"), s);
+
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("2"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("1.1"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("2.1"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("3.1"), s);
+
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("3"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("1.1"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("2.1"), s);
+    txt >> s; CPPUNIT_ASSERT_EQUAL(string("3.1"), s);
+
 }
 
 int main(int numargs, char**args) {

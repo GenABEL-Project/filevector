@@ -252,6 +252,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 				continue;
 			}
 
+            deepDbg << "parsing number [" << lineWords[i] << "]" << endl;
 			parseStringToArbType(lineWords[i], type, &ArbTypeData[colCnt*element_size], nanString);
 			colCnt++;
 		}

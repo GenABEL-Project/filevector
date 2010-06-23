@@ -154,12 +154,8 @@ void FilteredMatrix::saveAs(string newFilename, unsigned long nvars, unsigned lo
     nestedMatrix->saveAs(newFilename, nvars, nobss, &recodedRowIndexes[0], &recodedColIndexes[0]);
 }
 
-void FilteredMatrix::saveAsText(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long * varIndexes, unsigned long * obsIndexes) {
-    vector<unsigned long> recodedColIndexes;
-    vector<unsigned long> recodedRowIndexes;
-    filterIdxList(obsIndexes, nobss, recodedColIndexes, filteredToRealColIdx);
-    filterIdxList(varIndexes, nvars, recodedRowIndexes, filteredToRealRowIdx);
-    nestedMatrix->saveAsText(newFilename, nvars, nobss, &recodedRowIndexes[0], &recodedColIndexes[0]);
+void FilteredMatrix::saveAsText(string newFilename, bool showVarNames, bool showObsNames) {
+    nestedMatrix->saveAsText(newFilename, showVarNames, showObsNames);
 }
 
 short unsigned FilteredMatrix::getElementSize() {
