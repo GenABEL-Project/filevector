@@ -57,17 +57,20 @@ private:
 public:
 	FileVector();
 	~FileVector();
+	
 	FileVector(string iFilename, unsigned long cachesizeMb) : filename (iFilename) {
 		readOnly = false;
 		updateNamesOnWrite = false;
 		char_buffer = 0;
 		initialize(cachesizeMb);
+		getWarningIsShown() = false;
 	}
 
 	FileVector(string iFilename, unsigned long cachesizeMb, bool iReadOnly) : filename(iFilename), readOnly(iReadOnly) {
 		updateNamesOnWrite = false;
 		char_buffer = 0;
 		initialize(cachesizeMb);
+		getWarningIsShown() = false;
     }
 
 	FileVector(char *iFilename, unsigned long cachesizeMb) : filename(string(iFilename)){
@@ -76,12 +79,14 @@ public:
 		string filename(iFilename);
 		char_buffer = 0;
 		initialize(cachesizeMb);
+		getWarningIsShown() = false;
 	}
 
 	FileVector(char *iFilename, unsigned long cachesizeMb, bool iReadOnly) : filename(string(iFilename)), readOnly(iReadOnly) {
 		updateNamesOnWrite = false;
 		char_buffer = 0;
 		initialize(cachesizeMb);
+        getWarningIsShown() = false;
 	}
 	// for testing purposes
 	void getPrivateCacheData(unsigned long* cacheSizeNVars, unsigned long *inCachFrom, unsigned long *inCacheTo );
@@ -124,7 +129,7 @@ public:
 	void saveVariablesAs( string newFilename, unsigned long nvars, unsigned long * varindexes);
 	void saveObservationsAs( string newFilename, unsigned long nobss, unsigned long * obsindexes);
 	void saveAs(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long * varindexes, unsigned long * obsindexes);
-	void saveAsText(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long * varindexes, unsigned long * obsindexes);
+	void saveAsText(string newFilename, bool saveVarNames, bool saveObsNames);
 
 	unsigned long getCacheSizeInMb();
 	void setCacheSizeInMb( unsigned long cachesizeMb );

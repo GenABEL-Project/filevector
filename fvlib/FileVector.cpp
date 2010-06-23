@@ -537,50 +537,42 @@ void FileVector::saveAs(string newFilename, unsigned long nvars, unsigned long n
 	delete[] out_variable;
 }
 
-void FileVector::saveAsText(string newFilename, unsigned long nvars, unsigned long nobss,
-		unsigned long *varindexes, unsigned long *obsindexes) {
-
-	dbg << "nvars = " << nvars << endl;
-	dbg << "obsIdx = " << nobss << endl;
+void FileVector::saveAsText(string newFilename, bool saveVarNames, bool saveObsNames) {
 
 	ofstream textfile(newFilename.c_str(), ios::out);
 
 	// copy observation names from the first object
-	for( unsigned long i=0 ; i < nobss ; i++ ) {
-		FixedChar fc = readObservationName( obsindexes[i] ) ;
-		textfile << fc.name << " ";
+	if (saveObsNames) {
+    	for( unsigned long i=0 ; i < getNumObservations() ; i++ ) {
+	    	FixedChar fc = readObservationName( i ) ;
+		    textfile << fc.name << " ";
+	    }
+
+	    textfile << endl;
 	}
-
-	textfile << endl;
-
-	char * out_variable = new (nothrow) char[nobss*getElementSize()];
-	if (!out_variable)
-		errorLog << "can not allocate memory for out_variable" << errorExit;
 
 	char * in_variable = new (nothrow) char[getNumObservations()*getElementSize()];
 	if (!in_variable)
 		errorLog << "can not allocate memory for in_variable" << endl << endl << errorExit;
 
-	for(unsigned long i=0; i<nvars; i++) {
-		dbg << "Writing var " << i << " of " << nvars << endl;
-		unsigned long selected_index = varindexes[i];
+	for(unsigned long i=0; i<getNumVariables(); i++) {
+		dbg << "Writing var " << i << " of " << getNumVariables()<< endl;
 		//write var names
-		FixedChar fc = readVariableName(selected_index);
-		textfile << fc.name << " ";
+		FixedChar fc = readVariableName(i);
+		if (saveVarNames) {
+		    textfile << fc.name << " ";
+		}
 		//write variables
-		readVariable(selected_index, in_variable);
-		copyVariable(out_variable, in_variable, nobss, obsindexes);
+		readVariable(i, in_variable);
 
-		for(unsigned long j=0; j<nobss; j++) {
-			double x;
-			performCast(x, &out_variable[j*getElementSize()],getElementType());
-			textfile << x << " ";
+		for(unsigned long j=0; j<getNumObservations(); j++) {
+		    string s  = bufToString(getElementType(),&in_variable[j*getElementSize()]);
+			textfile << s << " ";
 		}
 		textfile << endl;
 	}
 
 	delete[] in_variable;
-	delete[] out_variable;
 }
 
 short unsigned FileVector::getElementSize() {

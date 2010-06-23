@@ -49,6 +49,7 @@ public:
     FilteredMatrix(AbstractMatrix &matrix) : nestedMatrix(&matrix) {
         dbg << "Constructing FilteredMatrix from AbstractMatrix, ptr = " << (void *)this << endl;
         setNoFiltering();
+        getWarningIsShown() = false;
     }
 
     unsigned long getNumVariables();
@@ -60,7 +61,7 @@ public:
 	void saveVariablesAs(string newFilename, unsigned long nvars, unsigned long * varindexes);
    	void saveObservationsAs(string newFilename, unsigned long nobss, unsigned long * obsindexes);
     void saveAs(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long * varindexes, unsigned long * obsindexes);
-    void saveAsText(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long * varindexes, unsigned long * obsindexes);
+    void saveAsText(string newFilename, bool, bool);
     void readObservation(unsigned long obsIdx, void * outvec);
     void writeObservation(unsigned long obsIdx, void * invec);
     void writeVariableName(unsigned long varIdx, FixedChar newname);  // todo loooong future -- control that name is unique
