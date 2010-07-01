@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ChangeListManager" verified="true">
+  <component name="ChangeListManager">
     <list readonly="true" id="0cf22546-5515-44a3-820c-631f2cb4d6a0" name="Default" comment="" />
-    <list default="true" id="860d1542-2499-4d4d-8bee-95f6748579a8" name="never" comment="fix" />
+    <list default="true" id="860d1542-2499-4d4d-8bee-95f6748579a8" name="never" comment="fix">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../DatABEL/R/databel_class.R" afterPath="$PROJECT_DIR$/../../../DatABEL/R/databel_class.R" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../fvlib/FileVector.cpp" afterPath="$PROJECT_DIR$/../../fvlib/FileVector.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../MixABEL/src/DAlib/AbstractMatrix_R.cpp" afterPath="$PROJECT_DIR$/../../../MixABEL/src/DAlib/AbstractMatrix_R.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../DatABEL/src/DAlib/AbstractMatrix_R.cpp" afterPath="$PROJECT_DIR$/../../../DatABEL/src/DAlib/AbstractMatrix_R.cpp" />
+    </list>
     <list id="ced3e2a1-b89b-4a3d-8c8f-29712af80a11" name="Failed commit: never" comment="setReadOnly" />
     <list id="24af8540-a06c-4ec4-8f08-d990c4033a01" name="other" comment="missing throw" />
-    <ignored path="filevector.iws" />
     <ignored path=".idea/workspace.xml" />
+    <ignored path="filevector.iws" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,19 +68,28 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="FileVector.h" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="FileVector.h" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../fvlib/FileVector.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="137" column="17" selection-start="4274" selection-end="4274" vertical-scroll-proportion="0.41917807">
+            <state line="16" column="45" selection-start="257" selection-end="257" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AbstractMatrix.h" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../fvlib/AbstractMatrix.h">
+      <file leaf-file-name="runit.databel_class.R" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../../DatABEL/inst/unitTests/runit.databel_class.R">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="94" column="0" selection-start="3748" selection-end="3748" vertical-scroll-proportion="0.0">
+            <state line="38" column="58" selection-start="790" selection-end="790" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="shared_functions.R" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../../DatABEL/inst/unitTests/shared_functions.R">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="54" selection-start="736" selection-end="736" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -84,7 +98,7 @@
       <file leaf-file-name="FilteredMatrix.cpp" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../fvlib/FilteredMatrix.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="161" column="21" selection-start="6218" selection-end="6218" vertical-scroll-proportion="0.0">
+            <state line="161" column="21" selection-start="6175" selection-end="6175" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -93,7 +107,43 @@
       <file leaf-file-name="FilteredMatrix.h" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../fvlib/FilteredMatrix.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="59" column="60" selection-start="2019" selection-end="2019" vertical-scroll-proportion="0.0">
+            <state line="61" column="58" selection-start="2077" selection-end="2077" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AbstractMatrix_R.cpp" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../../DatABEL/src/DAlib/AbstractMatrix_R.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="614" column="34" selection-start="15568" selection-end="15568" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AbstractMatrix.h" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../fvlib/AbstractMatrix.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="100" column="0" selection-start="4146" selection-end="4146" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FileVector.cpp" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../fvlib/FileVector.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="396" column="2" selection-start="14355" selection-end="14355" vertical-scroll-proportion="0.618123">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="databel_class.R" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../../DatABEL/R/databel_class.R">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="252" column="22" selection-start="6774" selection-end="6774" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -109,11 +159,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/../../fvlib/AbstractMatrix.cpp" />
-        <option value="$PROJECT_DIR$/../../../../../a.cpp" />
-        <option value="$PROJECT_DIR$/../../fvlib/FileVector.cpp" />
-        <option value="$PROJECT_DIR$/../../../DatABEL/R/databel_base_class.R" />
-        <option value="$PROJECT_DIR$/filtered.R" />
         <option value="$PROJECT_DIR$/../../../DatABEL/R/databel_base_class_internal.R" />
         <option value="$PROJECT_DIR$/../../../DatABEL/R/databel_filtered_class_internal.R" />
         <option value="$PROJECT_DIR$/../../../DatABEL/R/databel_filtered_R.R" />
@@ -125,6 +170,11 @@
         <option value="$PROJECT_DIR$/../../fvlib/FilteredMatrix.h" />
         <option value="$PROJECT_DIR$/../../../DatABEL2/src/DAlib/AbstractMatrix_R.cpp" />
         <option value="$PROJECT_DIR$/../../../DatABEL2/src/DAlib/FilteredMatrix_R.cpp" />
+        <option value="$PROJECT_DIR$/../../../DatABEL/inst/unitTests/shared_functions.R" />
+        <option value="$PROJECT_DIR$/../../../DatABEL/inst/unitTests/runit.databel_class.R" />
+        <option value="$PROJECT_DIR$/../../../DatABEL/R/databel_class.R" />
+        <option value="$PROJECT_DIR$/../../../DatABEL/src/DAlib/AbstractMatrix_R.cpp" />
+        <option value="$PROJECT_DIR$/../../fvlib/FileVector.cpp" />
       </list>
     </option>
   </component>
@@ -163,19 +213,14 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Favorites" />
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="stiv" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -226,170 +271,92 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="DatABEL2" />
+              <option name="myItemId" value="DatABEL" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stiv" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="filevector" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DatABEL" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
+              <option name="myItemId" value="inst" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="unitTests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stiv" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="filevector" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DatABEL" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="inst" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="197" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="162" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="201" />
     <property name="project.structure.last.edited" value="Modules" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="166" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="34" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="181" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="185" />
     <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
-    <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth2" value="150" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth1" value="165" />
+    <property name="recentsLimit" value="5" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth2" value="153" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth1" value="168" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder4" value="4" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../.." />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth0" value="146" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth4" value="889" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth0" value="149" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth4" value="892" />
     <property name="GoToClass.includeJavaFiles" value="false" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth3" value="147" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth3" value="151" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth4" value="923" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth4" value="927" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="options.lastSelected" value="com.intellij.openapi.vcs.configurable.VcsManagerConfigurable$4" />
+    <property name="options.lastSelected" value="com.advancedtools.cpp.CppSupportLoader" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder4" value="4" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder1" value="1" />
-    <property name="project.structure.side.proportion" value="0.14026718" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder2" value="2" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
+    <property name="project.structure.side.proportion" value="0.14026718" />
     <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder0" value="0" />
     <property name="options.searchVisible" value="true" />
-  </component>
-  <component name="RestoreUpdateTree">
-    <UpdateInfo date="5/17/10 11:33 AM" ActionInfo="_Update">
-      <UpdatedFiles>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Updated from server" />
-          <option name="myStatusName" value="Changed on server" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="CHANGED_ON_SERVER" />
-          <FILE-GROUP>
-            <option name="myUpdateName" value="Updated" />
-            <option name="myStatusName" value="Changed" />
-            <option name="mySupportsDeletion" value="false" />
-            <option name="myCanBeAbsent" value="false" />
-            <option name="myId" value="UPDATED" />
-            <PATH vcs="svn" revision="434">$PROJECT_DIR$/../../../../www/index.php</PATH>
-          </FILE-GROUP>
-          <FILE-GROUP>
-            <option name="myUpdateName" value="Created" />
-            <option name="myStatusName" value="Created" />
-            <option name="mySupportsDeletion" value="false" />
-            <option name="myCanBeAbsent" value="false" />
-            <option name="myId" value="CREATED" />
-            <PATH vcs="svn" revision="434">$PROJECT_DIR$/../../../../www/erfsmall.RData</PATH>
-            <PATH vcs="svn" revision="434">$PROJECT_DIR$/../../../../www/erf.RData</PATH>
-            <PATH vcs="svn" revision="434">$PROJECT_DIR$/../../../../www/ABEL-tutorial.pdf</PATH>
-          </FILE-GROUP>
-          <FILE-GROUP>
-            <option name="myUpdateName" value="Deleted" />
-            <option name="myStatusName" value="Deleted" />
-            <option name="mySupportsDeletion" value="false" />
-            <option name="myCanBeAbsent" value="true" />
-            <option name="myId" value="REMOVED_FROM_REPOSITORY" />
-          </FILE-GROUP>
-          <FILE-GROUP>
-            <option name="myUpdateName" value="Restored" />
-            <option name="myStatusName" value="Will be restored" />
-            <option name="mySupportsDeletion" value="false" />
-            <option name="myCanBeAbsent" value="false" />
-            <option name="myId" value="RESTORED" />
-          </FILE-GROUP>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Modified" />
-          <option name="myStatusName" value="Modified" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MODIFIED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Skipped" />
-          <option name="myStatusName" value="Skipped" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="SKIPPED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Merged with conflicts" />
-          <option name="myStatusName" value="Will be merged with conflicts" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MERGED_WITH_CONFLICTS" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Merged" />
-          <option name="myStatusName" value="Will be merged" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MERGED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Not in repository" />
-          <option name="myStatusName" value="Not in repository" />
-          <option name="mySupportsDeletion" value="true" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="UNKNOWN" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Locally added" />
-          <option name="myStatusName" value="Locally added" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="LOCALLY_ADDED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Locally removed" />
-          <option name="myStatusName" value="Locally removed" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="LOCALLY_REMOVED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Switched" />
-          <option name="myStatusName" value="Switched" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="SWITCHED" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Merged with property conflicts" />
-          <option name="myStatusName" value="Will be merged with property conflicts" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Merged with tree conflicts" />
-          <option name="myStatusName" value="Will be merged with tree conflicts" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
-        </FILE-GROUP>
-      </UpdatedFiles>
-    </UpdateInfo>
   </component>
   <component name="RunManager" selected="Cpp.run tests">
     <configuration default="true" type="Remote" factoryName="Remote">
@@ -576,7 +543,7 @@
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
-  <component name="SvnConfiguration">
+  <component name="SvnConfiguration" maxAnnotateRevisions="500">
     <option name="USER" value="" />
     <option name="PASSWORD" value="" />
     <option name="LAST_MERGED_REVISION" />
@@ -631,26 +598,26 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="28" width="1600" height="874" extended-state="0" />
-    <editor active="false" />
+    <frame x="0" y="33" width="1624" height="854" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.52259886" sideWeight="0.99496853" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39974293" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40536723" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.40462428" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23446327" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299748" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23929961" sideWeight="0.23909986" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298071" sideWeight="0.8513854" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30704042" sideWeight="0.58474576" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991013" sideWeight="0.5852601" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43037975" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="SVN Properties" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299748" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.52259886" sideWeight="0.99496853" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="SVN Repositories" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.46327683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -666,8 +633,10 @@
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="false" />
     <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="true" />
+    <option name="ENABLE_BACKGROUND_PROCESSES" value="false" />
+    <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="rollback" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -691,7 +660,6 @@
     <MESSAGE value="code format" />
     <MESSAGE value="code format by yuriy" />
     <MESSAGE value="lazy variable loading" />
-    <MESSAGE value="rollback" />
     <MESSAGE value="Implemented read/writeVariable in FilteredMatrix" />
     <MESSAGE value="enable output" />
     <MESSAGE value="nested filteredMatrix" />
@@ -705,6 +673,7 @@
     <MESSAGE value="setReadOnly" />
     <MESSAGE value="create/delete filematrix/abstractmatrix pair" />
     <MESSAGE value="fix" />
+    <MESSAGE value="rollback" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -716,35 +685,75 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/filtered.R">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="23" selection-start="1082" selection-end="1082" vertical-scroll-proportion="0.0">
+        <state line="35" column="23" selection-start="1082" selection-end="1082" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../fvlib/FileVector.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="45" selection-start="257" selection-end="257" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../fvlib/FilteredMatrix.h">
+    <entry file="file://$PROJECT_DIR$/../../../ProbABEL/src/include/Rinternals.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="60" selection-start="2019" selection-end="2019" vertical-scroll-proportion="0.0">
+        <state line="382" column="9" selection-start="12869" selection-end="12869" vertical-scroll-proportion="0.3323217">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../DatABEL/inst/unitTests/runit.databel_class.R">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="58" selection-start="790" selection-end="790" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../DatABEL/inst/unitTests/shared_functions.R">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="54" selection-start="736" selection-end="736" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../fvlib/FilteredMatrix.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="161" column="21" selection-start="6218" selection-end="6218" vertical-scroll-proportion="0.0">
+        <state line="161" column="21" selection-start="6175" selection-end="6175" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../fvlib/FilteredMatrix.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="58" selection-start="2077" selection-end="2077" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../DatABEL/R/databel_class.R">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="252" column="22" selection-start="6774" selection-end="6774" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../DatABEL/src/DAlib/AbstractMatrix_R.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="614" column="34" selection-start="15568" selection-end="15568" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../fvlib/AbstractMatrix.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="94" column="0" selection-start="3748" selection-end="3748" vertical-scroll-proportion="0.0">
+        <state line="100" column="0" selection-start="4146" selection-end="4146" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../fvlib/FileVector.h">
+    <entry file="file://$PROJECT_DIR$/../../fvlib/FileVector.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="137" column="17" selection-start="4274" selection-end="4274" vertical-scroll-proportion="0.41917807">
+        <state line="396" column="2" selection-start="14355" selection-end="14355" vertical-scroll-proportion="0.618123">
           <folding />
         </state>
       </provider>
