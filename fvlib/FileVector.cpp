@@ -341,8 +341,7 @@ void FileVector::writeObservation(unsigned long obsIdx, void * invec) {
 	if (readOnly) {
 		errorLog << "Trying to write to the readonly file." << errorExit;
 	}
-	for(unsigned long int i = 0; i< getNumVariables(); i++)
-	{
+	for(unsigned long int i = 0; i< getNumVariables(); i++)	{
 		writeElement( i, obsIdx, (char*)invec+ i*getElementSize() );
 	}
 }

@@ -64,7 +64,7 @@ void FilteredMatrix::writeObservation(unsigned long obsIdx, void * invec) {
         writeElement( i, obsIdx, (char*)invec + i * getElementSize());
     }
 }
-#define WRITE_SPEED_PROPORTION .01
+
 void FilteredMatrix::writeVariable(unsigned long varIdx, void *datavec) {
     unsigned long i;
     fmDbg << "FilteredMatrix.writeVariable(" << varIdx << ")" << endl;

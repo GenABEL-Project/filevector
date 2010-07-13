@@ -9,6 +9,8 @@ using namespace std;
 #include "frutil.h"
 #include "CastUtils.h"
 
+#define WRITE_SPEED_PROPORTION .01
+
 class AbstractMatrix {
 public:
     virtual ~AbstractMatrix(){};
