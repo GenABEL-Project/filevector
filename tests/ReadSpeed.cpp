@@ -13,7 +13,7 @@ int main ( int argc, char * argv[] )
 	}
     char * ifname1 = argv[1];
 
-	unsigned long cachesize = 64;
+	unsigned long cachesize = 80;
 	if (argc>2) cachesize = atoi(argv[2]);
 	if (cachesize < 0) {
 	    errorLog <<"cache size must be positive long integer\n\n" << errorExit;
@@ -26,24 +26,38 @@ int main ( int argc, char * argv[] )
 	testDbg << "Variables:"<< indata1->getNumVariables() << "\n";
 	testDbg << "Observations:"<< indata1->getNumObservations() << "\n";
 
-	float * tmpdat = new ( nothrow ) float [indata1->getNumObservations()];
-	if(!tmpdat )
+	float tmpdat ;
+/*	if(!tmpdat )
 	{
 		testDbg << "Cannot allocate buffer" << "\n";
 		exit(1);
-	}
+	}*/
 
-        for ( unsigned long i=0 ; i < indata1->getNumVariables() ; i++ )
+/*        for ( unsigned long i=0 ; i < indata1->getNumVariables() ; i++ )
         {
             indata1->readVariableAs( i, tmpdat );
-            if( i % 10000 == 0 )
+            if( i % 100 == 0 )
             {
                 testDbg << "Read:"<< i << "/" << indata1->getNumVariables() << " variables \n";
             }
         }
 
-	delete tmpdat;
-        delete indata1;
+        for ( long i=indata1->getNumVariables() -1; i >=0  ; i-- )
+        {
+            indata1->readVariableAs( i, tmpdat );
+            if( i % 100 == 0 )
+            {
+                testDbg << "Read:"<< i << "/" << indata1->getNumVariables() << " variables \n";
+            }
+        }*/
+
+       for ( unsigned long j= 0; j <indata1->getNumObservations() ; j++ )
+       for ( unsigned long i= 0; i <indata1->getNumVariables() ; i++ )
+        {
+            indata1->readElementAs( i,j, tmpdat );
+        }
+
+    delete indata1;
 
 	testDbg << "Finished";
 }
