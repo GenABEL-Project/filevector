@@ -49,8 +49,7 @@ private:
 	// which variables are now in cache
 	unsigned long in_cache_from;
 	unsigned long in_cache_to;
-	char * cached_data;
-	char * char_buffer;
+	char * cacheBuffer;
 	bool readOnly;
 	bool updateNamesOnWrite;
 		
@@ -61,14 +60,14 @@ public:
 	FileVector(string iFilename, unsigned long cachesizeMb) : filename (iFilename) {
 		readOnly = false;
 		updateNamesOnWrite = false;
-		char_buffer = 0;
+		cacheBuffer = 0;
 		initialize(cachesizeMb);
 		getWarningIsShown() = false;
 	}
 
 	FileVector(string iFilename, unsigned long cachesizeMb, bool iReadOnly) : filename(iFilename), readOnly(iReadOnly) {
 		updateNamesOnWrite = false;
-		char_buffer = 0;
+		cacheBuffer = 0;
 		initialize(cachesizeMb);
 		getWarningIsShown() = false;
     }
@@ -77,14 +76,14 @@ public:
 		updateNamesOnWrite = false;
 		readOnly = false;
 		string filename(iFilename);
-		char_buffer = 0;
+		cacheBuffer = 0;
 		initialize(cachesizeMb);
 		getWarningIsShown() = false;
 	}
 
 	FileVector(char *iFilename, unsigned long cachesizeMb, bool iReadOnly) : filename(string(iFilename)), readOnly(iReadOnly) {
 		updateNamesOnWrite = false;
-		char_buffer = 0;
+		cacheBuffer = 0;
 		initialize(cachesizeMb);
         getWarningIsShown() = false;
 	}

@@ -40,26 +40,28 @@ void ConvertTest::test() {
     delete fv;
 
     ifstream txt(textFileName.c_str());
-    string s;
+    string s;float f;
+
+
     txt >> s; CPPUNIT_ASSERT_EQUAL(string("1"), s);
     txt >> s; CPPUNIT_ASSERT_EQUAL(string("2"), s);
     txt >> s; CPPUNIT_ASSERT_EQUAL(string("3"), s);
 
     txt >> s; CPPUNIT_ASSERT_EQUAL(string("1"), s);
-    txt >> s; CPPUNIT_ASSERT_EQUAL(string("1.1"), s);
-    txt >> s; CPPUNIT_ASSERT_EQUAL(string("2.1"), s);
-    txt >> s; CPPUNIT_ASSERT_EQUAL(string("3.1"), s);
+
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(1.1,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(2.1,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(3.1,f)<.001);
 
     txt >> s; CPPUNIT_ASSERT_EQUAL(string("2"), s);
-    txt >> s; CPPUNIT_ASSERT_EQUAL(string("1.1"), s);
-    txt >> s; CPPUNIT_ASSERT_EQUAL(string("2.1"), s);
-    txt >> s; CPPUNIT_ASSERT_EQUAL(string("3.1"), s);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(1.1,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(2.1,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(3.1,f)<.001);
 
     txt >> s; CPPUNIT_ASSERT_EQUAL(string("3"), s);
-    txt >> s; CPPUNIT_ASSERT_EQUAL(string("1.1"), s);
-    txt >> s; CPPUNIT_ASSERT_EQUAL(string("2.1"), s);
-    txt >> s; CPPUNIT_ASSERT_EQUAL(string("3.1"), s);
-
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(1.1,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(2.1,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(3.1,f)<.001);
 }
 
 int main(int numargs, char**args) {

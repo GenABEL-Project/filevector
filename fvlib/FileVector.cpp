@@ -21,8 +21,8 @@ void FileVector::saveIndexFile() {
 
 void FileVector::deInitialize(){
 	saveIndexFile();
-	delete [] char_buffer;
-	char_buffer = 0;
+	delete [] cacheBuffer;
+	cacheBuffer = 0;
 	delete [] observationNames;
 	observationNames = 0;
 	delete [] variableNames;
@@ -172,11 +172,11 @@ void FileVector::setCacheSizeInMb( unsigned long cachesizeMb ) {
 	cache_size_bytes = cache_size_nvars*fileHeader.bytesPerRecord*fileHeader.numObservations*sizeof(char);
 
 	//free previously allocated memory
-	if(char_buffer !=0 )
-		delete char_buffer;
+	if(cacheBuffer !=0 )
+		delete []cacheBuffer;
 	// get memory for the cache
-	char_buffer = new (nothrow) char [cache_size_bytes];
-	if (!char_buffer)
+	cacheBuffer = new (nothrow) char [cache_size_bytes];
+	if (!cacheBuffer)
 		errorLog << "failed to get memory for cache" << endl << errorExit;
 	max_buffer_size_bytes = INT_MAX;
 
@@ -198,34 +198,12 @@ void FileVector::update_cache(unsigned long from_var) {
 	deepDbg << "Updating cache: " << in_cache_from << " - " << in_cache_to << "\n";
 	unsigned long internal_from = in_cache_from*fileHeader.numObservations*fileHeader.bytesPerRecord*sizeof(char);
 	dataFile.seekg(internal_from, ios::beg);
-	if (current_cache_size_bytes <= max_buffer_size_bytes) {
-		dataFile.read((char*)char_buffer,current_cache_size_bytes);
-		if (!dataFile) {
-			errorLog << internal_from << " aa " << current_cache_size_bytes << " " << max_buffer_size_bytes << "\n";
-			errorLog << "Failed to read cache from file '"<< dataFilename <<"' (1)\n" << errorExit;
-		}
-	} else {
-		// cache size is bigger than what we can read in one go ... read in blocks
-		unsigned long nbytes_togo = current_cache_size_bytes;
-		unsigned long nbytes_finished = 0;
-		while (nbytes_togo>0)
-			if (nbytes_togo > max_buffer_size_bytes) {
-				dataFile.read((char*)(char_buffer+nbytes_finished),max_buffer_size_bytes);
-				if (!dataFile) {
-					errorLog << "Failed to read cache from file '"<<dataFilename<<"' (2)\n"<<errorExit;
-				}
-				nbytes_finished += max_buffer_size_bytes;
-				nbytes_togo -= max_buffer_size_bytes;
-			} else {
-				dataFile.read((char*)(char_buffer+nbytes_finished),nbytes_togo);
-				if (!dataFile) {
-					errorLog << "Failed to read cache from file '"<<dataFilename<<"' (3)\n"<<errorExit;
-				}
-				nbytes_finished += nbytes_togo;
-				nbytes_togo -= nbytes_togo;
-			}
+	blockWriteOrRead(dataFile,current_cache_size_bytes, cacheBuffer, false);
+	if (!dataFile) {
+		errorLog << internal_from << " aa " << current_cache_size_bytes << " " << max_buffer_size_bytes << "\n";
+		errorLog << "Failed to read cache from file '"<< dataFilename <<"' (1)\n" << errorExit;
 	}
-	cached_data = char_buffer;
+
 }
 
 void FileVector::setUpdateNamesOnWrite(bool bUpdate) {
@@ -317,10 +295,10 @@ void FileVector::readVariable(unsigned long varIdx, void * outvec) {
 	}
 	if (in_cache_to > 0 && varIdx >= in_cache_from && varIdx <= in_cache_to) {
 		unsigned long offset = (varIdx - in_cache_from)*fileHeader.numObservations*getElementSize();
-		memcpy(outvec,cached_data+offset,getElementSize()*(fileHeader.numObservations));
+		memcpy(outvec,cacheBuffer+offset,getElementSize()*(fileHeader.numObservations));
 	} else {
 		update_cache(varIdx);
-		memcpy(outvec,cached_data,getElementSize()*fileHeader.numObservations);
+		memcpy(outvec,cacheBuffer,getElementSize()*fileHeader.numObservations);
 	}
 }
 
@@ -362,7 +340,7 @@ void FileVector::writeVariable(unsigned long varIdx, void * datavec) {
 	if (varIdx >= in_cache_from && varIdx <= in_cache_to)
 	{
 		unsigned long offset = (varIdx - in_cache_from)*fileHeader.numObservations*getElementSize();
-		memcpy(cached_data + offset,datavec,getElementSize()*fileHeader.numObservations);
+		memcpy(cacheBuffer + offset,datavec,getElementSize()*fileHeader.numObservations);
 	}
 }
 
@@ -397,7 +375,7 @@ void FileVector::writeElement(unsigned long varIdx, unsigned long obsIdx, void* 
 
 	if (varIdx >= in_cache_from && varIdx <= in_cache_to) {
 		unsigned long offset = (varIdx - in_cache_from)*fileHeader.numObservations*getElementSize() + obsIdx *getElementSize();
-		memcpy(cached_data+offset,data,getElementSize() );
+		memcpy(cacheBuffer+offset,data,getElementSize() );
 	}
 }
 
