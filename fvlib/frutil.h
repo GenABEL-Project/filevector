@@ -110,6 +110,6 @@ string extract_base_file_name(string filename);
 bool file_exists(string fileName);
 bool headerOrDataExists(string fileName);
 unsigned short calcDataSize(unsigned short int type);
-void tokenize(const string& str, vector<string>& tokens, const string& delimiters = " ");
+void tokenize(const string& str, vector<string>& tokens, const string& delimiters = " \t");
 void blockWriteOrRead(fstream& file, unsigned long length, char* data, bool writeAction);
 #endif

@@ -180,7 +180,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 	string firstLine;
 
 	vector<string> firstLineWords;
-	tokenize(firstLine, firstLineWords, " ");
+	tokenize(firstLine, firstLineWords);
 
 	unsigned long numLines = calcNumLines(infilename);
 	unsigned long numWords = calcNumWordsInFirstLine(infilename);
@@ -220,7 +220,7 @@ void text2fvf(string program_name, string infilename, string outfilename,
 
 	while(getline(srcFile, line)) {
 		vector<string> lineWords;
-		tokenize(line, lineWords, " ");
+		tokenize(line, lineWords);
 
 		// is this a column name line?
 		if (lineCnt == ((unsigned long) cnrow) && !colNamesFilePresents)
