@@ -81,7 +81,7 @@ $(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/TransposeTest.cpp  -o $(TRANSPOSETEST); $(TRANSPOSETEST)
 
 converter : $(CONVERT)
-$(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
+$(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp 
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(SRCDIR)/convert.cpp -o $(CONVERT)
 
 transpose :$(TRANSPOSE)

@@ -26,14 +26,14 @@ int main ( int argc, char * argv[] )
 	testDbg << "Variables:"<< indata1->getNumVariables() << "\n";
 	testDbg << "Observations:"<< indata1->getNumObservations() << "\n";
 
-	float tmpdat ;
+	float* tmpdat  = new float[indata1->getNumObservations()];
 /*	if(!tmpdat )
 	{
 		testDbg << "Cannot allocate buffer" << "\n";
 		exit(1);
 	}*/
 
-/*        for ( unsigned long i=0 ; i < indata1->getNumVariables() ; i++ )
+        for ( unsigned long i=0 ; i < indata1->getNumVariables() ; i++ )
         {
             indata1->readVariableAs( i, tmpdat );
             if( i % 100 == 0 )
@@ -49,15 +49,16 @@ int main ( int argc, char * argv[] )
             {
                 testDbg << "Read:"<< i << "/" << indata1->getNumVariables() << " variables \n";
             }
-        }*/
+        }
 
-       for ( unsigned long j= 0; j <indata1->getNumObservations() ; j++ )
+/*       for ( unsigned long j= 0; j <indata1->getNumObservations() ; j++ )
        for ( unsigned long i= 0; i <indata1->getNumVariables() ; i++ )
         {
             indata1->readElementAs( i,j, tmpdat );
         }
-
+  */
     delete indata1;
+    delete[]tmpdat;
 
 	testDbg << "Finished";
 }
