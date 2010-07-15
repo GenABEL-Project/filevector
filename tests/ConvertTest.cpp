@@ -49,19 +49,19 @@ void ConvertTest::test() {
 
     txt >> s; CPPUNIT_ASSERT_EQUAL(string("1"), s);
 
-    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(1.1,f)<.001);
-    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(2.1,f)<.001);
-    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(3.1,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(1.1F,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(2.1F,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(3.1F,f)<.001);
 
     txt >> s; CPPUNIT_ASSERT_EQUAL(string("2"), s);
-    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(1.1,f)<.001);
-    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(2.1,f)<.001);
-    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(3.1,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(1.1F,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(2.1F,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(3.1F,f)<.001);
 
     txt >> s; CPPUNIT_ASSERT_EQUAL(string("3"), s);
-    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(1.1,f)<.001);
-    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(2.1,f)<.001);
-    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(3.1,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(1.1F,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(2.1F,f)<.001);
+    txt >> s; parseStringToArbType(s,FLOAT,&f,"NAN");CPPUNIT_ASSERT(TestUtil::relativeDifference(3.1F,f)<.001);
 }
 
 int main(int numargs, char**args) {

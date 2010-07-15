@@ -23,9 +23,7 @@ void UnitTest::testReadOnly(){
         FileVector *fv2;
         fv2 = new FileVector(filename,1);
     } catch (int x) {
-        testDbg << 1;
     }
-    testDbg << 2;
 
     delete fv;
     testDbg << "endOftestReadOnly"<<endl;
@@ -160,8 +158,8 @@ void UnitTest::test_save_obs() {
     CPPUNIT_ASSERT_EQUAL( orig_var[3] ,saved_var[1] );
 
     delete fv_copy;
-    delete orig_var;
-    delete saved_var;
+    delete[] orig_var;
+    delete[] saved_var;
 }
 
 /*test saving vars/obs window*/
@@ -198,8 +196,8 @@ void UnitTest::test_save_vars_obs() {
 
     delete fv;
     delete fv_copy;
-    delete orig_var;
-    delete saved_var;
+    delete []orig_var;
+    delete []saved_var;
 }
 
 void UnitTest::test_setCacheSizeMb() {
@@ -209,28 +207,28 @@ void UnitTest::test_setCacheSizeMb() {
     string src_file_name = getFilenameToWrite();
     FileVector *fv = new FileVector( src_file_name, 1 );
 
-    unsigned long realCacheSizeNvars, realInCacheFrom, realInCacheTo;
+    unsigned long realCacheSizeNvars, realcacheBegin, realcacheEnd;
 
-    fv->getPrivateCacheData(&realCacheSizeNvars, &realInCacheFrom, &realInCacheTo);
+    fv->getPrivateCacheData(&realCacheSizeNvars, &realcacheBegin, &realcacheEnd);
     CPPUNIT_ASSERT_EQUAL( 130UL ,realCacheSizeNvars );
 
     float * var = new float [fv->getNumObservations()];
     fv->readVariableAs(0,var);
-    fv->getPrivateCacheData(&realCacheSizeNvars, &realInCacheFrom, &realInCacheTo);
-    CPPUNIT_ASSERT_EQUAL( 0UL, realInCacheFrom );
-    CPPUNIT_ASSERT_EQUAL( 129UL, realInCacheTo );
+    fv->getPrivateCacheData(&realCacheSizeNvars, &realcacheBegin, &realcacheEnd);
+    CPPUNIT_ASSERT_EQUAL( 0UL, realcacheBegin );
+    CPPUNIT_ASSERT_EQUAL( 130UL, realcacheEnd );
 
     fv->setCacheSizeInMb(2);
-    fv->getPrivateCacheData(&realCacheSizeNvars, &realInCacheFrom, &realInCacheTo);
+    fv->getPrivateCacheData(&realCacheSizeNvars, &realcacheBegin, &realcacheEnd);
     CPPUNIT_ASSERT_EQUAL((unsigned long )261 ,realCacheSizeNvars );
-    CPPUNIT_ASSERT_EQUAL((unsigned long )0 ,realInCacheFrom );
-    CPPUNIT_ASSERT_EQUAL((unsigned long )0 ,realInCacheTo );
+    CPPUNIT_ASSERT_EQUAL((unsigned long )1 ,realcacheBegin );
+    CPPUNIT_ASSERT_EQUAL((unsigned long )0 ,realcacheEnd );
 
     fv->readVariableAs(fv->getNumVariables() - 1,var);
-    fv->getPrivateCacheData(&realCacheSizeNvars, &realInCacheFrom, &realInCacheTo);
+    fv->getPrivateCacheData(&realCacheSizeNvars, &realcacheBegin, &realcacheEnd);
 
-    CPPUNIT_ASSERT_EQUAL(fv->getNumVariables() - 1,realInCacheFrom );
-    CPPUNIT_ASSERT_EQUAL(fv->getNumVariables() - 1,realInCacheTo );
+    CPPUNIT_ASSERT_EQUAL(fv->getNumVariables() - 261,realcacheBegin );
+    CPPUNIT_ASSERT_EQUAL(fv->getNumVariables(),realcacheEnd );
 
     delete fv;
     delete []var;
@@ -328,6 +326,7 @@ void UnitTest::test_add_variable() {
     _fc_varname_loaded = fv2->readVariableName(11);
     CPPUNIT_ASSERT_EQUAL( varname2, string(_fc_varname_loaded.name) );
     delete fv2;
+    delete []var;
 }
 
 void UnitTest::test_extract_base_file_name()  {
