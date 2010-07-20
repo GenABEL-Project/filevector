@@ -14,6 +14,7 @@ unsigned int UNSIGNED_INT_NAN;
 int INT_NAN;
 char CHAR_NAN;
 unsigned char UNSIGNED_CHAR_NAN;
+char const* parseFormats[9];
 
 int initConsts(){
   sscanf("32767","%hi",&SHORT_INT_NAN);
@@ -22,30 +23,27 @@ int initConsts(){
   sscanf("4294967295","%u",&UNSIGNED_INT_NAN);
   sscanf("127","%i",&CHAR_NAN);
   sscanf("255","%u",&UNSIGNED_CHAR_NAN);
+
+  parseFormats[UNSIGNED_SHORT_INT] = "%hu";
+  parseFormats[SHORT_INT] = "%hd";
+  parseFormats[UNSIGNED_INT] = "%u";
+  parseFormats[INT] = "%d";
+  parseFormats[FLOAT] = "%f";
+  parseFormats[DOUBLE] = "%lf";
+  parseFormats[SIGNED_CHAR] = "%i";
+  parseFormats[UNSIGNED_CHAR] = "%i";
 }
 
 int dummy = initConsts();
 
 void parseStringToArbType(string s, int destType, void *destData, string nanString) {
-
-	map<int, string> fmt;
-
-	fmt[UNSIGNED_SHORT_INT] = string("%hu");
-	fmt[SHORT_INT] = string("%hd");
-	fmt[UNSIGNED_INT] = string("%u");
-	fmt[INT] = string("%d");
-	fmt[FLOAT] = string("%f");
-	fmt[DOUBLE] = string("%lf");
-	fmt[SIGNED_CHAR] = string("%i");
-	fmt[UNSIGNED_CHAR] = string("%i");
-
-	string format = fmt[destType];
+    char const *format = parseFormats[destType];
 
 	int result;
 	// no proper format specifier exists for char
 	if (destType == SIGNED_CHAR || destType == UNSIGNED_CHAR) {
 	    int i;
-	    result = sscanf(s.c_str(), format.c_str(), &i);
+	    result = sscanf(s.c_str(), format, &i);
     	if (nanString == s || result !=1){
 	        setNan(destData, destType);
 		    return;
@@ -55,7 +53,7 @@ void parseStringToArbType(string s, int destType, void *destData, string nanStri
 	    }
 
 	} else {
-	    result = sscanf(s.c_str(), format.c_str(), destData);
+	    result = sscanf(s.c_str(), format, destData);
     	if (nanString == s || result !=1){
 	        setNan(destData, destType);
 		    return;
