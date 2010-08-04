@@ -11,6 +11,8 @@ using namespace std;
 
 #define WRITE_SPEED_PROPORTION .01
 
+// See filteredMatrix.h for detailed comments
+
 class AbstractMatrix {
 public:
     virtual ~AbstractMatrix(){};
