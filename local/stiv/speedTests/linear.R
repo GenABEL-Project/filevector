@@ -10,21 +10,25 @@ print(system.time(for(i in 1:(n/d)){s=s+databel2matrix(f,,i);})*d)
 }
 
 unlink("name*");
-f(5000,"CHAR")
-f(5000,"SHORT_INT");
-f(5000,"INT");
-f(5000,"DOUBLE");
-f(10000,"CHAR")
-f(10000,"SHORT_INT");
-f(10000,"INT");
-f(10000,"DOUBLE");
-f(20000,"CHAR")
-f(20000,"SHORT_INT");
-f(20000,"INT");
-f(20000,"DOUBLE");
-f(30000,"CHAR")
-f(30000,"SHORT_INT");
-f(30000,"INT");
-f(30000,"DOUBLE");
+##f(5000,"CHAR")
+#f(5000,"SHORT_INT");
+#f(5000,"INT");
+#f(5000,"DOUBLE");
+#f(10000,"CHAR")
+#f(10000,"SHORT_INT");
+#f(10000,"INT");
+#f(10000,"DOUBLE");
+#f(20000,"CHAR")
+#f(20000,"SHORT_INT");
+#f(20000,"INT");
+#f(20000,"DOUBLE");
+#f(30000,"CHAR")
+#f(30000,"SHORT_INT");
+#f(30000,"INT");
+#f(30000,"DOUBLE");
+f(40000,"CHAR")
+f(40000,"SHORT_INT");
+f(40000,"INT");
+f(40000,"DOUBLE");
 
 
