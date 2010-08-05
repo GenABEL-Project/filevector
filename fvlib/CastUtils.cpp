@@ -85,7 +85,7 @@ string dataTypeToString(int type){
 	return 0;
 }
 
-string bufToString(short int dataType, char *data){
+string bufToString(short int dataType, char *data, string nanString){
 	char ret[20];
 	switch(dataType){
 	case UNSIGNED_SHORT_INT:
@@ -112,6 +112,9 @@ string bufToString(short int dataType, char *data){
 	case UNSIGNED_CHAR: // changed to "%f" from %lf [not ISO C++]
 		sprintf(ret, "%d", (int)*(unsigned char*)data);
 		break;
+	}
+	if (checkNan(data,dataType)) {
+	    return nanString;	
 	}
 
 	return string(ret);
@@ -189,10 +192,6 @@ bool checkNan(void *data, int dataType){
     	default:
     		errorLog << "file contains data of unknown type " << dataType << endl << errorExit;
    }
-}
-
-string valueToString(void*data,int type) {
-
 }
 
 int getDataType(unsigned short int){return UNSIGNED_SHORT_INT;}

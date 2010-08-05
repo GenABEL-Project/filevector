@@ -103,6 +103,7 @@ public:
 	void writeVariableName(unsigned long varIdx, FixedChar name);
 	void writeObservationName(unsigned long obsIdx, FixedChar name);
 
+    virtual string getFileName();
 	virtual unsigned long getNumVariables();
 	virtual unsigned long getNumObservations();
 
@@ -129,7 +130,7 @@ public:
 	void saveVariablesAs( string newFilename, unsigned long nvars, unsigned long * varindexes);
 	void saveObservationsAs( string newFilename, unsigned long nobss, unsigned long * obsindexes);
 	void saveAs(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long * varindexes, unsigned long * obsindexes);
-	void saveAsText(string newFilename, bool saveVarNames, bool saveObsNames);
+	void saveAsText(string newFilename, bool saveVarNames, bool saveObsNames, string nanString);
 
 	unsigned long getCacheSizeInMb();
 	void setCacheSizeInMb( unsigned long cachesizeMb );

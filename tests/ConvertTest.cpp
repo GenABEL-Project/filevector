@@ -35,7 +35,7 @@ void ConvertTest::test() {
 
     delete[] var;
 
-    fv->saveAsText(textFileName, true, true);
+    fv->saveAsText(textFileName, true, true, "NAN");
 
     delete fv;
 

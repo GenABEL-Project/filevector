@@ -73,6 +73,8 @@ public:
        delete [] ret;
     }
 
+    virtual string getFileName() = 0;
+
     virtual unsigned long getNumVariables() = 0;
     virtual unsigned long getNumObservations() = 0;
 
@@ -81,7 +83,7 @@ public:
    	virtual void saveObservationsAs( string newFilename, unsigned long nobss, unsigned long * obsindexes) = 0;
 
     virtual void saveAs(string newFilename, unsigned long nvars, unsigned long nobss, unsigned long * varindexes, unsigned long * obsindexes) = 0;
-    virtual void saveAsText(string newFilename, bool saveVarNames, bool saveObsNames) = 0;
+    virtual void saveAsText(string newFilename, bool saveVarNames, bool saveObsNames, string nanString) = 0;
 
     virtual void readObservation(unsigned long obsIdx, void * outvec) = 0;
     virtual void writeObservation(unsigned long obsIdx, void * invec) = 0;
