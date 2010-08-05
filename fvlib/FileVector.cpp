@@ -512,6 +512,11 @@ void FileVector::saveVariablesAs( string newFilename, unsigned long nvars, unsig
 	delete [] tmpvariable;
 }
 
+string FileVector::getFileName() {
+    return filename;
+}
+
+
 void FileVector::saveObservationsAs( string newFilename, unsigned long nobss, unsigned long *obsindexes) {
 	if (headerOrDataExists(newFilename))
 	{
@@ -592,7 +597,7 @@ void FileVector::saveAs(string newFilename, unsigned long nvars, unsigned long n
 	delete[] out_variable;
 }
 
-void FileVector::saveAsText(string newFilename, bool saveVarNames, bool saveObsNames) {
+void FileVector::saveAsText(string newFilename, bool saveVarNames, bool saveObsNames, string nanString) {
 
 	ofstream textfile(newFilename.c_str(), ios::out);
 
@@ -621,7 +626,7 @@ void FileVector::saveAsText(string newFilename, bool saveVarNames, bool saveObsN
 		readVariable(i, in_variable);
 
 		for(unsigned long j=0; j<getNumObservations(); j++) {
-		    string s  = bufToString(getElementType(),&in_variable[j*getElementSize()]);
+		    string s  = bufToString(getElementType(),&in_variable[j*getElementSize()], nanString);
 			textfile << s << " ";
 		}
 		textfile << endl;

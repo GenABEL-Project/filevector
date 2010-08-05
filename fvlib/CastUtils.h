@@ -119,6 +119,6 @@ template <class DT> void performCast(void*dest, DT&src, int destType, bool &warn
 
 void parseStringToArbType(string s, int destType, void *destData, string nanString);
 unsigned short int dataTypeFromString(string type);
-string bufToString(short int dataType, char *data);
+string bufToString(short int dataType, char *data, string nanString);
 
 #endif

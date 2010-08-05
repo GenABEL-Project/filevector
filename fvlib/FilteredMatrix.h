@@ -57,6 +57,8 @@ public:
         getWarningIsShown() = false;
     }
 
+    string getFileName();
+
     /**
     * Returns number of variables
     **/
@@ -101,7 +103,7 @@ public:
     /**
     * Saves current object as text
     **/
-    void saveAsText(string newFilename, bool saveVarNames, bool saveObsNames);
+    void saveAsText(string newFilename, bool saveVarNames, bool saveObsNames, string nanString);
 
     /**
     * Get single observation

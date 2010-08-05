@@ -93,13 +93,18 @@ void FilteredMatrix::writeVariable(unsigned long varIdx, void *datavec) {
 void FilteredMatrix::readElement(unsigned long varIdx, unsigned long obsIdx, void * out) {
     fmDbg << "FilteredMatrix::readElement(" << varIdx << "," << obsIdx<<") = ";
     nestedMatrix->readElement(filteredToRealRowIdx[varIdx], filteredToRealColIdx[obsIdx], out);
-    fmDbg << bufToString(getElementType(), (char*)out) << endl;
+    fmDbg << bufToString(getElementType(), (char*)out, string("NAN")) << endl;
 }
 
 void FilteredMatrix::writeElement(unsigned long varIdx, unsigned long obsIdx, void* data) {
     fmDbg << "FilteredMatrix.writeElement (" << varIdx << "," << obsIdx << ")" << endl;
     nestedMatrix->writeElement(filteredToRealRowIdx[varIdx], filteredToRealColIdx[obsIdx], data);
 }
+
+string FilteredMatrix::getFileName(){
+    return nestedMatrix->getFileName(); 
+}
+
 
 unsigned long FilteredMatrix::getNumVariables() {
    return filteredToRealRowIdx.size();
@@ -154,8 +159,8 @@ void FilteredMatrix::saveAs(string newFilename, unsigned long nvars, unsigned lo
     nestedMatrix->saveAs(newFilename, nvars, nobss, &recodedRowIndexes[0], &recodedColIndexes[0]);
 }
 
-void FilteredMatrix::saveAsText(string newFilename, bool showVarNames, bool showObsNames) {
-    nestedMatrix->saveAsText(newFilename, showVarNames, showObsNames);
+void FilteredMatrix::saveAsText(string newFilename, bool showVarNames, bool showObsNames, string nanString) {
+    nestedMatrix->saveAsText(newFilename, showVarNames, showObsNames, nanString);
 }
 
 short unsigned FilteredMatrix::getElementSize() {
