@@ -86,7 +86,7 @@ string dataTypeToString(int type){
 }
 
 string bufToString(short int dataType, char *data, string nanString){
-	char ret[20];
+	char ret[500];
 	switch(dataType){
 	case UNSIGNED_SHORT_INT:
 		sprintf(ret, "%hu", *(unsigned short int*)data);
