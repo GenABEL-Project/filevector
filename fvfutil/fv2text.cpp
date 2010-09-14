@@ -71,9 +71,9 @@ int main(int argc, char* argv[])
     for (row=0; row<fv.getNumVariables(); row++){
 	    out << fv.readVariableName(row).name << " ";
         for (col=0; col<fv.getNumObservations(); col++){
-    	    char data[200];
+    	    char data[2000];
     	    fv.readElement(row, col, data);
-    	    string elem = bufToString(fv.getElementType(), data);
+    	    string elem = bufToString(fv.getElementType(), data,string("NAN"));
 	        out << elem << " ";
 	    }
 	    out << endl;
