@@ -393,6 +393,26 @@ void UnitTest::testFilteredMatrix() {
     CPPUNIT_ASSERT_EQUAL((float)12,obs[2]);
 }
 
+void UnitTest::testMy() {
+    testDbg << "testMy" << endl;
+    string file_name = getFilenameToWrite();
+    AbstractMatrix* fv = new FileVector( file_name, 2 );//no need in big cache
+    double x = 9;
+    fv->writeElement( 0, 0, &x);
+    fv->readElement( 0, 0, &x);
+    delete fv;
+
+    AbstractMatrix* fv2 = new FileVector( file_name, 2 );//reopen
+    fv2->readElement( 0, 0, &x);
+    delete fv2;
+
+    AbstractMatrix* fv3 = new FileVector( file_name, 2 );//no need in big cache
+    fv3->writeElement( 0, 0, &x);
+    fv3->readElement( 0, 0, &x);
+    delete fv3;
+}
+
+
 int main( int argc, char **argv)
 {
     TestUtil::detect_base_dir(string(argv[0]));
