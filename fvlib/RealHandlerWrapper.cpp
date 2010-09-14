@@ -1,7 +1,6 @@
 #include "FileVector.h"
 #include "RealHandlerWrapper.h"
 
-
 // returns true on success
 bool RealHandlerWrapper::open(const string &iFileName, bool iReadOnly) {
     fileName = iFileName;
@@ -10,7 +9,7 @@ bool RealHandlerWrapper::open(const string &iFileName, bool iReadOnly) {
         return true;
     }
 
-	if (readOnly) {
+	if (iReadOnly) {
 		stream.open(fileName.c_str(), ios::in | ios::binary);
 	} else {
 		stream.open(fileName.c_str(), ios::out | ios::in | ios::binary);
@@ -33,21 +32,13 @@ void RealHandlerWrapper::close(){
     } else if (useCount == 1) {
         useCount = 0;
         stream.close();
-    } else {
-        printf("EROR");
-        exit(0);
-    }; // false call, do nothing
+    }
 }
 
 void RealHandlerWrapper::blockWriteOrRead(unsigned long iLength, char* data, bool writeAction) {
-    cout << "RealHandlerWrapper::blockWriteOrRead("<<"useCount="<<useCount<<")"<<endl; 
     if (writeAction == false)
         memset(data, '!', iLength);
     ::blockWriteOrRead(stream, iLength, data, writeAction);
-//    if (!stream) {
-//        printf("useCount = %i", useCount);
- //       printf("BAD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n");
-//    }
 }
 
 void RealHandlerWrapper::fseek(unsigned long pos){
