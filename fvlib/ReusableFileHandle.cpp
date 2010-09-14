@@ -3,6 +3,60 @@
 #include "RealHandlerWrapper.h"
 #include "ReusableFileHandle.h"
 
+void hexdump(void *pAddressIn, long  lSize)
+{
+ char szBuf[100];
+ long lIndent = 1;
+ long lOutLen, lIndex, lIndex2, lOutLen2;
+ long lRelPos;
+ struct { char *pData; unsigned long lSize; } buf;
+ unsigned char *pTmp,ucTmp;
+ unsigned char *pAddress = (unsigned char *)pAddressIn;
+
+   buf.pData   = (char *)pAddress;
+   buf.lSize   = lSize;
+
+   while (buf.lSize > 0)
+   {
+      pTmp     = (unsigned char *)buf.pData;
+      lOutLen  = (int)buf.lSize;
+      if (lOutLen > 16)
+          lOutLen = 16;
+
+      // create a 64-character formatted output line:
+      sprintf(szBuf, " >                            "
+                     "                      "
+                     "    %08lX", pTmp-pAddress);
+      lOutLen2 = lOutLen;
+
+      for(lIndex = 1+lIndent, lIndex2 = 53-15+lIndent, lRelPos = 0;
+          lOutLen2;
+          lOutLen2--, lIndex += 2, lIndex2++
+         )
+      {
+         ucTmp = *pTmp++;
+
+         sprintf(szBuf + lIndex, "%02X ", (unsigned short)ucTmp);
+         if(!isprint(ucTmp))  ucTmp = '.'; // nonprintable char
+         szBuf[lIndex2] = ucTmp;
+
+         if (!(++lRelPos & 3))     // extra blank after 4 bytes
+         {  lIndex++; szBuf[lIndex+2] = ' '; }
+      }
+
+      if (!(lRelPos & 3)) lIndex--;
+
+      szBuf[lIndex  ]   = '<';
+      szBuf[lIndex+1]   = ' ';
+
+      printf("%s\n", szBuf);
+
+      buf.pData   += lOutLen;
+      buf.lSize   -= lOutLen;
+   }
+}
+
+
 map<string, RealHandlerWrapper*> ReusableFileHandle::openHandles;
 
 int ReusableFileHandle::testGetNumHandles(){
@@ -10,9 +64,9 @@ int ReusableFileHandle::testGetNumHandles(){
 }
 
 ReusableFileHandle ReusableFileHandle::getHandle(string fileName, bool readOnly){
-/*    RealHandlerWrapper *newHandleWrapper = new RealHandlerWrapper();
-    bool success = newHandleWrapper->open(fileName, readOnly);
-    return ReusableFileHandle (newHandleWrapper, success, fileName, readOnly);*/
+//    RealHandlerWrapper *newHandleWrapper = new RealHandlerWrapper();
+//    bool success = newHandleWrapper->open(fileName, readOnly);
+//    return ReusableFileHandle (newHandleWrapper, success, fileName, readOnly);
 
     cout << "getHandle("+fileName+", readonly=" << readOnly << ")" << endl;
 
@@ -41,9 +95,9 @@ ReusableFileHandle ReusableFileHandle::getHandle(string fileName, bool readOnly)
 
 void ReusableFileHandle::close() {
 
-    cout << "ReusableFileHandle::close("<<fileName<<")" <<endl; 
 
 /*    if (isOk) {
+        cout << "ReusableFileHandle::close("<<fileName<<")" <<endl; 
         this->realHandlerWrapper->close();
         delete this->realHandlerWrapper;
     }*/
@@ -67,12 +121,18 @@ void ReusableFileHandle::close() {
 
 
 void ReusableFileHandle::blockWriteOrRead(unsigned long length, char* data, bool writeAction){
-//    cout << "ReusableFileHandle::blockWriteOrRead:"<<endl;
+    cout << "ReusableFileHandle::blockWriteOrRead from "<<curPos<<", length = "<< length <<", file = " << fileName << "data:"<< endl;
   //  cout << "fseek(" << curPos << ")" << endl;
     realHandlerWrapper->fseek(curPos);
 //    cout << "read(" << length << ")" << endl;
     realHandlerWrapper->blockWriteOrRead(length, data, writeAction);
+
+    hexdump(data,length > 100?100:length );
+
+
     curPos += length;
+
+    cout << endl;
 }
 
 void ReusableFileHandle::flush(){
@@ -82,4 +142,6 @@ void ReusableFileHandle::flush(){
 void ReusableFileHandle::fseek(unsigned long pos){
     curPos = pos;
 }
+
+
 
