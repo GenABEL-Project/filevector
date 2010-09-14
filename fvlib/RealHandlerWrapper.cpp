@@ -33,10 +33,14 @@ void RealHandlerWrapper::close(){
     } else if (useCount == 1) {
         useCount = 0;
         stream.close();
-    } else; // false call, do nothing
+    } else {
+        printf("EROR");
+        exit(0);
+    }; // false call, do nothing
 }
 
 void RealHandlerWrapper::blockWriteOrRead(unsigned long iLength, char* data, bool writeAction) {
+    cout << "RealHandlerWrapper::blockWriteOrRead("<<"useCount="<<useCount<<")"<<endl; 
     if (writeAction == false)
         memset(data, '!', iLength);
     ::blockWriteOrRead(stream, iLength, data, writeAction);
