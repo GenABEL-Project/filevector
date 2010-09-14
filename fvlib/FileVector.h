@@ -19,6 +19,7 @@
 #include "frutil.h"
 #include "frerror.h"
 
+#include "ReusableFileHandle.h"
 #include "AbstractMatrix.h"
 
 using namespace std;
@@ -32,8 +33,8 @@ private:
     const string filename;
 	string dataFilename;
     string indexFilename;
-	fstream dataFile;
-	fstream indexFile;
+	ReusableFileHandle dataFile;
+	ReusableFileHandle indexFile;
 	FileHeader fileHeader;
 	// row and column names
 	FixedChar *variableNames;

@@ -58,7 +58,7 @@ void TestUtil::create_empty_filevector(string tmp_file_name, unsigned long nvars
 bool TestUtil::compare_arrays(float * a1, float * a2, int size) {
 	for(int i =0; i< size ; i++) {
 		if(a1[i] != a2[i]) {
-		  testDbg << "compare_arrays: " << i << " elements not equal:"<< a1[i]<<","<<a2[i]<<endl;
+		  cout << "compare_arrays: " << i << " elements not equal:"<< a1[i]<<","<<a2[i]<<endl;
 		  return false;
 		}
 	}
