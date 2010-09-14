@@ -24,8 +24,8 @@ class UnitTest : public CppUnit::TestFixture {
 //    CPPUNIT_TEST( testReadOnly );
 //    CPPUNIT_TEST( testFilteredMatrix );
 //    CPPUNIT_TEST( testCacheUpdatedOnWrite );
-    CPPUNIT_TEST( test_write_variable_name );
-    CPPUNIT_TEST( test_writeObservationName );
+//    CPPUNIT_TEST( test_write_variable_name );
+//    CPPUNIT_TEST( test_writeObservationName );
 //    CPPUNIT_TEST( test_save );
 //    CPPUNIT_TEST( test_save_vars );
 //    CPPUNIT_TEST( test_save_obs );
@@ -36,6 +36,8 @@ class UnitTest : public CppUnit::TestFixture {
 //    CPPUNIT_TEST( test_add_variable );
 //    CPPUNIT_TEST( test_extract_base_file_name );
 
+    CPPUNIT_TEST( testMy );
+    
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -55,6 +57,7 @@ public:
     void test_extract_base_file_name();
     void testFilteredMatrix();
     void testReadOnly();
+    void testMy();
 };
 
 
