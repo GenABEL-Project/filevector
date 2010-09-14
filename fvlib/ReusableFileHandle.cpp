@@ -121,7 +121,8 @@ void ReusableFileHandle::close() {
 
 
 void ReusableFileHandle::blockWriteOrRead(unsigned long length, char* data, bool writeAction){
-    cout << "ReusableFileHandle::blockWriteOrRead from "<<curPos<<", length = "<< length <<", file = " << fileName << "data:"<< endl;
+    cout << "ReusableFileHandle::blockWriteOrRead from "<<curPos<<", length = "<< length <<", file = " << fileName << "data:"
+    <<(writeAction ? "write":"read")<< endl;
   //  cout << "fseek(" << curPos << ")" << endl;
     realHandlerWrapper->fseek(curPos);
 //    cout << "read(" << length << ")" << endl;
