@@ -15,11 +15,7 @@ bool RealHandlerWrapper::open(const string &iFileName, bool iReadOnly) {
 		stream.open(fileName.c_str(), ios::out | ios::in | ios::binary);
 	}
 
-    stream.seekg(0,ios::end);
-    length = stream.tellg();
-    stream.seekg(0,ios::beg);
-
-    readOnly = iReadOnly; 
+    readOnly = iReadOnly;
 
 	useCount = 1;
 
@@ -36,14 +32,10 @@ void RealHandlerWrapper::close(){
 }
 
 void RealHandlerWrapper::blockWriteOrRead(unsigned long iLength, char* data, bool writeAction) {
-    if (writeAction == false)
-        memset(data, '!', iLength);
     ::blockWriteOrRead(stream, iLength, data, writeAction);
 }
 
 void RealHandlerWrapper::fseek(unsigned long pos){
-    lastPos = pos;
-//    cout << "RealHandlerWrapper::fseek("<<fileName<<"," << pos << ")" << endl;
     stream.seekg(pos, ios::beg);
     stream.seekp(pos, ios::beg);
 }

@@ -17,6 +17,8 @@ ReusableFileHandle ReusableFileHandle::getHandle(string fileName, bool readOnly)
     if (ReusableFileHandle::openHandles.find(key) != ReusableFileHandle::openHandles.end()) {
         RealHandlerWrapper *rhw = ReusableFileHandle::openHandles[key];
 
+        rhw->open(fileName, readOnly);
+
         ReusableFileHandle ret(rhw, true, fileName, readOnly);
 
         return ret;
