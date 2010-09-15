@@ -26,7 +26,10 @@ ReusableFileHandle ReusableFileHandle::getHandle(string fileName, bool readOnly)
 
         if (success) {
             ReusableFileHandle::openHandles[key] = newHandleWrapper;
-        }
+		} else {
+			delete newHandleWrapper;
+			newHandleWrapper = 0;
+		}
 
         ReusableFileHandle ret(newHandleWrapper, success, fileName, readOnly);
         return ret;
@@ -45,6 +48,7 @@ void ReusableFileHandle::close() {
     rhw->close();
 
     if (rhw->getUseCount() == 0) {
+		delete rhw;
         ReusableFileHandle::openHandles.erase(key);
     }
 }
