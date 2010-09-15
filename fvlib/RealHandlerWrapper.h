@@ -17,10 +17,8 @@ private:
     string fileName;
     
     bool readOnly;
-    unsigned long lastPos;
 
 public:
-    unsigned long length;
     RealHandlerWrapper(): useCount(0) {}
 
     void blockWriteOrRead(unsigned long length, char* data, bool writeAction);
