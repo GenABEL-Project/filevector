@@ -76,7 +76,6 @@ public:
 	FileVector(char *iFilename, unsigned long cachesizeMb) : filename(string(iFilename)){
 		updateNamesOnWrite = false;
 		readOnly = false;
-		string filename(iFilename);
 		cacheBuffer = 0;
 		initialize(cachesizeMb);
 		getWarningIsShown() = false;
