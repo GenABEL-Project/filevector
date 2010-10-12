@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "../fvlib/frerror.h"
 #include "../fvlib/frutil.h"
 #include "../fvlib/FileVector.h"
 

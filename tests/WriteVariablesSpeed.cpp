@@ -3,7 +3,6 @@ Use initializeEmptyFile()/writeVariable() for 2,000,000 and top up with addVaria
 Select 2,500 random variables,  */
 #include <sstream>
 
-#include "../fvlib/frerror.h"
 #include "../fvlib/frutil.h"
 #include "../fvlib/FileVector.h"
 

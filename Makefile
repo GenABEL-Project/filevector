@@ -22,6 +22,7 @@ BUILDSUBMATRIX = $(BINDIR)/buildsubmatrix
 
 UNITTEST = $(BINDIR)/unittest
 TRANSPOSETEST = $(BINDIR)/transposetest
+RFHTEST = $(BINDIR)/rfhtest
 
 # GNU compiler
 CPP = g++
@@ -79,6 +80,10 @@ $(UNITTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TestUtil.* $(TESTSDIR)/UnitTes
 transposetest: $(TRANSPOSETEST)
 $(TRANSPOSETEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/TransposeTest.cpp
 	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(SRCDIR)/text2fvf.cpp $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/TransposeTest.cpp  -o $(TRANSPOSETEST); $(TRANSPOSETEST)
+
+rfhtest: $(RFHTEST)
+$(RFHTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReusableFileHandleTest.cpp
+	$(CPP) $(CFLAGS) $(CPPUNITFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/ReusableFileHandleTest.cpp -o $(RFHTEST); $(RFHTEST)
 
 converter : $(CONVERT)
 $(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp 
