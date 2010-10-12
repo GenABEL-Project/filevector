@@ -22,13 +22,14 @@ private:
 public:
     ReusableFileHandle(RealHandlerWrapper *iRealHandlerWrapper, bool iIsOk,
         const string& iFileName, bool iReadOnly ):
-        realHandlerWrapper(iRealHandlerWrapper), isOk(iIsOk),
-        fileName(iFileName), readOnly(iReadOnly), curPos(0) {
+        isOk(iIsOk), curPos(0),
+        fileName(iFileName), readOnly(iReadOnly),
+        realHandlerWrapper(iRealHandlerWrapper){
     }
 
     ReusableFileHandle(const ReusableFileHandle &rfh) :
-        realHandlerWrapper(rfh.realHandlerWrapper), isOk(rfh.isOk),
-        fileName(rfh.fileName), readOnly(rfh.readOnly), curPos(rfh.curPos) {
+        isOk(rfh.isOk), curPos(rfh.curPos),fileName(rfh.fileName),
+        readOnly(rfh.readOnly),    realHandlerWrapper(rfh.realHandlerWrapper)  {
     }
 
     void operator=(const ReusableFileHandle &rfh){
@@ -39,8 +40,8 @@ public:
         realHandlerWrapper = rfh.realHandlerWrapper;
     }
     
-    ReusableFileHandle() : isOk(false),
-        fileName(), readOnly(false), curPos(0) {
+    ReusableFileHandle() : isOk(false),curPos(0),
+        fileName(), readOnly(false)  {
     }
 
     operator bool(){
