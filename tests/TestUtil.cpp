@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "../fvlib/frutil.h"
-#include "../fvlib/frerror.h"
 #include "../fvlib/FileVector.h"
 #include "TestUtil.h"
 

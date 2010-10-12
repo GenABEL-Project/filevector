@@ -17,7 +17,6 @@
 
 #include "Logger.h"
 #include "frutil.h"
-#include "frerror.h"
 
 #include "ReusableFileHandle.h"
 #include "AbstractMatrix.h"
