@@ -6,14 +6,14 @@ int main(int argc, char * argv[])
 
     int next_option;
     int quiet = 0;
-    const char * const short_options = "i:o:c:r:1:2:3:4:t:R:T:d";
+    const char * const short_options = "i:o:c:s:r:2:3:4:t:R:T:d:";
     const struct option long_options [] =
         {
             {"infile",    required_argument, NULL, 'i'},
             {"outfile",   required_argument, NULL, 'o'},
             {"skipcols",  required_argument, NULL, 'c'},
-            {"skiprows",  required_argument, NULL, 'r'},
-            {"rncol",     required_argument, NULL, '1'},
+            {"skiprows",  required_argument, NULL, 's'},
+            {"rownames",  required_argument, NULL, 'r'},
             {"cnrow",     required_argument, NULL, '2'},
             {"rnfile",    required_argument, NULL, '3'},
             {"cnfile",    required_argument, NULL, '4'},
@@ -33,12 +33,13 @@ int main(int argc, char * argv[])
     string nanString;
 
     unsigned long rownames = 0, colnames = 0, transpose = 0, skipcols = 0,
-    skiprows = 0, Rmatrix = 0;
+        skiprows = 0, Rmatrix = 0;
     unsigned short dataType = 0;
 
     do
     {
-        next_option = getopt_long(argc,argv,short_options,long_options,NULL);
+        next_option = getopt_long(argc, argv, short_options, long_options,
+                                  NULL);
         switch (next_option)
         {
             case 'i':
@@ -50,10 +51,10 @@ int main(int argc, char * argv[])
             case 'c':
                 skipcols = atoi(optarg);
                 break;
-            case 'r':
+            case 's':
                 skiprows = atoi(optarg);
                 break;
-            case '1':
+            case 'r':
                 rownames = atoi(optarg);
                 break;
             case '2':
@@ -74,6 +75,7 @@ int main(int argc, char * argv[])
                 Rmatrix=1;
                 break;
             case 'd':
+                cout << "optarg:" << optarg << flush;
                 dataType = dataTypeFromString(optarg);
                 break;
             case 'n':
@@ -89,7 +91,7 @@ int main(int argc, char * argv[])
 
     if (dataType == 0) {
         dataType = DOUBLE;
-        msg <<"No output data type specified. Using DOUBLE.\n";
+        msg << "No output data type specified. Using DOUBLE.\n";
     }
 
     // check that in- and out-filenames are supplied
