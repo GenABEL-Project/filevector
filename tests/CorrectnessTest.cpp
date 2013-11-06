@@ -76,13 +76,13 @@ void CorrectnessTest::testRandomReadObservations(){
 
     testDbg << "Size is " << numVariables << " x " << numObservations << endl;
 
-    int numObservationsToTest = 10;
+    unsigned long numObservationsToTest = 10;
     int observationIdx[numObservationsToTest];
 
     unsigned long i;
 
     TestUtil::initRandomGenerator();
-    for (int i=0; i<numObservationsToTest; i++) {
+    for (i=0; i<numObservationsToTest; i++) {
         observationIdx[i] = (rand()*numObservations)/RAND_MAX;
     }
 

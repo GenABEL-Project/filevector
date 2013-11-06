@@ -25,7 +25,7 @@ void ConvertTest::test() {
 
     float * var = new float [fv->getNumObservations()];
 	
-    for(int i = 0; i< fv->getNumObservations(); i++) {
+    for(unsigned int i = 0; i< fv->getNumObservations(); i++) {
         var[i] = i + 1.1;
     }
 

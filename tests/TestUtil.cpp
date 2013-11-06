@@ -38,7 +38,7 @@ float TestUtil::random_float() {
 
 
 void TestUtil::create_and_fill_variable(unsigned int  nobs, float * in ) {
-	for(int i = 0; i<nobs; i++)
+	for(unsigned int i = 0; i<nobs; i++)
 	{
 		in[i] = i + (float)i/10;
 	}

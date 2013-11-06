@@ -245,8 +245,8 @@ void UnitTest::test_read_write_observation() {
 
     float * var1 = new float [fv->getNumVariables()];
     float * var2 = new float [fv->getNumVariables()];
-    int i;
-    for(i = 0; i<fv->getNumVariables(); i++)
+
+    for(unsigned int i = 0; i<fv->getNumVariables(); i++)
     {
         var1[i] = i;
 	}
@@ -278,7 +278,7 @@ void UnitTest::test_readVariable_convert_to() {
 	AbstractMatrix* fv = new FileVector( tmp_file_name, 1 );
 
 	float * var = new float [fv->getNumObservations()];
-	for(int i = 0; i<fv->getNumObservations(); i++)
+	for(unsigned int i = 0; i<fv->getNumObservations(); i++)
     {
         var[i] = i + (float)i/10;
 	}
