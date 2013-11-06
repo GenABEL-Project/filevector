@@ -35,7 +35,7 @@ int main(int argc, char * argv[]) {
 	FileVector fv(filename,cache_size);
 
     float * tmp = new float[fv.getNumObservations()];
-	for(int i=0;i<fv.getNumVariables();i++)
+	for(unsigned int i=0;i<fv.getNumVariables();i++)
 	{
 	    fv.writeVariable(i, tmp);
 	    fv.writeVariableName(i,FixedChar("original"));

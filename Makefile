@@ -29,7 +29,7 @@ CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -g #-m64 
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -g -Wall -std=c++11  #-m64 
 CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS) ${CONVERT}
 

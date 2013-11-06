@@ -33,7 +33,7 @@ int main(int argc, char * argv[])
 	stat( filename.c_str() , &filestatus);
 
 
-	if (filestatus.st_size < sizeof(data_type))
+	if ( (unsigned int) filestatus.st_size < sizeof(data_type) )
 		errorLog << "File " << filename <<" is too short to contain an FVF-object." << endl << errorExit;
 
 	fstream dataFile;
