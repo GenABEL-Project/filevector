@@ -132,7 +132,7 @@ void FilteredMatrix::saveVariablesAs( string newFilename, unsigned long nvars, u
 
     filterIdxList(obsIndexes, this->getNumObservations(), recodedColIndexes, filteredToRealColIdx);
     filterIdxList(varIndexes, nvars, recodedRowIndexes, filteredToRealRowIdx);
-    delete obsIndexes;
+    delete[] obsIndexes;
 }
 
 void FilteredMatrix::saveObservationsAs( string newFilename, unsigned long nobss, unsigned long * obsIndexes) {
