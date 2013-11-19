@@ -18,12 +18,13 @@ char const* parseFormats[9];
 
 int initConsts(){
   int i;
+  unsigned int ui;
   sscanf("32767","%hi",&SHORT_INT_NAN);
   sscanf("65535","%hu",&UNSIGNED_SHORT_INT_NAN);
   sscanf("2147483647","%i",&INT_NAN);
   sscanf("4294967295","%u",&UNSIGNED_INT_NAN);
   sscanf("127","%i",&i); CHAR_NAN = i;
-  sscanf("255","%u",&i); UNSIGNED_CHAR_NAN = i;
+  sscanf("255","%u",&ui); UNSIGNED_CHAR_NAN = ui;
 
   parseFormats[UNSIGNED_SHORT_INT] = "%hu";
   parseFormats[SHORT_INT] = "%hd";
@@ -184,9 +185,17 @@ bool checkNan(void *data, int dataType){
     	case INT:
     	    return (*(int*) data) == INT_NAN;
     	case FLOAT:
-	  return ISNAN(*(float*) data);
+#ifdef _NOT_R_FILEVECTOR
+			return std::isnan(*(float*) data);
+#else
+			return ISNAN(*(float*) data);
+#endif
     	case DOUBLE:
+#ifdef _NOT_R_FILEVECTOR
+	  return std::isnan(*(double*)data);
+#else
 	  return ISNAN(*(double*)data);
+#endif
     	case UNSIGNED_CHAR:
     	    return (*(unsigned char*) data) == UNSIGNED_CHAR_NAN;
     	case SIGNED_CHAR:
