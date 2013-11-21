@@ -29,7 +29,7 @@ CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -g -Wall -std=c++11 #-m64 
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -g -Wall -std=c++11 -D_NOT_R_FILEVECTOR #-m64
 CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS) ${CONVERT}
 
@@ -86,7 +86,7 @@ $(RFHTEST): $(LIBFILES) $(TESTFILES) $(TESTSDIR)/ReusableFileHandleTest.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/ReusableFileHandleTest.cpp $(CPPUNITFLAGS) -o $(RFHTEST); $(RFHTEST)
 
 converter : $(CONVERT)
-$(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp 
+$(CONVERT): $(LIBFILES) $(SRCDIR)/convert.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(SRCDIR)/convert.cpp $(CPPUNITFLAGS) -o $(CONVERT)
 
 transpose :$(TRANSPOSE)
@@ -107,14 +107,14 @@ $(CONVERTTEST):$(LIBFILES) $(TESTFILES) $(TESTSDIR)/ConvertTest.cpp
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/text2fvf.cpp $(TESTSDIR)/TestUtil.cpp $(TESTSDIR)/ConvertTest.cpp $(CPPUNITFLAGS) -o $(CONVERTTEST); $(CONVERTTEST)
 
 buildtestdata : $(BUILDTESTDATA)
-$(BUILDTESTDATA):$(TESTSDIR)/BuildTestData.cpp $(LIBDIR)/*.cpp $(LIBDIR)/*.h 
+$(BUILDTESTDATA):$(TESTSDIR)/BuildTestData.cpp $(LIBDIR)/*.cpp $(LIBDIR)/*.h
 	$(CPP) $(CFLAGS) $(TESTSDIR)/BuildTestData.cpp $(LIBDIR)/*.cpp $(CPPUNITFLAGS) -o $(BUILDTESTDATA)
 
-preparetestdata: buildtestdata 
-	$(BUILDTESTDATA) tests/data/correctnessTestData 33815 1473 100 120; $(BUILDTESTDATA) tests/data/2write/modify_me 1001 1003; 
+preparetestdata: buildtestdata
+	$(BUILDTESTDATA) tests/data/correctnessTestData 33815 1473 100 120; $(BUILDTESTDATA) tests/data/2write/modify_me 1001 1003;
 
 tests : preparetestdata correctnesstest readspeed modificationtest unittest writespeed accessmodetest converttest transposetest
 runtests : tests
 
-tests-clean: 
+tests-clean:
 	rm -rf tests/data/2write/* tests/data/modetests/* tests/data/correctnessTestData.*
