@@ -29,7 +29,17 @@ CPP = g++
 # use for Solaris
 # CPP = CC
 
-CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -g -Wall -std=c++11 -D_NOT_R_FILEVECTOR #-m64
+CFLAGS = -I $(LIBDIR) -I $(SRCDIR) -g -Wall -D_NOT_R_FILEVECTOR #-m64
+
+# Get the gcc version and check if the minor version number is above
+# 7. Before gcc 4.7 the option for -std=c++11 was named -std=c++0x.
+GCCVERSIONGTEQ47 := $(shell expr `gcc -dumpversion | cut -f2 -d.` \>= 7)
+ifeq "$(GCCVERSIONGTEQ47)" "1"
+    CFLAGS += -std=c++11
+else
+    CFLAGS += -std=c++0x
+endif
+
 CPPUNITFLAGS = -lcppunit
 EXECS = $(TEXT2FVF) $(MERGEVARS) ${CONVERT}
 
