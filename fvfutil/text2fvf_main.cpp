@@ -69,10 +69,10 @@ int main(int argc, char * argv[])
                 colnamesfilename = string(optarg);
                 break;
             case 't':
-                transpose=1;
+                transpose = 1;
                 break;
             case 'R':
-                Rmatrix=1;
+                Rmatrix = 1;
                 break;
             case 'd':
                 cout << "optarg:" << optarg << flush;
@@ -100,13 +100,14 @@ int main(int argc, char * argv[])
         print_text2fvf_usage(program_name);
     }
 
-    string Pname = program_name, Iname = infilename, Oname = outfilename, RFname = rownamesfilename, CFname = colnamesfilename;
+    string Pname = program_name, Iname = infilename, Oname = outfilename,
+        RFname = rownamesfilename, CFname = colnamesfilename;
 
     text2fvf(Pname, Iname, Oname,
-                RFname, CFname,
-                rownames, colnames,
-                skiprows, skipcols,
-                transpose, Rmatrix, dataType, !!quiet, nanString);
+             RFname, CFname,
+             rownames, colnames,
+             skiprows, skipcols,
+             transpose, Rmatrix, dataType, !!quiet, nanString);
 
     return(0);
 }
