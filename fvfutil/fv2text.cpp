@@ -12,7 +12,7 @@ using namespace std;
 
 
 
-void info() 
+void info()
 {
     cout << "fv2text converts .fv* files to a text file" << endl;
     cout << "Usage: fv2text inputfile outfile.txt [--RMatrix]" << endl;
@@ -23,21 +23,21 @@ void info()
 
     char s[20];
     for(int i=0;i<length;i++){
-	sprintf(s,"%x ", ((unsigned char*)data)[i]);
-	    ret += string(s);
-    }    
+        sprintf(s,"%x ", ((unsigned char*)data)[i]);
+            ret += string(s);
+    }
 
-    return ret;    
+    return ret;
 }*/
 
 
 int main(int argc, char* argv[])
 {
     argc--;
-    if (argc<2) 
+    if (argc<2)
     {
         info();
-	return 0;
+        return 0;
     }
 
     string inputFileName = string(argv[1]);
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     bool isRMatrix;
 
     if (argc >= 3) {
-	isRMatrix = (strcmp(argv[3], "--RMatrix") == 0);
+        isRMatrix = (strcmp(argv[3], "--RMatrix") == 0);
     }
 
     cout << "Input file is '" << inputFileName << "'." << endl;
@@ -59,23 +59,23 @@ int main(int argc, char* argv[])
     unsigned long row, col;
 
     if (!isRMatrix) {
-	    out << "X ";
+            out << "X ";
     }
 
-    for (col=0; col<fv.getNumObservations(); col++){
-	    out << fv.readObservationName(col).name << " ";
+    for (col = 0; col < fv.getNumObservations(); col++){
+            out << fv.readObservationName(col).name << " ";
     }
 
     out << endl;
 
-    for (row=0; row<fv.getNumVariables(); row++){
-	    out << fv.readVariableName(row).name << " ";
-        for (col=0; col<fv.getNumObservations(); col++){
-    	    char data[2000];
-    	    fv.readElement(row, col, data);
-    	    string elem = bufToString(fv.getElementType(), data,string("NAN"));
-	        out << elem << " ";
-	    }
-	    out << endl;
+    for (row = 0; row < fv.getNumVariables(); row++){
+            out << fv.readVariableName(row).name << " ";
+        for (col = 0; col < fv.getNumObservations(); col++){
+            char data[2000];
+            fv.readElement(row, col, data);
+            string elem = bufToString(fv.getElementType(), data, string("NAN"));
+                out << elem << " ";
+            }
+            out << endl;
     }
 }
