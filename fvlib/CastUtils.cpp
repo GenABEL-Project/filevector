@@ -5,6 +5,7 @@
 
 using namespace std;
 
+#include <R.h>
 #include "frutil.h"
 #include "CastUtils.h"
 
