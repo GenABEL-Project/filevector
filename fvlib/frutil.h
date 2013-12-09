@@ -15,7 +15,7 @@ using namespace std;
 
 class FixedChar
 {
-public:
+ public:
     FixedChar(){
         memset(name,0xab,NAMELENGTH);
     };
@@ -35,7 +35,7 @@ public:
 
 class FileHeader
 {
-public:
+ public:
     unsigned short int type;
     // should change that to long!!!
     unsigned int nelements;
