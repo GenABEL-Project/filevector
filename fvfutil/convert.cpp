@@ -98,6 +98,6 @@ int main(int argc, char * argv[])
     dataFile.close();
     new_data_file.close();
     new_index_file.close();
-    delete buffer;
+    delete[] buffer;
 
 }
