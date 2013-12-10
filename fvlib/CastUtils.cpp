@@ -5,7 +5,9 @@
 
 using namespace std;
 
+#ifndef _NOT_R_FILEVECTOR
 #include <R.h>
+#endif
 #include "frutil.h"
 #include "CastUtils.h"
 
