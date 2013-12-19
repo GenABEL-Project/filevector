@@ -55,7 +55,7 @@ void genSumFiles(string baseName, unsigned long numObservations, unsigned long n
     for(i=0;i<numObservations;i++){
         obsSums[i] = 0.;
     }
-    
+
     for(j=0;j<numVariables;j++){
 
         double sum = 0;
@@ -70,6 +70,8 @@ void genSumFiles(string baseName, unsigned long numObservations, unsigned long n
     for(i=0;i<numObservations;i++){
         obsSumFile << obsSums[i] << " ";
     }
+
+    delete[] obsSums;
 }
 
 int main(int numArgs, char**args){
@@ -121,7 +123,7 @@ int main(int numArgs, char**args){
     if (subMatrixNumVars > 0)
         buildSubmatrix(baseName, numVariables, numObservations, subMatrixNumVars, subMatrixNumObs);
 
-    cout << "Writing " << baseName << "..." << endl; 
+    cout << "Writing " << baseName << "..." << endl;
     text2fvf("text2fvf", textFileName, baseName,"", "", 1, 1,0, 0, true, true, DOUBLE, true,"NAN");
     cout << "Done." << endl;
 }
