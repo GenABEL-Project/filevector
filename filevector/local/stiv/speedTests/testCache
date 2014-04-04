@@ -1,0 +1,40 @@
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 0
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 1
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 2
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 3
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 4
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 5
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 6
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 7
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 8
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 9
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 10
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 12
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 14
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches' 
+time ../../../bin/readspeed name 18
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 20
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 30
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 40
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 50
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 60
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+time ../../../bin/readspeed name 70

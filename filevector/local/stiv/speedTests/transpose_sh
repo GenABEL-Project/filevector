@@ -1,0 +1,16 @@
+rm name_transposed.fv?;time ../../../bin/transpose name 1
+rm name_transposed.fv?;time ../../../bin/transpose name 10
+rm name_transposed.fv?;time ../../../bin/transpose name 20
+rm name_transposed.fv?;time ../../../bin/transpose name 30
+rm name_transposed.fv?;time ../../../bin/transpose name 70
+rm name_transposed.fv?;time ../../../bin/transpose name 100
+rm name_transposed.fv?;time ../../../bin/transpose name 500
+rm name_transposed.fv?;time ../../../bin/transpose name 1000
+rm name_transposed.fv?;time ../../../bin/transpose name 3000
+rm name_transposed.fv?;time ../../../bin/transpose name 6000
+rm name_transposed.fv?;time ../../../bin/transpose name 1000
+rm name_transposed.fv?;time ../../../bin/transpose name 2000
+rm name_transposed.fv?;time ../../../bin/transpose name 4000
+rm name_transposed.fv?;time ../../../bin/transpose name 5000
+rm name_transposed.fv?;time ../../../bin/transpose name 8000
+rm name_transposed.fv?;time ../../../bin/transpose name 10000
