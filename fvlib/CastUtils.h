@@ -1,6 +1,9 @@
 #ifndef __CastUtils__
 #define __CastUtils__
 
+#include "const.h"
+
+
 // these copy-pastes are for template support
 void setNan(unsigned short int &i);
 void setNan(short int &i);
