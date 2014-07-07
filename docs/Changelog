@@ -1,0 +1,5 @@
+* 2014 v
+  - Maksim Struchalin: Fixed bug #5793 where DatABEL gave errors like:
+    "file contains data of unknown type 5".
+* 2014-04-07 v1.0.0
+  - First 'official' tag/release of filevector.
