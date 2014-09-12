@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
     string inputFileName = string(argv[1]);
     string outputFileName = string(argv[2]);
 
-    bool isRMatrix;
+    bool isRMatrix = false;
 
     if (argc >= 3) {
         isRMatrix = (strcmp(argv[3], "--RMatrix") == 0);
