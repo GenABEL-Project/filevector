@@ -1,5 +1,6 @@
-* 2014 v
+* 2015-03-16 v1.0.1
+  - Lennart Karssen: Fixed uninitialised variable in the fv2text utility (r1827).
   - Maksim Struchalin: Fixed bug #5793 where DatABEL gave errors like:
-    "file contains data of unknown type 5".
+    "file contains data of unknown type 5" (r1760).
 * 2014-04-07 v1.0.0
   - First 'official' tag/release of filevector.
