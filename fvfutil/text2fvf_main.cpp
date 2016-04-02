@@ -75,7 +75,6 @@ int main(int argc, char * argv[])
                 Rmatrix = 1;
                 break;
             case 'd':
-                cout << "optarg:" << optarg << flush;
                 dataType = dataTypeFromString(optarg);
                 break;
             case 'n':
