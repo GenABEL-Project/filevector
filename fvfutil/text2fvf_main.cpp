@@ -20,7 +20,7 @@ int main(int argc, char * argv[])
             {"transpose", no_argument,       NULL, 't'},
             {"Rmatrix",   no_argument,       NULL, 'R'},
             {"outType",   required_argument, NULL, 'T'},
-            {"dataType",  required_argument, NULL, 'd'},
+            {"datatype",  required_argument, NULL, 'd'},
             {"nanString", no_argument,       NULL, 'n'},
             { NULL     ,  no_argument,       NULL,  0 }
         };

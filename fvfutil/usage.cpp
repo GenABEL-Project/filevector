@@ -5,7 +5,7 @@ using namespace std;
 void print_text2fvf_usage(char * progname)
 {
     cout << "USAGE: " << progname << " -i INFILE -o OUTFILE [-r N2] "
-         << "[--colnames[=CFILE]] [-t] [-datatype=TYPE]" << endl;
+         << "[--colnames[=CFILE]] [-t] [--datatype=TYPE]" << endl;
     cout << endl;
     cout << "\t--infile=INFILE    : the name of the input file "
          << "containing matrix in text format" << endl;
