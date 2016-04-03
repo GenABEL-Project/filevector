@@ -6,7 +6,7 @@ int main(int argc, char * argv[])
 
     int next_option;
     int quiet = 0;
-    const char * const short_options = "i:o:c:s:r:2:3:4:t:R:T:d:";
+    const char * const short_options = "i:o:c:s:r:2:3:4:t:RT:d:";
     const struct option long_options [] =
         {
             {"infile",    required_argument, NULL, 'i'},
