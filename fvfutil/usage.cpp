@@ -70,7 +70,7 @@ void print_text2fvf_usage(char * progname)
 
 void print_text2fvf_welcome()
 {
-    cout << "\ntext2fvf v. " << T2F_VERSION
+    cout << "\ntext2fvf v" << T2F_VERSION
          << " (" << T2F_RELEASEDATE
          << ")" << endl;
     cout << "(C) " << T2F_AUTHORS << endl;
