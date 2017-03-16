@@ -6,7 +6,7 @@ int main(int argc, char * argv[])
 
     int next_option;
     int quiet = 0;
-    const char * const short_options = "i:o:c:s:r:2:3:4:t:RT:d:";
+    const char * const short_options = "i:o:c:s:r:2:3:4:t:RT:d:n:";
     const struct option long_options [] =
         {
             {"infile",    required_argument, NULL, 'i'},
@@ -21,7 +21,7 @@ int main(int argc, char * argv[])
             {"Rmatrix",   no_argument,       NULL, 'R'},
             {"outType",   required_argument, NULL, 'T'},
             {"datatype",  required_argument, NULL, 'd'},
-            {"nanString", no_argument,       NULL, 'n'},
+            {"nanString", required_argument, NULL, 'n'},
             { NULL     ,  no_argument,       NULL,  0 }
         };
 

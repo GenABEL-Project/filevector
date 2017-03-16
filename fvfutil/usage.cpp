@@ -23,6 +23,7 @@ void print_text2fvf_usage(char * progname)
     cout << "\t--transpose        : should the matrix be transposed" << endl;
     cout << "\t--datatype=TYPE    : specify destination data type, "
          << "default is DOUBLE" << endl;
+    cout << "\t-n STRING    --nanString=STRING : specify the string used to code NAs" << endl;
     cout << "\t-R           --Rmatrix          : if this option is set, the "
          << "file format is assumed to follow" << endl;
     cout << "\t                                  the format of an R matrix "
