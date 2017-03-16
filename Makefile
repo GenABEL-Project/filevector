@@ -58,7 +58,7 @@ $(BINDIR):
 	mkdir -p $(BINDIR)
 
 text2fvf: $(TEXT2FVF)
-$(TEXT2FVF): $(LIBFILES) $(REGFILES) $(SRCDIR)/text2fvf.cpp $(SRCDIR)/text2fvf_main.cpp
+$(TEXT2FVF): $(LIBFILES) $(REGFILES) $(SRCDIR)/text2fvf.cpp $(SRCDIR)/text2fvf_main.cpp $(SRCDIR)/usage.cpp $(SRCDIR)/text2fvf.h
 	$(CPP) $(CFLAGS) $(LIBDIR)/*.cpp $(SRCDIR)/usage.cpp $(SRCDIR)/text2fvf.cpp $(SRCDIR)/text2fvf_main.cpp -o $(TEXT2FVF)
 
 fv2text: $(FV2TEXT)
